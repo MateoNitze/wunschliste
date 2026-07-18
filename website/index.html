@@ -1,0 +1,2861 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Noch zu holen — meine Kaufliste</title>
+<meta name="description" content="Meine komplette Kaufliste: 209 Wünsche über neun Kategorien — sortiert, priorisiert, abhakbar.">
+<meta name="theme-color" content="#0c0b09">
+<meta property="og:title" content="Noch zu holen — meine Kaufliste">
+<meta property="og:description" content="Alles, was noch fehlt. An einem Ort. 209 Wünsche, abhakbar mit gespeichertem Fortschritt.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='4' y='4' width='8' height='8' transform='rotate(45 8 8)' fill='%23e8a33d'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0c0b09;
+    --surface:#151310;
+    --surface-2:#1d1a15;
+    --line:rgba(255,255,255,0.07);
+    --line-strong:rgba(255,255,255,0.15);
+    --text:#ece7de;
+    --muted:#948d80;
+    --amber:#e8a33d;
+    --amber-dark:#b97f24;
+    --amber-soft:rgba(232,163,61,0.12);
+    --green:#79c99e;
+    --green-soft:rgba(121,201,158,0.12);
+    --blue:#8fa8d6;
+    --blue-soft:rgba(143,168,214,0.07);
+    --red:#d98a75;
+    --red-soft:rgba(217,138,117,0.12);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    font-size:15px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  body::after{
+    content:'';
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:2000;
+    opacity:0.03;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .sans{ font-family:'Inter',-apple-system,'Segoe UI',Roboto,sans-serif; }
+  .mono{ font-family:'JetBrains Mono','SFMono-Regular',Consolas,monospace; letter-spacing:0; }
+  ::selection{ background:rgba(232,163,61,0.4); color:#fff; }
+  :focus-visible{ outline:2px solid var(--amber); outline-offset:2px; border-radius:4px; }
+  ::-webkit-scrollbar{ width:10px; }
+  ::-webkit-scrollbar-track{ background:var(--bg); }
+  ::-webkit-scrollbar-thumb{ background:#2c2822; border-radius:5px; border:2px solid var(--bg); }
+
+  @keyframes fadeUp{
+    from{ opacity:0; transform:translateY(10px); }
+    to{ opacity:1; transform:none; }
+  }
+
+  /* ---------- Hero ---------- */
+  header{
+    position:relative;
+    background:
+      linear-gradient(180deg, rgba(12,11,9,0.5) 0%, rgba(12,11,9,0.82) 55%, var(--bg) 96%),
+      url("../assets/references/noch-zu-holen-hero-reference.png") center 40% / cover no-repeat,
+      var(--bg);
+    border-bottom:1px solid var(--line);
+  }
+  .hero-inner{
+    max-width:1020px;
+    margin:0 auto;
+    padding:40px 24px 56px;
+    animation:fadeUp 0.6s ease both;
+  }
+  .wordmark{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:600;
+    font-size:14px;
+    letter-spacing:0.09em;
+    color:var(--text);
+    margin-bottom:72px;
+  }
+  .wordmark .gem{
+    width:9px; height:9px;
+    background:var(--amber);
+    transform:rotate(45deg);
+    flex-shrink:0;
+  }
+  .hero-grid{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:48px;
+    flex-wrap:wrap;
+  }
+  .hero-text{ max-width:560px; }
+  .hero-eyebrow{
+    font-family:'JetBrains Mono',Consolas,monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.2em;
+    color:var(--amber);
+    margin-bottom:18px;
+  }
+  h1{
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:600;
+    font-size:clamp(34px,5.4vw,54px);
+    line-height:1.08;
+    letter-spacing:-0.01em;
+    margin:0 0 18px;
+  }
+  .hero-sub{
+    color:var(--muted);
+    font-size:16px;
+    max-width:480px;
+  }
+
+  .ring-wrap{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+    flex-shrink:0;
+  }
+  .ring{ position:relative; width:170px; height:170px; }
+  .ring svg{ transform:rotate(-90deg); }
+  .ring .track{ fill:none; stroke:rgba(255,255,255,0.09); stroke-width:6; }
+  .ring .bar{
+    fill:none;
+    stroke:var(--amber);
+    stroke-width:6;
+    stroke-linecap:round;
+    transition:stroke-dashoffset 1.1s cubic-bezier(0.3,0,0.2,1);
+  }
+  .ring-center{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+  }
+  .ring-num{
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:600;
+    font-size:44px;
+    line-height:1;
+  }
+  .ring-label{
+    font-family:'JetBrains Mono',Consolas,monospace;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.14em;
+    color:var(--muted);
+    margin-top:6px;
+  }
+  .ring-sub{
+    font-family:'JetBrains Mono',Consolas,monospace;
+    font-size:11px;
+    color:var(--muted);
+  }
+  .ring-sub b{ color:var(--amber); font-weight:500; }
+
+  /* ---------- Ledger ---------- */
+  .ledger{
+    width:min(972px, calc(100% - 48px));
+    margin:36px auto 0;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    overflow:hidden;
+    animation:fadeUp 0.6s ease 0.1s both;
+  }
+  .ledger-item{
+    padding:20px 22px;
+    border-right:1px solid var(--line);
+    min-width:0;
+  }
+  .ledger-item:last-child{ border-right:none; }
+  .ledger-item .label{
+    font-family:'JetBrains Mono',Consolas,monospace;
+    text-transform:uppercase;
+    font-size:10px;
+    letter-spacing:0.15em;
+    color:var(--muted);
+    margin-bottom:10px;
+  }
+  .ledger-item .value{
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:600;
+    font-size:27px;
+    line-height:1;
+  }
+  .ledger-item .value.amber{ color:var(--amber); }
+  .ledger-item .value.green{ color:var(--green); }
+
+  main{
+    max-width:1020px;
+    margin:0 auto;
+    padding:40px 24px 110px;
+    animation:fadeUp 0.6s ease 0.18s both;
+  }
+
+  /* ---------- Controls ---------- */
+  .controls-bar{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:center;
+    margin-bottom:12px;
+    position:sticky;
+    top:0;
+    z-index:40;
+    padding:14px 0;
+    background:rgba(12,11,9,0.82);
+    -webkit-backdrop-filter:blur(14px);
+    backdrop-filter:blur(14px);
+  }
+  #searchBox{
+    flex:1;
+    min-width:200px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    color:var(--text);
+    padding:12px 16px;
+    border-radius:10px;
+    font:inherit;
+    font-size:14px;
+    transition:border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  #searchBox::placeholder{ color:var(--muted); }
+  #searchBox:focus{
+    outline:none;
+    border-color:rgba(232,163,61,0.5);
+    box-shadow:0 0 0 3px rgba(232,163,61,0.12);
+  }
+  .ctrl-btn{
+    background:transparent;
+    border:1px solid var(--line);
+    color:var(--muted);
+    padding:11px 16px;
+    border-radius:10px;
+    font-family:'Inter',sans-serif;
+    font-weight:500;
+    font-size:13px;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  }
+  .ctrl-btn:hover{ color:var(--text); border-color:var(--line-strong); background:var(--surface); }
+  .ctrl-btn.active{
+    background:var(--amber-soft);
+    border-color:rgba(232,163,61,0.4);
+    color:var(--amber);
+  }
+
+  .toolbar{
+    display:flex;
+    gap:2px;
+    flex-wrap:wrap;
+    margin-bottom:40px;
+  }
+  .tab{
+    background:none;
+    border:none;
+    color:var(--muted);
+    padding:10px 14px;
+    font-family:'Inter',sans-serif;
+    font-weight:500;
+    font-size:13px;
+    cursor:pointer;
+    transition:color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .tab:hover{ color:var(--text); }
+  .tab.active{
+    color:var(--text);
+    box-shadow:inset 0 -2px 0 var(--amber);
+  }
+
+  /* ---------- Kategorien ---------- */
+  .category-block{ margin-bottom:56px; }
+  .category-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:16px;
+    padding-bottom:12px;
+    border-bottom:1px solid var(--line);
+  }
+  .category-title{
+    display:flex;
+    align-items:baseline;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .category-head h2{
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:600;
+    font-size:23px;
+    letter-spacing:-0.01em;
+    color:var(--text);
+    margin:0;
+  }
+  .cat-progress{
+    font-family:'JetBrains Mono',Consolas,monospace;
+    font-size:10.5px;
+    color:var(--muted);
+    background:var(--surface);
+    border:1px solid var(--line);
+    padding:3px 10px;
+    border-radius:999px;
+  }
+  .cat-progress.some{ color:var(--green); border-color:rgba(121,201,158,0.3); }
+  .category-head .sum{
+    color:var(--amber);
+    font-size:13px;
+    white-space:nowrap;
+  }
+
+  .subcategory-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:12px;
+    margin:28px 0 12px;
+  }
+  .subcategory-head h3{
+    font-family:'JetBrains Mono',Consolas,monospace;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.18em;
+    color:var(--muted);
+    font-weight:500;
+    margin:0;
+  }
+  .subcategory-head .sub-sum{ font-size:11px; color:var(--muted); }
+
+  /* ---------- Gruppen ---------- */
+  .group-block{ margin-bottom:10px; }
+  .group-header{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:15px 18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    cursor:pointer;
+    transition:border-color 0.15s ease, background 0.15s ease;
+  }
+  .group-header:hover{ border-color:var(--line-strong); background:var(--surface-2); }
+  .group-header-left{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    flex-wrap:wrap;
+    min-width:0;
+  }
+  .chevron{
+    color:var(--amber);
+    font-size:10px;
+    display:inline-block;
+    transition:transform 0.15s ease;
+  }
+  .chevron.open{ transform:rotate(90deg); }
+  .group-name{ font-size:14px; font-weight:500; color:var(--text); }
+  .group-count{
+    font-family:'JetBrains Mono',Consolas,monospace;
+    font-size:10px;
+    color:var(--muted);
+    background:var(--surface-2);
+    border:1px solid var(--line);
+    padding:3px 10px;
+    border-radius:999px;
+  }
+  .group-sum{ color:var(--amber); font-size:13px; white-space:nowrap; }
+  .group-items{
+    padding:12px 0 4px 18px;
+    border-left:1px solid var(--line-strong);
+    margin:10px 0 14px 12px;
+  }
+
+  .alt-header{
+    border-color:rgba(143,168,214,0.3);
+    background:var(--blue-soft);
+  }
+  .alt-header:hover{ border-color:rgba(143,168,214,0.5); background:rgba(143,168,214,0.1); }
+  .alt-icon{ color:var(--blue); font-size:13px; }
+  .alt-count{
+    background:rgba(143,168,214,0.12);
+    border-color:rgba(143,168,214,0.25);
+    color:var(--blue);
+  }
+
+  /* ---------- Karten ---------- */
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:18px 20px;
+    margin-bottom:10px;
+    display:flex;
+    align-items:flex-start;
+    gap:14px;
+    transition:border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease, opacity 0.2s ease;
+  }
+  .card:hover{
+    border-color:var(--line-strong);
+    transform:translateY(-1px);
+    box-shadow:0 10px 28px rgba(0,0,0,0.4);
+  }
+  .card.done{ opacity:0.5; }
+  .card.done .item-title{ text-decoration:line-through; text-decoration-color:rgba(236,231,222,0.5); }
+
+  .checkbox{
+    width:24px; height:24px;
+    padding:0;
+    background:transparent;
+    border:none;
+    flex-shrink:0;
+    margin-top:26px;
+    cursor:pointer;
+    position:relative;
+  }
+  .checkbox .cb-diamond{
+    position:absolute;
+    inset:2px;
+    border:1.5px solid var(--line-strong);
+    transform:rotate(45deg);
+    border-radius:3px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:border-color 0.15s ease, background 0.15s ease;
+  }
+  .checkbox .cb-diamond span{
+    transform:rotate(-45deg);
+    font-size:12px;
+    line-height:1;
+    color:transparent;
+  }
+  .checkbox:hover .cb-diamond{ border-color:var(--amber); }
+  .checkbox.done .cb-diamond{
+    background:var(--green);
+    border-color:var(--green);
+  }
+  .checkbox.done .cb-diamond span{ color:#0c0b09; }
+
+  .thumb{
+    width:72px; height:72px;
+    border-radius:10px;
+    overflow:hidden;
+    flex-shrink:0;
+    border:1px solid var(--line);
+    background:#fff;
+    padding:0;
+    cursor:zoom-in;
+    transition:border-color 0.15s ease;
+  }
+  .thumb:hover{ border-color:var(--line-strong); }
+  .thumb img{
+    width:100%; height:100%;
+    object-fit:cover;
+    display:block;
+    transition:transform 0.35s ease;
+  }
+  .thumb:hover img{ transform:scale(1.07); }
+  .thumb-mono{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg, var(--surface-2), #26221b);
+    color:var(--muted);
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:600;
+    font-size:24px;
+    cursor:default;
+  }
+
+  .card-body{ flex:1; min-width:0; }
+  .item-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .item-title{ font-size:15px; font-weight:500; line-height:1.45; color:var(--text); }
+  .series-badge{
+    font-family:'JetBrains Mono',Consolas,monospace;
+    font-size:9.5px;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    color:var(--green);
+    background:var(--green-soft);
+    border:1px solid rgba(121,201,158,0.25);
+    padding:2px 8px;
+    border-radius:999px;
+    vertical-align:middle;
+    margin-left:6px;
+    white-space:nowrap;
+    font-weight:400;
+  }
+  .item-price{
+    font-family:'JetBrains Mono',Consolas,monospace;
+    font-weight:500;
+    color:#d9d2c5;
+    font-size:13.5px;
+    white-space:nowrap;
+  }
+  .item-note{ margin-top:6px; font-size:13px; color:var(--muted); line-height:1.6; }
+  .item-tags{
+    margin-top:12px;
+    display:flex;
+    gap:8px;
+    align-items:center;
+    flex-wrap:wrap;
+  }
+  .prio-tag{
+    font-size:10.5px;
+    font-weight:600;
+    padding:3px 10px;
+    border-radius:999px;
+    text-transform:uppercase;
+    letter-spacing:0.07em;
+  }
+  .prio-must{ background:var(--red-soft); color:var(--red); }
+  .prio-nice{ background:rgba(255,255,255,0.06); color:var(--muted); }
+  .prio-dream{ background:var(--amber-soft); color:var(--amber); }
+  .prio-dream::before{ content:'◆ '; font-size:8px; vertical-align:1px; }
+
+  .link-btn{
+    background:transparent;
+    border:1px solid var(--line);
+    color:var(--muted);
+    cursor:pointer;
+    font-size:11.5px;
+    font-family:'Inter',sans-serif;
+    font-weight:500;
+    padding:4px 12px;
+    border-radius:999px;
+    text-decoration:none;
+    display:inline-block;
+    transition:color 0.15s ease, border-color 0.15s ease;
+  }
+  .link-btn:hover{ color:var(--amber); border-color:rgba(232,163,61,0.45); }
+
+  .accessory-toggle-btn{
+    background:var(--amber-soft);
+    border:1px solid rgba(232,163,61,0.35);
+    color:var(--amber);
+    cursor:pointer;
+    font-size:11.5px;
+    font-family:'Inter',sans-serif;
+    font-weight:500;
+    padding:4px 12px;
+    border-radius:999px;
+    transition:background 0.15s ease;
+  }
+  .accessory-toggle-btn:hover{ background:rgba(232,163,61,0.22); }
+
+  .price-meta{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:2px;
+  }
+  .last-checked{ font-size:10px; color:var(--muted); }
+  .last-checked.stale{ color:var(--red); }
+
+  .empty{
+    color:var(--muted);
+    font-size:14px;
+    padding:32px;
+    text-align:center;
+    border:1px dashed var(--line-strong);
+    border-radius:12px;
+  }
+  .search-info{ color:var(--muted); font-size:13px; margin-bottom:20px; }
+
+  .dream-toggle.active{
+    background:var(--amber-soft);
+    border-color:rgba(232,163,61,0.4);
+    color:var(--amber);
+  }
+
+  .dream-project{
+    margin-bottom:52px;
+    border:1px solid rgba(232,163,61,0.3);
+    border-radius:16px;
+    padding:26px;
+    background:radial-gradient(640px 220px at 16% 0%, rgba(232,163,61,0.07), transparent 60%), var(--surface);
+  }
+  .dream-project-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:10px;
+    padding-bottom:16px;
+    border-bottom:1px solid rgba(232,163,61,0.25);
+  }
+  .dream-project-head h2{
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:600;
+    font-size:24px;
+    letter-spacing:-0.01em;
+    color:var(--amber);
+    margin:0;
+  }
+  .dream-project-head h2::before{ content:'◆ '; font-size:14px; vertical-align:3px; }
+  .dream-project-sum{ color:var(--amber); font-size:13px; white-space:nowrap; }
+
+  footer{
+    max-width:1020px;
+    margin:0 auto;
+    padding:28px 24px 48px;
+    color:var(--muted);
+    font-size:12px;
+    border-top:1px solid var(--line);
+    display:flex;
+    justify-content:space-between;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  footer .built{
+    font-family:'JetBrains Mono',Consolas,monospace;
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+  }
+  footer .built .gem{
+    display:inline-block;
+    width:7px; height:7px;
+    background:var(--amber);
+    transform:rotate(45deg);
+    margin-right:7px;
+  }
+
+  /* ---------- Filter-Leiste ---------- */
+  .filter-bar{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    align-items:center;
+    margin-bottom:10px;
+  }
+  .fchip{
+    background:transparent;
+    border:1px solid var(--line);
+    color:var(--muted);
+    padding:7px 13px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:500;
+    cursor:pointer;
+    font-family:'Inter',sans-serif;
+    transition:color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  }
+  .fchip:hover{ color:var(--text); border-color:var(--line-strong); }
+  .fchip.on{ background:var(--amber-soft); border-color:rgba(232,163,61,0.4); color:var(--amber); }
+  .fchip.ghost{ font-size:11.5px; }
+  .fsep{ width:1px; height:18px; background:var(--line-strong); margin:0 4px; }
+  .fgrow{ flex:1; }
+  .fselect, .fbudget{
+    background:var(--surface);
+    border:1px solid var(--line);
+    color:var(--muted);
+    padding:7px 10px;
+    border-radius:8px;
+    font-size:12px;
+    font-family:'Inter',sans-serif;
+  }
+  .fselect:focus, .fbudget:focus{ outline:none; border-color:rgba(232,163,61,0.5); color:var(--text); }
+  .fbudget{ width:90px; }
+  .fbudget::-webkit-outer-spin-button, .fbudget::-webkit-inner-spin-button{ -webkit-appearance:none; }
+  .filter-info{
+    font-family:'JetBrains Mono',Consolas,monospace;
+    font-size:11px;
+    color:var(--amber);
+    margin-bottom:16px;
+  }
+
+  /* ---------- Kategorie-Fortschritt ---------- */
+  .cat-bar{
+    height:2px;
+    background:rgba(255,255,255,0.06);
+    border-radius:1px;
+    margin:-8px 0 18px;
+    overflow:hidden;
+  }
+  .cat-bar span{
+    display:block;
+    height:100%;
+    background:var(--green);
+    border-radius:1px;
+    transition:width 0.5s ease;
+  }
+  .cat-progress.full{ color:var(--amber); border-color:rgba(232,163,61,0.4); }
+
+  /* ---------- Haken-Animation ---------- */
+  @keyframes diamondPop{
+    0%{ transform:rotate(45deg) scale(1); }
+    40%{ transform:rotate(45deg) scale(1.35); }
+    100%{ transform:rotate(45deg) scale(1); }
+  }
+  .cb-diamond.pop{ animation:diamondPop 0.35s ease; }
+
+  /* ---------- Toast ---------- */
+  .toast{
+    position:fixed;
+    left:50%;
+    bottom:26px;
+    transform:translate(-50%, 16px);
+    z-index:150;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    background:var(--surface-2);
+    border:1px solid var(--line-strong);
+    border-radius:12px;
+    padding:12px 18px;
+    font-size:13px;
+    color:var(--text);
+    box-shadow:0 16px 48px rgba(0,0,0,0.5);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.25s ease, transform 0.25s ease;
+    max-width:min(480px, calc(100vw - 48px));
+  }
+  .toast.show{ opacity:1; transform:translate(-50%, 0); pointer-events:auto; }
+  .toast-undo{
+    background:none;
+    border:none;
+    color:var(--amber);
+    font-weight:600;
+    font-size:13px;
+    cursor:pointer;
+    padding:0;
+    font-family:'Inter',sans-serif;
+    white-space:nowrap;
+  }
+  .toast-undo:hover{ color:#f2bd66; }
+
+  /* ---------- Lightbox-Navigation ---------- */
+  .lb-nav{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    z-index:2;
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    border:1px solid rgba(0,0,0,0.15);
+    background:rgba(255,255,255,0.92);
+    color:#15130f;
+    font-size:22px;
+    line-height:1;
+    cursor:pointer;
+    transition:background 0.15s ease;
+  }
+  .lb-nav:hover{ background:#fff; }
+  .lb-nav.prev{ left:12px; }
+  .lb-nav.next{ right:12px; }
+  .lb-count{
+    font-family:'JetBrains Mono',Consolas,monospace;
+    font-size:10.5px;
+    color:var(--muted);
+  }
+  .lb-check{
+    flex-shrink:0;
+    background:transparent;
+    border:1px solid var(--line-strong);
+    color:var(--text);
+    font-size:12.5px;
+    font-weight:500;
+    padding:9px 16px;
+    border-radius:999px;
+    cursor:pointer;
+    font-family:'Inter',sans-serif;
+    transition:color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  }
+  .lb-check:hover{ border-color:var(--green); color:var(--green); }
+  .lb-check.done{ background:var(--green-soft); border-color:rgba(121,201,158,0.4); color:var(--green); }
+
+  /* ---------- Performance ---------- */
+  .card{ content-visibility:auto; contain-intrinsic-size:auto 132px; }
+
+  /* ---------- Druckansicht: Einkaufsliste (nur offene Einträge) ---------- */
+  @media print{
+    body{ background:#fff; color:#000; font-size:12px; border:none; }
+    body::after, header, .ledger, .controls-bar, .filter-bar, .filter-info,
+    .toolbar, footer, .lb-overlay, .toast, .checkbox, .thumb, .item-tags,
+    .chevron, .cat-bar, .alt-icon{ display:none !important; }
+    main{ padding:0; max-width:none; animation:none; }
+    main::before{
+      content:'Noch zu holen — offene Einträge';
+      display:block;
+      font-family:Georgia,serif;
+      font-size:20px;
+      font-weight:700;
+      margin-bottom:14px;
+      color:#000;
+    }
+    .card{ content-visibility:visible; border:none; border-bottom:1px solid #ddd; border-radius:0; padding:6px 0; margin:0; box-shadow:none; background:#fff; opacity:1; transform:none; }
+    .card.done{ display:none !important; }
+    .reveal{ opacity:1 !important; }
+    .item-title, .item-price, .category-head h2{ color:#000; }
+    .item-note{ color:#555; }
+    .category-head{ border-color:#000; margin-top:20px; margin-bottom:6px; }
+    .category-head .sum, .group-sum, .sub-sum{ color:#000; }
+    .cat-progress{ background:#fff; border-color:#999; color:#333; }
+    .group-header{ background:#fff; border:none; padding:8px 0 2px; }
+    .group-name{ color:#000; font-weight:700; }
+    .group-count, .alt-count{ color:#333; background:#fff; border-color:#bbb; }
+    .group-items{ border-color:#ccc; margin-left:4px; }
+    .subcategory-head h3{ color:#333; }
+    .series-badge{ color:#333; background:#fff; border-color:#bbb; }
+    .empty{ display:none; }
+  }
+
+  /* ---------- Reveal ---------- */
+  .reveal{ opacity:0; }
+  .reveal.in{ animation:cardIn 0.5s ease both; }
+  @keyframes cardIn{
+    from{ opacity:0; transform:translateY(14px); }
+    to{ opacity:1; transform:none; }
+  }
+
+  /* ---------- Lightbox ---------- */
+  .lb-overlay{
+    position:fixed;
+    inset:0;
+    z-index:100;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    background:rgba(8,7,5,0.78);
+    -webkit-backdrop-filter:blur(10px);
+    backdrop-filter:blur(10px);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.2s ease;
+  }
+  .lb-overlay.open{ opacity:1; pointer-events:auto; }
+  .lb-panel{
+    position:relative;
+    width:min(680px, 100%);
+    background:var(--surface);
+    border:1px solid var(--line-strong);
+    border-radius:16px;
+    overflow:hidden;
+    box-shadow:0 30px 80px rgba(0,0,0,0.6);
+    transform:translateY(14px) scale(0.985);
+    transition:transform 0.25s ease;
+  }
+  .lb-overlay.open .lb-panel{ transform:none; }
+  .lb-close{
+    position:absolute;
+    top:12px; right:12px;
+    z-index:2;
+    width:34px; height:34px;
+    border-radius:50%;
+    border:1px solid rgba(0,0,0,0.15);
+    background:rgba(255,255,255,0.92);
+    color:#15130f;
+    font-size:20px;
+    line-height:1;
+    cursor:pointer;
+    transition:background 0.15s ease;
+  }
+  .lb-close:hover{ background:#fff; }
+  .lb-imgwrap{ background:var(--surface-2); padding:16px; }
+  .lb-img{
+    display:block;
+    width:100%;
+    height:min(58vh, 460px);
+    object-fit:contain;
+  }
+  .lb-meta{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    padding:16px 20px;
+    border-top:1px solid var(--line);
+  }
+  .lb-text{ min-width:0; }
+  .lb-title{ font-weight:500; font-size:15px; color:var(--text); }
+  .lb-price{
+    font-family:'JetBrains Mono',Consolas,monospace;
+    font-size:13px;
+    color:var(--amber);
+    margin-top:4px;
+  }
+  .lb-link{
+    flex-shrink:0;
+    background:var(--amber-soft);
+    border:1px solid rgba(232,163,61,0.35);
+    color:var(--amber);
+    font-size:12.5px;
+    font-weight:500;
+    padding:9px 16px;
+    border-radius:999px;
+    text-decoration:none;
+    white-space:nowrap;
+    transition:background 0.15s ease;
+  }
+  .lb-link:hover{ background:rgba(232,163,61,0.22); }
+
+  @media (max-width:720px){
+    .wordmark{ margin-bottom:44px; }
+    .hero-grid{ justify-content:center; }
+    .ledger{ grid-template-columns:1fr 1fr; }
+    .ledger-item:nth-child(-n+2){ border-bottom:1px solid var(--line); }
+    .ledger-item:nth-child(2){ border-right:none; }
+    .thumb{ width:58px; height:58px; }
+    .thumb-mono{ font-size:19px; }
+    .checkbox{ margin-top:18px; }
+    .lb-meta{ flex-wrap:wrap; }
+  }
+  @media (prefers-reduced-motion:reduce){
+    *, *::before, *::after{ transition:none !important; animation:none !important; }
+    html{ scroll-behavior:auto; }
+    .reveal{ opacity:1; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hero-inner">
+    <div class="wordmark"><span class="gem"></span>NOCH ZU HOLEN</div>
+    <div class="hero-grid">
+      <div class="hero-text">
+        <div class="hero-eyebrow">Meine Kaufliste</div>
+        <h1>Alles, was noch fehlt. An einem Ort.</h1>
+        <div class="hero-sub">209 Wünsche über neun Kategorien — sortiert, priorisiert, abhakbar. Was ich abhake, bleibt abgehakt.</div>
+      </div>
+      <div class="ring-wrap">
+        <div class="ring">
+          <svg width="170" height="170" viewBox="0 0 170 170">
+            <circle class="track" cx="85" cy="85" r="76"></circle>
+            <circle class="bar" id="ringBar" cx="85" cy="85" r="76"></circle>
+          </svg>
+          <div class="ring-center">
+            <div class="ring-num" id="ringNum">0</div>
+            <div class="ring-label" id="ringLabel">von 209 erledigt</div>
+          </div>
+        </div>
+        <div class="ring-sub" id="ringSub"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="ledger sans" id="ledger"></div>
+
+<main>
+  <div class="controls-bar sans">
+    <input type="text" id="searchBox" placeholder="Suchen (Titel, Notiz, Marke …)" oninput="onSearch()">
+    <button class="ctrl-btn" id="expandAllBtn" onclick="toggleExpandAll()">Alle Gruppen aufklappen</button>
+    <button class="ctrl-btn dream-toggle" id="dreamModeBtn" onclick="toggleDreamMode()">◆ Große Träume</button>
+  </div>
+
+  <div class="filter-bar sans">
+    <button class="fchip" id="hideDoneBtn" onclick="toggleHideDone()">Erledigte ausblenden</button>
+    <span class="fsep"></span>
+    <button class="fchip prio" data-prio="must" onclick="setPrioFilter('must')">Muss bald her</button>
+    <button class="fchip prio" data-prio="nice" onclick="setPrioFilter('nice')">Nice to have</button>
+    <button class="fchip prio" data-prio="dream" onclick="setPrioFilter('dream')">Großer Traum</button>
+    <span class="fsep"></span>
+    <select class="fselect" id="sortSelect" onchange="setSort(this.value)" aria-label="Sortierung">
+      <option value="default">Reihenfolge: Standard</option>
+      <option value="asc">Preis aufsteigend</option>
+      <option value="desc">Preis absteigend</option>
+    </select>
+    <input class="fbudget" id="budgetInput" type="number" min="0" placeholder="max €" oninput="setBudget(this.value)" aria-label="Budget-Filter in Euro">
+    <span class="fgrow"></span>
+    <button class="fchip ghost" onclick="exportState()">Stand sichern</button>
+    <button class="fchip ghost" onclick="document.getElementById('importFile').click()">Stand laden</button>
+    <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importState(this)">
+    <button class="fchip ghost" onclick="printList()">Drucken</button>
+  </div>
+  <div class="filter-info" id="filterInfo" style="display:none"></div>
+
+  <div class="toolbar" id="tabs"></div>
+
+  <div id="lists"></div>
+</main>
+
+<div class="lb-overlay" id="lightbox">
+  <div class="lb-panel" role="dialog" aria-modal="true" aria-label="Produktbild">
+    <button class="lb-close" onclick="closeLightbox()" aria-label="Schließen">×</button>
+    <button class="lb-nav prev" onclick="lbNav(-1)" aria-label="Vorheriges Produkt">‹</button>
+    <button class="lb-nav next" onclick="lbNav(1)" aria-label="Nächstes Produkt">›</button>
+    <div class="lb-imgwrap"><img class="lb-img" id="lbImg" alt=""></div>
+    <div class="lb-meta">
+      <div class="lb-text">
+        <div class="lb-title" id="lbTitle"></div>
+        <div class="lb-price" id="lbPrice"></div>
+        <div class="lb-count" id="lbCount"></div>
+      </div>
+      <button class="lb-check" id="lbCheck" onclick="lbToggleCheck()">Abhaken</button>
+      <a class="lb-link" id="lbLink" target="_blank" rel="noopener">Zum Produkt ↗</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast sans" id="toast" role="status" aria-live="polite">
+  <span id="toastMsg"></span>
+  <button id="toastUndo" class="toast-undo">Rückgängig</button>
+</div>
+
+<footer>
+  <span>Meine Liste, mein Tempo — Haken werden direkt im Browser gespeichert.</span>
+  <span class="built"><span class="gem"></span>Gebaut mit Claude Code</span>
+</footer>
+
+<script>
+  const CATEGORIES = ["Setup", "Sport", "Körperliches", "Entertainment", "Bücher", "Technik", "Comics & Manga", "Zuhause & Wellness", "Kleidung & Mode"];
+  const PRIO_LABEL = { must: "Muss bald her", nice: "Nice to have", dream: "Großer Traum" };
+  const PRIO_CLASS = { must: "prio-must", nice: "prio-nice", dream: "prio-dream" };
+
+  let items = [
+    { id: 4, title: "Tastatur: Wooting 60HE v2", category: "Setup", subcategory: "Gaming", group: "Tastatur", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 220,
+      link: "https://wooting.io/wooting-60he-v2",
+      note: "Layout: ISO · Sprache: Deutsch · Style: Aluminium, Colour Black · Keycaps: Wooting Double Shot Backlit PBT Keycap Set (Split Spacebar Included)",
+      done: false, priceUpdated: null },
+    { id: 5, title: "Premium Cable Set", category: "Setup", subcategory: "Gaming", group: "Tastatur", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 20,
+      link: "https://wooting.io/product/detachable-cable",
+      note: "Zubehör zur Wooting 60HE v2.",
+      done: false, priceUpdated: null },
+    { id: 6, title: "60HE (v2) Wrist Rest", category: "Setup", subcategory: "Gaming", group: "Tastatur", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 25,
+      link: "https://wooting.io/product/wooting-60he-v2-wrist-rest",
+      note: "Zubehör zur Wooting 60HE v2.",
+      done: false, priceUpdated: null },
+    { id: 7, title: "Schreibtisch: Secretlab Magnus Pro", category: "Setup", subcategory: "Gaming", group: "Schreibtisch", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 1000,
+      link: "https://secretlab.eu/de/pages/magnus-pro",
+      note: "Größe: XL · Farbe: Black · Schreibtischunterlage: Signature Black",
+      done: false, priceUpdated: null },
+    { id: 8, title: "Basicly Performance Bundle", category: "Setup", subcategory: "Gaming", group: "Schreibtisch", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 180,
+      link: "https://secretlab.eu/de/pages/magnus-pro",
+      note: "Zubehör-Bundle zum Secretlab Magnus Pro.",
+      done: false, priceUpdated: null },
+    { id: 9, title: "Magnetische Kopfhörer-Halterung", category: "Setup", subcategory: "Gaming", group: "Schreibtisch", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 35,
+      link: "https://secretlab.eu/de/pages/magnus-pro",
+      note: "Zubehör zum Secretlab Magnus Pro.",
+      done: false, priceUpdated: null },
+    { id: 10, title: "Magnetischer Ethernetkabel-Extender", category: "Setup", subcategory: "Gaming", group: "Schreibtisch", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 30,
+      link: "https://secretlab.eu/de/pages/magnus-pro",
+      note: "Zubehör zum Secretlab Magnus Pro.",
+      done: false, priceUpdated: null },
+    { id: 11, title: "Premium PC-Halterung", category: "Setup", subcategory: "Gaming", group: "Schreibtisch", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 90,
+      link: "https://secretlab.eu/de/pages/magnus-pro",
+      note: "Zubehör zum Secretlab Magnus Pro.",
+      done: false, priceUpdated: null },
+    { id: 12, title: "MAGRGB™ (Smart Lighting Edition)", category: "Setup", subcategory: "Gaming", group: "Schreibtisch", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 80,
+      link: "https://secretlab.eu/de/pages/magnus-pro",
+      note: "Zubehör zum Secretlab Magnus Pro.",
+      done: false, priceUpdated: null },
+    { id: 13, title: "Kabelmanagement Bundle XL", category: "Setup", subcategory: "Gaming", group: "Schreibtisch", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 45,
+      link: "https://secretlab.eu/de/pages/magnus-pro",
+      note: "Idee, noch nicht final entschieden — Zubehör zum Secretlab Magnus Pro.",
+      done: false, priceUpdated: null },
+    { id: 14, title: "MAGNUS Monitorarm Dual (Black)", category: "Setup", subcategory: "Gaming", group: "Schreibtisch", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 320,
+      link: "https://secretlab.eu/de/pages/magnus-pro",
+      note: "Idee, noch nicht final entschieden — Zubehör (Dual-Monitorarm) für den Secretlab Magnus Pro.",
+      done: false, priceUpdated: null },
+    { id: 21, title: "Gaming-Stuhl: Herman Miller Embody", category: "Setup", subcategory: "Gaming", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 1800,
+      link: "https://destore.hermanmiller.com/products/embody-gaming-chair?variant=43930847805590",
+      note: "Herman Miller Embody Gaming Chair.",
+      done: false, priceUpdated: null },
+    { id: 15, title: "Gewichtheberschuhe: TYR Mens L-2 Lifter", category: "Sport", subcategory: "Krafttraining", priority: "nice", price: 100,
+      link: "https://tyr.eu/de/products/tyr-mens-l-2-lifter-1",
+      note: "Größe: 45–45.5 (EU) bzw. 12 Inches · Farbe: BLACK/GUM oder BLK/GOLD (noch nicht entschieden welche Farbe).",
+      done: false, priceUpdated: null },
+    { id: 16, title: "SBD Lifting Straps", category: "Sport", subcategory: "Krafttraining", priority: "nice", price: 30,
+      link: "https://sbdgermany.de/products/sbd-lifting-straps",
+      note: "Größe: One Size.",
+      done: false, priceUpdated: null },
+    { id: 17, title: "SBD Figure 8 Lifting Straps", category: "Sport", subcategory: "Krafttraining", priority: "nice", price: 30,
+      link: "https://sbdgermany.de/products/sbd-figure-8-lifting-straps",
+      note: "Größe: One Size.",
+      done: false, priceUpdated: null },
+    { id: 18, title: "Smelling Salts – Strong", category: "Sport", subcategory: "Krafttraining", priority: "nice", price: 15,
+      link: "https://beast.co.uk/collections/smelling-salts/products/beast-smelling-salts?variant=54207086723457",
+      note: "Beast Smelling Salts, Variante Strong.",
+      done: false, priceUpdated: null },
+    { id: 19, title: "Smelling Salts – Stronger", category: "Sport", subcategory: "Krafttraining", priority: "nice", price: 15,
+      link: "https://beast.co.uk/collections/smelling-salts/products/beast-smelling-salts?variant=54207086756225",
+      note: "Beast Smelling Salts, Variante Stronger.",
+      done: false, priceUpdated: null },
+    { id: 20, title: "Smelling Salts – Worlds Strongest", category: "Sport", subcategory: "Krafttraining", priority: "nice", price: 15,
+      link: "https://beast.co.uk/collections/smelling-salts/products/beast-smelling-salts?variant=54207086788993",
+      note: "Beast Smelling Salts, Variante Worlds Strongest.",
+      done: false, priceUpdated: null },
+    { id: 30, title: "Mikasa V200W", category: "Sport", subcategory: "Ballsport", group: "Volleyball", priority: "nice", price: 45,
+      link: "https://mikasasports.eu/product/v200w/",
+      note: "Test-Option für normalen Volleyball.",
+      done: false, priceUpdated: null },
+    { id: 31, title: "Molten V5M5000", category: "Sport", subcategory: "Ballsport", group: "Volleyball", priority: "nice", price: 55,
+      link: "https://www.molten.de/products/v5m5000-de?_pos=1&_sid=db6cfbdee&_ss=r",
+      note: "Test-Option für normalen Volleyball.",
+      done: false, priceUpdated: null },
+    { id: 32, title: "Molten V5B5000", category: "Sport", subcategory: "Ballsport", group: "Beachvolleyball", priority: "nice", price: 55,
+      link: "https://www.molten.de/products/v5b5000-de?_pos=4&_sid=42ec2639b&_ss=r",
+      note: "Test-Option für Beachvolleyball.",
+      done: false, priceUpdated: null },
+    { id: 33, title: "Mikasa BV550C-WYBR", category: "Sport", subcategory: "Ballsport", group: "Beachvolleyball", priority: "nice", price: 50,
+      link: "https://mikasasports.eu/product/bv550c-wybr/",
+      note: "Test-Option für Beachvolleyball.",
+      done: false, priceUpdated: null },
+    { id: 34, title: "Tattoo (Unterarm, klein bis mittelgroß)", category: "Körperliches", priority: "nice", price: 250,
+      link: "",
+      note: "Preis ist eine grobe Schätzung: kleine bis mittelgroße Tattoos kosten in Deutschland meist zwischen 150–400 €, je nach Motiv, Detailgrad und Studio (Stundensätze liegen oft bei 100–150 €).",
+      done: false, priceUpdated: null },
+    { id: 35, title: "Cap: Thorns Cap (Saint Kaizen)", category: "Körperliches", priority: "nice", price: 40,
+      link: "https://saintkaizen.com/products/thorns-cap",
+      note: "",
+      done: false, priceUpdated: null },
+    { id: 36, title: "Citizen BM8550-81EC", category: "Körperliches", group: "Uhr", priority: "nice", price: 300,
+      link: "https://de.citizenwatch.eu/de/p/bm8550-81ec/",
+      note: "Test-Option — Edelstahl, Schwarz, cleanes Zifferblatt.",
+      done: false, priceUpdated: null },
+    { id: 37, title: "Tissot T1584071105100", category: "Körperliches", group: "Uhr", priority: "nice", price: 450,
+      link: "https://www.tissotwatches.com/de-de/T1584071105100.html",
+      note: "Test-Option — Edelstahl, Schwarz, cleanes Zifferblatt.",
+      done: false, priceUpdated: null },
+    { id: 38, title: "Tissot T1504101105100", category: "Körperliches", group: "Uhr", priority: "nice", price: 400,
+      link: "https://www.tissotwatches.com/de-de/T1504101105100.html",
+      note: "Test-Option — Edelstahl, Schwarz, cleanes Zifferblatt.",
+      done: false, priceUpdated: null },
+    { id: 39, title: "Tissot T1658071105100", category: "Körperliches", group: "Uhr", priority: "nice", price: 480,
+      link: "https://www.tissotwatches.com/de-de/T1658071105100.html",
+      note: "Test-Option — Edelstahl, Schwarz, cleanes Zifferblatt.",
+      done: false, priceUpdated: null },
+    { id: 40, title: "Tissot T1274101105100", category: "Körperliches", group: "Uhr", priority: "nice", price: 420,
+      link: "https://www.tissotwatches.com/de-de/T1274101105100.html",
+      note: "Test-Option — Edelstahl, Schwarz, cleanes Zifferblatt.",
+      done: false, priceUpdated: null },
+    { id: 41, title: "Citizen NJ0150-81E", category: "Körperliches", group: "Uhr", priority: "nice", price: 320,
+      link: "https://de.citizenwatch.eu/de/p/nj0150-81e/",
+      note: "Test-Option — Edelstahl, Schwarz, cleanes Zifferblatt.",
+      done: false, priceUpdated: null },
+    { id: 42, title: "Citizen BM7251-88E", category: "Körperliches", group: "Uhr", priority: "nice", price: 280,
+      link: "https://de.citizenwatch.eu/de/p/bm7251-88e/",
+      note: "Test-Option — Edelstahl, Schwarz, cleanes Zifferblatt.",
+      done: false, priceUpdated: null },
+    { id: 43, title: "Seiko SUR557", category: "Körperliches", group: "Uhr", priority: "nice", price: 320,
+      link: "https://seikousa.com/products/sur557?_pos=41&_sid=8f7c24e56&_ss=r",
+      note: "Test-Option — Edelstahl, Schwarz, cleanes Zifferblatt.",
+      done: false, priceUpdated: null },
+    { id: 44, title: "Seiko SUR361", category: "Körperliches", group: "Uhr", priority: "nice", price: 300,
+      link: "https://seikousa.com/products/sur361?_pos=48&_sid=8f7c24e56&_ss=r",
+      note: "Test-Option — Edelstahl, Schwarz, cleanes Zifferblatt.",
+      done: false, priceUpdated: null },
+    { id: 45, title: "Seiko SUR311", category: "Körperliches", group: "Uhr", priority: "nice", price: 310,
+      link: "https://seikousa.com/products/sur311?_pos=53&_sid=8f7c24e56&_ss=r",
+      note: "Test-Option — Edelstahl, Schwarz, cleanes Zifferblatt.",
+      done: false, priceUpdated: null },
+    { id: 46, title: "Soundsystem: Sonos Ultimate Immersive Set", category: "Entertainment", roomArea: "Entertainment-Ecke", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 2500,
+      link: "https://www.sonos.com/de-de/shop/ultimate-immersive-set-arc-ultra-sub-era-300-pair-black",
+      note: "Arc Ultra + Sub + Era 300 Pair, Farbe Black.",
+      done: false, priceUpdated: null },
+    { id: 47, title: "LG OLED65G57LW", category: "Entertainment", roomArea: "Entertainment-Ecke", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 2200,
+      link: "https://www.amazon.de/dp/B0F2JBN3QH/ref=asc_df_B0F2JBN3QH1783672200000/?creative=22662&creativeASIN=B0F2JBN3QH",
+      note: "65\\\" 4K OLED evo AI TV, α11 Gen2 Prozessor, webOS 25, 120 Hz (VRR bis 165 Hz), Modelljahr 2025. Ersetzt den alten Platzhalter-Eintrag.",
+      done: false, priceUpdated: null }
+,
+    { id: 48, title: "Atomic Habits", category: "Bücher", priority: "nice", price: 14,
+      link: "https://www.amazon.de/Atomic-Habits-Proven-Build-Break/dp/1847941834/ref=sr_1_1?__mk_de_DE=%C3%85M%C3%85%C5%BD%C3%95%C3%91&sr=8-1",
+      note: "James Clear – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 49, title: "Dopamine Nation", category: "Bücher", group: "Dopamine Nation", priority: "nice", price: 14,
+      link: "https://www.amazon.de/Dopamine-Nation-Finding-Balance-Indulgence/dp/152474672X/ref=tmm_hrd_swatch_0?_encoding=UTF8&sr=1-3",
+      note: "Anna Lembke – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 50, title: "Die Dopamin-Nation", category: "Bücher", group: "Dopamine Nation", priority: "nice", price: 15,
+      link: "https://www.amazon.de/Die-Dopamin-Nation-Balance-Zeitalter-Vergn%C3%BCgens/dp/3962572953/ref=tmm_pap_swatch_0",
+      note: "Anna Lembke – Deutsche Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 51, title: "Die Psychologie des Geldes", category: "Bücher", priority: "nice", price: 15,
+      link: "https://www.amazon.de/%C3%9Cber-die-Psychologie-Geldes-Lektionen/dp/3959724438/ref=tmm_pap_swatch_0",
+      note: "Morgan Housel – Deutsche Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 52, title: "Same As Ever", category: "Bücher", priority: "nice", price: 15,
+      link: "https://www.amazon.de/Same-Ever-Geschichten-niemals-%C3%A4ndern/dp/3959727186/ref=tmm_pap_swatch_0",
+      note: "Morgan Housel – Deutsche Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 53, title: "Outlive", category: "Bücher", group: "Outlive", priority: "nice", price: 15,
+      link: "https://www.amazon.de/OUTLIVE-Standardwerk-f%C3%BChrenden-Mediziner-Langlebigkeit/dp/386493270X/ref=tmm_hrd_swatch_0?_encoding=UTF8&sr=1-3",
+      note: "Peter Attia – Deutsche Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 54, title: "Outlive", category: "Bücher", group: "Outlive", priority: "nice", price: 14,
+      link: "https://www.amazon.de/Outlive-Science-Longevity-Peter-Attia/dp/1785044540/?_encoding=UTF8",
+      note: "Peter Attia – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 55, title: "Thinking, Fast and Slow", category: "Bücher", group: "Thinking, Fast and Slow", priority: "nice", price: 14,
+      link: "https://www.amazon.de/Thinking-Fast-Slow-Daniel-Kahneman/dp/0374275637/ref=tmm_hrd_swatch_0",
+      note: "Daniel Kahneman – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 56, title: "Schnelles Denken, langsames Denken", category: "Bücher", group: "Thinking, Fast and Slow", priority: "nice", price: 15,
+      link: "https://www.amazon.de/Schnelles-Denken-langsames-Daniel-Kahneman/dp/3886808866/?_encoding=UTF8",
+      note: "Daniel Kahneman – Deutsche Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 57, title: "On the Genealogy of Morals", category: "Bücher", priority: "nice", price: 10,
+      link: "https://www.amazon.de/Genealogy-Morals-Penguin-Classics/dp/0141195371/ref=sr_1_3?s=books&sr=1-3&text=Robert+C.+Holub",
+      note: "Friedrich Nietzsche – Penguin Classics, Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 58, title: "Fear and Trembling", category: "Bücher", priority: "nice", price: 11,
+      link: "https://www.amazon.de/Fear-Trembling-Dialectical-Johannes-Silentio/dp/0140444491/ref=tmm_pap_swatch_0?_encoding=UTF8&sr=8-1",
+      note: "Søren Kierkegaard – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 59, title: "Psychology", category: "Bücher", priority: "nice", price: 75,
+      link: "https://www.amazon.de/dp/1319190804/ref=cm_cr_arp_d_btm?ie=UTF8",
+      note: "Schacter/Gilbert/Nock/Wegner – Psychologie-Lehrbuch, Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 60, title: "The Laws of Human Nature", category: "Bücher", group: "The Laws of Human Nature", priority: "nice", price: 30,
+      link: "https://www.amazon.de/Laws-Human-Nature-Robert-Greene/dp/0525428143/ref=tmm_hrd_swatch_0",
+      note: "Robert Greene – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 61, title: "Die Gesetze der menschlichen Natur", category: "Bücher", group: "The Laws of Human Nature", priority: "nice", price: 26,
+      link: "https://www.amazon.de/Gesetze-menschlichen-Natur-einzigartigen-entschl%C3%BCsseln/dp/3959722303/ref=tmm_hrd_swatch_0",
+      note: "Robert Greene – Deutsche Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 62, title: "Mastery", category: "Bücher", group: "Mastery", priority: "nice", price: 28,
+      link: "https://www.amazon.de/Mastery-Robert-Greene/dp/0670024961/ref=tmm_hrd_swatch_0",
+      note: "Robert Greene – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 63, title: "The Art of Seduction", category: "Bücher", priority: "nice", price: 28,
+      link: "https://www.amazon.de/Art-Seduction-Robert-Greene/dp/B0F58ZS7QC/ref=tmm_hrd_swatch_0",
+      note: "Robert Greene – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 64, title: "The 33 Strategies of War", category: "Bücher", priority: "nice", price: 28,
+      link: "https://www.amazon.de/33-Strategies-War-Robert-Greene/dp/0670034576/ref=tmm_hrd_swatch_0",
+      note: "Robert Greene – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 65, title: "Perfekt! Der überlegene Weg zum Erfolg", category: "Bücher", group: "Mastery", priority: "nice", price: 24,
+      link: "https://www.amazon.de/Perfekt-%C3%BCberlegene-Weg-zum-Erfolg/dp/3446436790/ref=tmm_hrd_swatch_0",
+      note: "Robert Greene – Deutsche Ausgabe von „Mastery“.",
+      done: false, priceUpdated: null },
+    { id: 66, title: "Ego Is the Enemy", category: "Bücher", group: "Ego Is the Enemy", priority: "nice", price: 14,
+      link: "https://www.amazon.de/Ego-Enemy-Ryan-Holiday/dp/1591847818/ref=tmm_hrd_swatch_0",
+      note: "Ryan Holiday – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 67, title: "The Obstacle Is the Way", category: "Bücher", group: "The Obstacle Is the Way", priority: "nice", price: 22,
+      link: "https://www.amazon.de/Obstacle-Way-Expanded-10th-Anniversary/dp/0593719913/ref=tmm_hrd_swatch_0",
+      note: "Ryan Holiday – Englische Ausgabe, erweiterte 10th-Anniversary-Edition.",
+      done: false, priceUpdated: null },
+    { id: 68, title: "Wisdom Takes Work", category: "Bücher", group: "Wisdom Takes Work", priority: "nice", price: 14,
+      link: "https://www.amazon.de/Wisdom-Takes-Work-Repeat-Virtues/dp/0593191730/ref=tmm_hrd_swatch_0",
+      note: "Ryan Holiday – Englische Ausgabe (Stoic Virtues Series).",
+      done: false, priceUpdated: null },
+    { id: 69, title: "Stillness Is the Key", category: "Bücher", group: "Stillness Is the Key", priority: "nice", price: 14,
+      link: "https://www.amazon.de/Stillness-Key-Ryan-Holiday/dp/0525538585/ref=tmm_hrd_swatch_0",
+      note: "Ryan Holiday – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 70, title: "Discipline Is Destiny", category: "Bücher", group: "Discipline Is Destiny", priority: "nice", price: 14,
+      link: "https://www.amazon.de/Discipline-Destiny-Power-Self-Control-Virtues/dp/0593191692/ref=tmm_hrd_swatch_0",
+      note: "Ryan Holiday – Englische Ausgabe (Stoic Virtues Series).",
+      done: false, priceUpdated: null },
+    { id: 71, title: "Courage Is Calling", category: "Bücher", group: "Courage Is Calling", priority: "nice", price: 14,
+      link: "https://www.amazon.de/Courage-Calling-Fortune-Favors-Brave/dp/0593191676/ref=tmm_hrd_swatch_0",
+      note: "Ryan Holiday – Englische Ausgabe (Stoic Virtues Series).",
+      done: false, priceUpdated: null },
+    { id: 72, title: "Das Hindernis ist der Weg", category: "Bücher", group: "The Obstacle Is the Way", priority: "nice", price: 20,
+      link: "https://www.amazon.de/Dein-Hindernis-ist-Jubil%C3%A4umsausgabe-Schwierigkeiten/dp/3959728018/ref=tmm_hrd_swatch_0",
+      note: "Ryan Holiday – Deutsche Jubiläumsausgabe.",
+      done: false, priceUpdated: null },
+    { id: 73, title: "Disziplin & Selbstkontrolle", category: "Bücher", group: "Discipline Is Destiny", priority: "nice", price: 15,
+      link: "https://www.amazon.de/Disziplin-Selbstkontrolle-stoischen-Discipline-Self-Control/dp/3959725159/ref=tmm_hrd_swatch_0",
+      note: "Ryan Holiday – Deutsche Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 74, title: "Die Weisheit des Stoizismus", category: "Bücher", group: "Wisdom Takes Work", priority: "nice", price: 15,
+      link: "https://www.amazon.de/Weisheit-Stoizismus-Verstand-Gelassenheit-stoischen/dp/3959728328/ref=tmm_hrd_swatch_0",
+      note: "Ryan Holiday – Deutsche Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 75, title: "In der Stille liegt Dein Weg", category: "Bücher", group: "Stillness Is the Key", priority: "nice", price: 15,
+      link: "https://www.amazon.de/Stille-liegt-Dein-Weg/dp/3959723296/ref=tmm_hrd_swatch_0",
+      note: "Ryan Holiday – Deutsche Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 76, title: "Mut der Tapferen", category: "Bücher", group: "Courage Is Calling", priority: "nice", price: 15,
+      link: "https://www.amazon.de/Mut-Tapferen-stoischen-Tugenden-deutsche/dp/3959724888/ref=tmm_hrd_swatch_0",
+      note: "Ryan Holiday – Deutsche Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 77, title: "Dein Ego ist dein Feind", category: "Bücher", group: "Ego Is the Enemy", priority: "nice", price: 15,
+      link: "https://www.amazon.de/Dein-Ego-ist-dein-Feind/dp/3959720327/ref=tmm_hrd_swatch_0",
+      note: "Ryan Holiday – Deutsche Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 78, title: "Das Richtige tun. Genau jetzt.", category: "Bücher", priority: "nice", price: 15,
+      link: "https://www.amazon.de/Das-Richtige-tun-Genau-jetzt/dp/3959725167/?_encoding=UTF8",
+      note: "Ryan Holiday – Deutsche Ausgabe (Stoic Virtues Series, Band zur Gerechtigkeit).",
+      done: false, priceUpdated: null },
+    { id: 79, title: "On the Shortness of Life", category: "Bücher", priority: "nice", price: 10,
+      link: "https://www.amazon.de/Shortness-Life-Revised-2018-Translation/dp/1985208725/?_encoding=UTF8",
+      note: "Seneca – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 80, title: "Wie man Freunde gewinnt im digitalen Zeitalter", category: "Bücher", group: "How to Win Friends and Influence People", priority: "nice", price: 15,
+      link: "https://www.amazon.de/digitalen-Zeitalter-Freunde-Menschen-beeinflusst/dp/395972585X/ref=sr_1_3?sr=8-3",
+      note: "Dale Carnegie & Associates – Deutsche Ausgabe, Adaption fürs digitale Zeitalter.",
+      done: false, priceUpdated: null },
+    { id: 81, title: "Wie man Freunde gewinnt", category: "Bücher", group: "How to Win Friends and Influence People", priority: "nice", price: 15,
+      link: "https://www.amazon.de/Wie-Freunde-gewinnt-einflussreich-Taschenbibliothek/dp/3596513081/ref=tmm_hrd_swatch_0?_encoding=UTF8&sr=8-1",
+      note: "Dale Carnegie – Deutsche Ausgabe, Klassiker.",
+      done: false, priceUpdated: null },
+    { id: 82, title: "How to Win Friends and Influence People", category: "Bücher", group: "How to Win Friends and Influence People", priority: "nice", price: 32,
+      link: "https://www.amazon.de/Friends-Influence-People-Deluxe-Hardbound/dp/9354403778/ref=tmm_hrd_swatch_0?_encoding=UTF8&sr=1-2",
+      note: "Dale Carnegie – Englische Ausgabe, Deluxe Hardbound.",
+      done: false, priceUpdated: null },
+    { id: 83, title: "Think and Grow Rich", category: "Bücher", group: "Think and Grow Rich", priority: "nice", price: 15,
+      link: "https://www.amazon.de/Think-Grow-Rich-Originalausgabe-Sonderausgabe/dp/3959725329/ref=tmm_hrd_swatch_0",
+      note: "Napoleon Hill – Deutsche Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 84, title: "Think and Grow Rich", category: "Bücher", group: "Think and Grow Rich", priority: "nice", price: 14,
+      link: "https://www.amazon.de/Think-Grow-Rich-Original-1937/dp/1640321098/ref=tmm_hrd_swatch_0",
+      note: "Napoleon Hill – Englische Ausgabe, Original von 1937.",
+      done: false, priceUpdated: null },
+    { id: 85, title: "The Way of the Superior Man", category: "Bücher", priority: "nice", price: 14,
+      link: "https://www.amazon.de/Way-Superior-Man-Spiritual-Challenges/dp/1622038320/ref=tmm_pap_swatch_0",
+      note: "David Deida – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 86, title: "Steve Jobs", category: "Bücher", priority: "nice", price: 26,
+      link: "https://www.amazon.de/Steve-Jobs-autorisierte-Apple-Gr%C3%BCnders-Weltbestseller/dp/3570105334/ref=tmm_hrd_swatch_0",
+      note: "Walter Isaacson – Deutsche Ausgabe, autorisierte Biografie.",
+      done: false, priceUpdated: null },
+    { id: 87, title: "The Comfort Crisis", category: "Bücher", group: "The Comfort Crisis", priority: "nice", price: 14,
+      link: "https://www.amazon.de/Comfort-Crisis-Embrace-Discomfort-Reclaim/dp/0593138767/ref=tmm_hrd_swatch_0?_encoding=UTF8&sr=1-1",
+      note: "Michael Easter – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 88, title: "Die Komfort-Krise", category: "Bücher", group: "The Comfort Crisis", priority: "nice", price: 15,
+      link: "https://www.amazon.de/Die-Komfort-Krise-Akzeptiere-Unbehagen-gl%C3%BCckliches/dp/B0D9RGLBCP/?_encoding=UTF8",
+      note: "Michael Easter – Deutsche Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 89, title: "Crime and Punishment", category: "Bücher", priority: "nice", price: 11,
+      link: "https://www.amazon.de/Punishment-Penguin-Classics-Fyodor-Dostoyevsky/dp/0140449132/ref=sr_1_1?__mk_de_DE=%C3%85M%C3%85%C5%BD%C3%95%C3%91&s=books&sr=1-1",
+      note: "Fjodor Dostojewski – Penguin Classics, Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 90, title: "Sony WF-1000XM6", category: "Technik", priority: "nice", price: 250,
+      link: "https://www.amazon.de/dp/B0GF9ZNLWM/ref=twister_B0GN3TRJSZ?_encoding=UTF8",
+      note: "Kabellose In-Ear-Kopfhörer mit Noise Cancelling, Schwarz.",
+      done: false, priceUpdated: null },
+    { id: 91, title: "Sony WH-1000XM6", category: "Technik", priority: "nice", price: 380,
+      link: "https://www.amazon.de/gp/product/B0F2TT8Q7M?ie=UTF8",
+      note: "Kabellose Over-Ear-Kopfhörer mit Noise Cancelling, Schwarz.",
+      done: false, priceUpdated: null },
+    { id: 92, title: "Der Idiot", category: "Bücher", priority: "nice", price: 9,
+      link: "https://www.amazon.de/Idiot-von-Dostojewski-optimiert-Kindle-ebook/dp/B007KNKV1S/?_encoding=UTF8",
+      note: "Fjodor Dostojewski – Deutsche Kindle-Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 93, title: "Stumbling on Happiness", category: "Bücher", group: "Stumbling on Happiness", priority: "nice", price: 14,
+      link: "https://www.amazon.de/Stumbling-Happiness-Rough-Daniel-Gilbert/dp/1400042666/ref=tmm_hrd_swatch_0",
+      note: "Daniel Gilbert – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 94, title: "Ins Glück stolpern", category: "Bücher", group: "Stumbling on Happiness", priority: "nice", price: 15,
+      link: "https://www.amazon.de/Ins-Gl%C3%BCck-stolpern-Unvorhersehbarkeit-w%C3%BCnschen/dp/3570500632/?_encoding=UTF8",
+      note: "Daniel Gilbert – Deutsche Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 95, title: "Radical Acceptance", category: "Bücher", priority: "nice", price: 14,
+      link: "https://www.amazon.de/Radical-Acceptance-Embracing-Heart-Buddha/dp/1846047684/ref=tmm_hrd_swatch_0",
+      note: "Tara Brach – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 96, title: "The Courage to Be Disliked", category: "Bücher", group: "The Courage to Be Disliked", priority: "nice", price: 14,
+      link: "https://www.amazon.de/Courage-Be-Disliked-multi-million-bestseller/dp/1805467034/ref=tmm_hrd_swatch_0",
+      note: "Ichiro Kishimi & Fumitake Koga – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 97, title: "Du musst nicht von allen gemocht werden", category: "Bücher", group: "The Courage to Be Disliked", priority: "nice", price: 15,
+      link: "https://www.amazon.de/musst-nicht-allen-gemocht-werden/dp/3499013371/ref=tmm_hrd_swatch_0",
+      note: "Ichiro Kishimi & Fumitake Koga – Deutsche Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 98, title: "No Bad Parts", category: "Bücher", group: "No Bad Parts", priority: "nice", price: 14,
+      link: "https://www.amazon.de/No-Bad-Parts-Restoring-Wholeness/dp/1785045113/ref=tmm_pap_swatch_0",
+      note: "Richard Schwartz – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 99, title: "Kein Teil von dir ist schlecht", category: "Bücher", group: "No Bad Parts", priority: "nice", price: 15,
+      link: "https://www.amazon.de/Kein-Teil-von-schlecht-Familiensystems/dp/3867813671/ref=tmm_pap_swatch_0",
+      note: "Richard Schwartz – Deutsche Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 100, title: "Think Again", category: "Bücher", group: "Think Again", priority: "nice", price: 14,
+      link: "https://www.amazon.de/Think-Again-Power-Knowing-What/dp/1984878107/ref=tmm_hrd_swatch_0",
+      note: "Adam Grant – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 101, title: "Think Again (Deutsch)", category: "Bücher", group: "Think Again", priority: "nice", price: 15,
+      link: "https://www.amazon.de/Think-Again-flexiblen-umschmei%C3%9Fen-Times-Bestseller/dp/349207135X/ref=tmm_hrd_swatch_0",
+      note: "Adam Grant – Deutsche Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 102, title: "The War of Art", category: "Bücher", priority: "nice", price: 14,
+      link: "https://www.amazon.de/War-Art-Through-Creative-Battles/dp/9395741546/ref=tmm_hrd_swatch_0",
+      note: "Steven Pressfield – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 103, title: "The One Thing", category: "Bücher", group: "The One Thing", priority: "nice", price: 10,
+      link: "https://www.amazon.de/One-Thing-%C3%BCberraschend-einfache-au%C3%9Fergew%C3%B6hnlichem-ebook/dp/B07117YL7L/?_encoding=UTF8",
+      note: "Gary Keller & Jay Papasan – Deutsche E-Book-Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 104, title: "The One Thing", category: "Bücher", group: "The One Thing", priority: "nice", price: 14,
+      link: "https://www.amazon.de/One-Thing-Suprisingly-Extraordinary-Results/dp/1848549601/ref=tmm_hrd_swatch_0",
+      note: "Gary Keller & Jay Papasan – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 105, title: "Deep Work", category: "Bücher", group: "Deep Work", priority: "nice", price: 14,
+      link: "https://www.amazon.de/Deep-Work-Focused-Success-Distracted/dp/1455586692/ref=tmm_hrd_swatch_0",
+      note: "Cal Newport – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 106, title: "Konzentriert arbeiten", category: "Bücher", group: "Deep Work", priority: "nice", price: 15,
+      link: "https://www.amazon.de/Konzentriert-arbeiten-Regeln-voller-Ablenkungen/dp/3868816577/ref=tmm_pap_swatch_0",
+      note: "Cal Newport – Deutsche Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 107, title: "The Alchemist", category: "Bücher", group: "The Alchemist", priority: "nice", price: 14,
+      link: "https://www.amazon.de/Alchemist-Paulo-Coelho/dp/0008856893/ref=tmm_hrd_swatch_0?_encoding=UTF8&sr=8-1",
+      note: "Paulo Coelho – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 108, title: "Der Alchimist", category: "Bücher", group: "The Alchemist", priority: "nice", price: 15,
+      link: "https://www.amazon.de/Alchimist-Paulo-Coelho/dp/3257261160/ref=tmm_hrd_swatch_0?_encoding=UTF8&sr=1-3",
+      note: "Paulo Coelho – Deutsche Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 109, title: "Money: Master the Game", category: "Bücher", group: "Money: Master the Game", priority: "nice", price: 14,
+      link: "https://www.amazon.de/MONEY-Master-Game-Financial-Freedom/dp/1476757801/ref=tmm_hrd_swatch_0?_encoding=UTF8&sr=1-1",
+      note: "Tony Robbins – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 110, title: "Money (Deutsch)", category: "Bücher", group: "Money: Master the Game", priority: "nice", price: 15,
+      link: "https://www.amazon.de/Money-einfachen-Schritte-finanziellen-Freiheit/dp/389879914X/ref=sr_1_2?__mk_de_DE=%C3%85M%C3%85%C5%BD%C3%95%C3%91&s=books&sr=1-2",
+      note: "Tony Robbins – Deutsche Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 111, title: "Essentialism", category: "Bücher", group: "Essentialism", priority: "nice", price: 14,
+      link: "https://www.amazon.de/Essentialism-Disciplined-Pursuit-Greg-McKeown/dp/0804137382/ref=tmm_hrd_swatch_0",
+      note: "Greg McKeown – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 112, title: "Essentialismus", category: "Bücher", group: "Essentialism", priority: "nice", price: 15,
+      link: "https://www.amazon.de/Essentialismus-konsequente-Weniger-Minimalismus-erobert/dp/3962570373/ref=sr_1_1?__mk_de_DE=%C3%85M%C3%85%C5%BD%C3%95%C3%91&sr=8-1",
+      note: "Greg McKeown – Deutsche Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 113, title: "Lying", category: "Bücher", group: "Lying", priority: "nice", price: 14,
+      link: "https://www.amazon.de/Lying-Sam-Harris/dp/1940051002/ref=sr_1_1?sr=8-1",
+      note: "Sam Harris – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 114, title: "Lügen", category: "Bücher", group: "Lying", priority: "nice", price: 15,
+      link: "https://www.amazon.de/L%C3%BCgen-Kurze-Beine-lange-Folgen/dp/3905752557/ref=sr_1_2?sr=8-2",
+      note: "Sam Harris – Deutsche Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 115, title: "The Ape that Understood the Universe", category: "Bücher", priority: "nice", price: 14,
+      link: "https://www.amazon.de/Ape-that-Understood-Universe-Culture/dp/1108425046/ref=tmm_hrd_swatch_0?_encoding=UTF8&sr=8-1",
+      note: "Steve Stewart-Williams – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 116, title: "The Precipice", category: "Bücher", priority: "nice", price: 14,
+      link: "https://www.amazon.de/Precipice-Existential-Risk-Future-Humanity/dp/0316484911/ref=tmm_hrd_swatch_0",
+      note: "Toby Ord – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 117, title: "Moral Uncertainty", category: "Bücher", priority: "nice", price: 14,
+      link: "https://www.amazon.de/Moral-Uncertainty-Hardback-William-Macaskill/dp/0198722273/ref=tmm_hrd_swatch_0",
+      note: "William MacAskill u.a. – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 118, title: "Lost Connections", category: "Bücher", priority: "nice", price: 14,
+      link: "https://www.amazon.de/Lost-Connections-Uncovering-Depression-Unexpected/dp/163286830X/ref=tmm_hrd_swatch_0",
+      note: "Johann Hari – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 119, title: "Endurance: Shackleton's Incredible Voyage", category: "Bücher", group: "Endurance", priority: "nice", price: 16,
+      link: "https://www.amazon.de/Endurance-Shackletons-Incredible-VOYAGES-PROMOTION/dp/1399642731/ref=tmm_pap_swatch_0",
+      note: "Alfred Lansing – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 120, title: "635 Tage im Eis", category: "Bücher", group: "Endurance", priority: "nice", price: 14,
+      link: "https://www.amazon.de/635-Tage-Eis-Die-Shackleton-Expedition/dp/3442150426/ref=tmm_pap_swatch_0",
+      note: "Alfred Lansing – Deutsche Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 121, title: "Why We Sleep", category: "Bücher", group: "Why We Sleep", priority: "nice", price: 14,
+      link: "https://www.amazon.de/Why-We-Sleep-Unlocking-Dreams/dp/1501144316/ref=tmm_hrd_swatch_0?_encoding=UTF8&sr=1-1",
+      note: "Matthew Walker – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 122, title: "Das große Buch vom Schlaf", category: "Bücher", group: "Why We Sleep", priority: "nice", price: 16,
+      link: "https://www.amazon.de/Das-gro%C3%9Fe-Buch-vom-Schlaf/dp/344217791X/ref=tmm_pap_swatch_0",
+      note: "Matthew Walker – Deutsche Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 123, title: "Models: Attract Women Through Honesty", category: "Bücher", priority: "nice", price: 14,
+      link: "https://www.amazon.de/Models-Attract-Women-Through-Honesty/dp/1463750358/ref=tmm_pap_swatch_0",
+      note: "Mark Manson – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 124, title: "Protocols", category: "Bücher", group: "Protocols", priority: "nice", price: 28,
+      link: "https://www.amazon.de/Protocols-Gebrauchsanweisung-weltbekannten-Neurobiologen-Neuroplastizit%C3%A4t/dp/3426284863/ref=tmm_hrd_swatch_0?_encoding=UTF8&sr=1-3",
+      note: "Andrew Huberman – Deutsche Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 125, title: "Protocols", category: "Bücher", group: "Protocols", priority: "nice", price: 30,
+      link: "https://www.amazon.de/Protocols-Operating-Manual-Human-Body/dp/1668032147/ref=tmm_hrd_swatch_0",
+      note: "Andrew Huberman – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 126, title: "Ikigai (Ken Mogi)", category: "Bücher", group: "Ikigai (Ken Mogi)", priority: "nice", price: 15,
+      link: "https://www.amazon.de/Ikigai-japanische-Lebenskunst-Ken-Mogi/dp/3832198997/ref=tmm_hrd_swatch_0?_encoding=UTF8&sr=8-1",
+      note: "Ken Mogi – Deutsche Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 127, title: "The Little Book of Ikigai", category: "Bücher", group: "Ikigai (Ken Mogi)", priority: "nice", price: 14,
+      link: "https://www.amazon.de/Little-Book-Ikigai-secret-Japanese/dp/1786489031/ref=tmm_hrd_swatch_0",
+      note: "Ken Mogi – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 128, title: "Alles Idioten", category: "Bücher", group: "Surrounded by Idiots", priority: "nice", price: 15,
+      link: "https://www.amazon.de/Alles-Idioten-Neuausgabe-Sunday-Times-Bestsellers-%C2%BBSurrounded/dp/3426571692/ref=tmm_other_meta_binding_swatch_0",
+      note: "Thomas Erikson – Deutsche Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 129, title: "Surrounded by Idiots", category: "Bücher", group: "Surrounded by Idiots", priority: "nice", price: 14,
+      link: "https://www.amazon.de/Surrounded-Idiots-Behavior-Effectively-Communicate/dp/1250398940/ref=tmm_hrd_swatch_0",
+      note: "Thomas Erikson – Englische Ausgabe.",
+      done: false, priceUpdated: null },
+    { id: 130, title: "Invincible Compendium 1", category: "Comics & Manga", group: "Invincible", priority: "nice", price: 55,
+      link: "https://www.amazon.de/Invincible-Compendium-1-Robert-Kirkman/dp/1607064111/ref=sr_1_2?__mk_de_DE=%C3%85M%C3%85%C5%BD%C3%95%C3%91&sr=8-2",
+      note: "Robert Kirkman – Englische Ausgabe, Compendium-Reihe (die ganze Reihe verfügbar).",
+      done: false, priceUpdated: null },
+    { id: 131, title: "Invincible 1 (Deutsch)", category: "Comics & Manga", group: "Invincible", priority: "nice", price: 15,
+      link: "https://www.amazon.de/Invincible-1-Robert-Kirkman/dp/3959813805/ref=sr_1_3?__mk_de_DE=%C3%85M%C3%85%C5%BD%C3%95%C3%91&sr=8-3",
+      note: "Robert Kirkman – Deutsche Ausgabe, Einzelbände (die ganze Reihe verfügbar).",
+      done: false, priceUpdated: null },
+    { id: 132, title: "Invincible: The Ultimate Collection Vol. 1", category: "Comics & Manga", group: "Invincible", priority: "nice", price: 45,
+      link: "https://www.thalia.de/shop/home/artikeldetails/A1001418991",
+      note: "Robert Kirkman – Englische Ausgabe, Ultimate-Collection-Hardcover-Reihe (die ganze Reihe verfügbar).",
+      done: false, priceUpdated: null },
+    { id: 133, title: "Attack on Titan", category: "Comics & Manga", priority: "nice", price: null,
+      link: "https://www.thalia.de/shop/home/artikeldetails/A1034481409",
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
+      done: false, priceUpdated: null },
+    { id: 134, title: "Blue Lock", category: "Comics & Manga", priority: "nice", price: null,
+      link: "https://www.thalia.de/shop/home/artikeldetails/A1060704377",
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
+      done: false, priceUpdated: null },
+    { id: 135, title: "Jujutsu Kaisen", category: "Comics & Manga", priority: "nice", price: null,
+      link: "https://www.thalia.de/shop/home/artikeldetails/A1055350720",
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
+      done: false, priceUpdated: null },
+    { id: 136, title: "Dragon Ball", category: "Comics & Manga", priority: "nice", price: null,
+      link: "https://www.thalia.de/shop/home/artikeldetails/A1053559977",
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
+      done: false, priceUpdated: null },
+    { id: 137, title: "One Piece", category: "Comics & Manga", priority: "nice", price: null,
+      link: "https://www.thalia.de/shop/home/artikeldetails/A1000310387",
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
+      done: false, priceUpdated: null },
+    { id: 138, title: "Vagabond", category: "Comics & Manga", priority: "nice", price: null,
+      link: "https://www.thalia.de/shop/home/artikeldetails/A1071409422",
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
+      done: false, priceUpdated: null },
+    { id: 139, title: "Tokyo Ghoul", category: "Comics & Manga", priority: "nice", price: null,
+      link: "https://www.thalia.de/shop/home/artikeldetails/A1032499154",
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
+      done: false, priceUpdated: null },
+    { id: 140, title: "My Hero Academia", category: "Comics & Manga", priority: "nice", price: null,
+      link: "https://www.thalia.de/shop/home/artikeldetails/A1037752563",
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
+      done: false, priceUpdated: null },
+    { id: 141, title: "Sword Art Online – Progressive", category: "Comics & Manga", priority: "nice", price: null,
+      link: "https://www.thalia.de/shop/home/artikeldetails/A1036068597",
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
+      done: false, priceUpdated: null },
+    { id: 142, title: "Haikyu!!", category: "Comics & Manga", priority: "nice", price: null,
+      link: "https://www.thalia.de/shop/home/artikeldetails/A1044968358",
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
+      done: false, priceUpdated: null },
+    { id: 143, title: "One-Punch Man", category: "Comics & Manga", priority: "nice", price: null,
+      link: "https://www.thalia.de/shop/home/artikeldetails/A1039020086",
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
+      done: false, priceUpdated: null },
+    { id: 144, title: "Re:Zero – Truth of Zero", category: "Comics & Manga", priority: "nice", price: null,
+      link: "https://www.thalia.de/shop/home/artikeldetails/A1074289086",
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
+      done: false, priceUpdated: null },
+    { id: 145, title: "Chainsaw Man", category: "Comics & Manga", priority: "nice", price: null,
+      link: "https://www.thalia.de/shop/home/artikeldetails/A1057875188",
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
+      done: false, priceUpdated: null },
+    { id: 146, title: "Demon Slayer", category: "Comics & Manga", priority: "nice", price: null,
+      link: "https://www.thalia.de/shop/home/artikeldetails/A1056442158",
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
+      done: false, priceUpdated: null },
+    { id: 147, title: "Vinland Saga", category: "Comics & Manga", priority: "nice", price: null,
+      link: "https://www.thalia.de/shop/home/artikeldetails/A1028597538",
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
+      done: false, priceUpdated: null },
+    { id: 148, title: "Berserk", category: "Comics & Manga", priority: "nice", price: null,
+      link: "https://www.thalia.de/shop/home/artikeldetails/A1073541072",
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
+      done: false, priceUpdated: null },
+    { id: 149, title: "Mob Psycho 100", category: "Comics & Manga", priority: "nice", price: null,
+      link: "https://www.thalia.de/shop/home/artikeldetails/A1050937387",
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
+      done: false, priceUpdated: null },
+    { id: 150, title: "Solo Leveling", category: "Comics & Manga", priority: "nice", price: null,
+      link: "https://www.thalia.de/shop/home/artikeldetails/A1057437665",
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
+      done: false, priceUpdated: null },
+    { id: 151, title: "Hell's Paradise", category: "Comics & Manga", priority: "nice", price: null,
+      link: "https://www.thalia.de/shop/home/artikeldetails/A1056472134",
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
+      done: false, priceUpdated: null },
+    { id: 152, title: "Black Clover", category: "Comics & Manga", priority: "nice", price: null,
+      link: "https://www.thalia.de/shop/home/artikeldetails/A1039574770",
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
+      done: false, priceUpdated: null },
+    { id: 153, title: "Tokyo Revengers", category: "Comics & Manga", priority: "nice", price: null,
+      link: "https://www.thalia.de/shop/home/artikeldetails/A1062231902",
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
+      done: false, priceUpdated: null },
+    { id: 154, title: "Death Note", category: "Comics & Manga", priority: "nice", price: null,
+      link: "https://www.thalia.de/shop/home/artikeldetails/A1000845333",
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
+      done: false, priceUpdated: null },
+    { id: 155, title: "Hunter x Hunter", category: "Comics & Manga", priority: "nice", price: null,
+      link: "https://www.thalia.de/shop/home/artikeldetails/A1000310396",
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
+      done: false, priceUpdated: null },
+    { id: 156, title: "Fullmetal Alchemist", category: "Comics & Manga", priority: "nice", price: null,
+      link: "https://www.thalia.de/shop/home/artikeldetails/A1064143908",
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
+      done: false, priceUpdated: null },
+    { id: 157, title: "Hellsing", category: "Comics & Manga", priority: "nice", price: null,
+      link: "https://www.thalia.de/shop/home/artikeldetails/A1001005168",
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
+      done: false, priceUpdated: null },
+    { id: 158, title: "Bleach", category: "Comics & Manga", priority: "nice", price: null,
+      link: "https://www.thalia.de/shop/home/artikeldetails/A1056047855",
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
+      done: false, priceUpdated: null },
+    { id: 159, title: "simplehuman Cleanstation", category: "Körperliches", priority: "nice", price: 100,
+      link: "https://www.simplehuman.com/products/cleanstation?variant=39328394150019",
+      note: "Rasierklingen-Reinigungs- und Ladestation.",
+      done: false, priceUpdated: null },
+    { id: 160, title: "Zahnbürstenhalter: KIEROFIRT (zirkulierendes Reinigungsgerät)", category: "Körperliches", group: "Zahnbürstenhalter", priority: "nice", price: 30,
+      link: "https://www.amazon.de/KIEROFIRT-Zahnb%C3%BCrstenhalter-zirkulierendes-Reinigungsger%C3%A4t-Zahnb%C3%BCrstenreiniger/dp/B0DWRVQ4TK/ref=sr_1_2?__mk_de_DE=%C3%85M%C3%85%C5%BD%C3%95%C3%91&sr=8-2",
+      note: "Test-Option, Zahnbürstenhalter mit Reinigungsfunktion.",
+      done: false, priceUpdated: null },
+    { id: 161, title: "Zahnbürstenhalter: Ankilo (LED-Bildschirm, wiederaufladbar)", category: "Körperliches", group: "Zahnbürstenhalter", priority: "nice", price: 35,
+      link: "https://www.amazon.de/Ankilo-Zahnb%C3%BCrstenhalter-LED-Bildschirm-Wiederaufladbare-Zahnb%C3%BCrstenschlitzen/dp/B0FKFQKBDG/ref=sr_1_6?sr=8-6",
+      note: "Test-Option, Zahnbürstenhalter mit LED-Display.",
+      done: false, priceUpdated: null },
+    { id: 162, title: "Birdie Wood Edition", category: "Zuhause & Wellness", priority: "nice", price: 200,
+      link: "https://birdie.design/de-de/products/birdie-wood-edition",
+      note: "Fresh Air Monitor mit CO2-Sensor aus der Schweiz, Gehäuse aus Eichenholz — zeigt an, wann gelüftet werden sollte.",
+      done: false, priceUpdated: null },
+    { id: 163, title: "WalkingPad A1 Pro", category: "Setup", subcategory: "Allgemein", priority: "nice", price: 600,
+      link: "https://de.walkingpad.com/products/walkingpad-a1-pro-klappbares-laufband-schreibtisch",
+      note: "Klappbares Laufband fürs Homeoffice / den Schreibtisch.",
+      done: false, priceUpdated: null },
+    { id: 164, title: "Hatch Restore", category: "Zuhause & Wellness", priority: "nice", price: 130,
+      link: "https://www.hatch.co/restore",
+      note: "Sonnenaufgangswecker mit Schlaf- und Meditations-Sounds.",
+      done: false, priceUpdated: null },
+    { id: 165, title: "Touch-Nachttischlampe (aufladbar, dimmbar)", category: "Zuhause & Wellness", priority: "nice", price: 30,
+      link: "https://www.amazon.de/Touch-Nachttischlampe-wiederaufladbare-Schreibtisch-Nachttischlampe-augenschonende-LED-Ambientelampe/dp/B0G4MDTR2K?ref_=ast_bl_cpl_dp",
+      note: "Wiederaufladbare LED-Nachttischlampe, augenschonend, dimmbar.",
+      done: false, priceUpdated: null },
+    { id: 166, title: "Eukalyptus-Stiele (Deko)", category: "Zuhause & Wellness", priority: "nice", price: 20,
+      link: "https://www.amazon.de/Eukalyptus-Stiele-Eukalyptusstiele-Eukalyptusbl%C3%A4ttern-Hochzeitsdekoration-Heimdekoration/dp/B0CLRGF6VK/ref=sr_1_2?__mk_de_DE=%C3%85M%C3%85%C5%BD%C3%95%C3%91&sr=8-2",
+      note: "Deko-Eukalyptuszweige für die Wohnung.",
+      done: false, priceUpdated: null },
+    { id: 167, title: "Philips Hue Play HDMI Sync Box 8K", category: "Entertainment", roomArea: "Entertainment-Ecke", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 230,
+      link: "https://www.philips-hue.com/en-us/p/hue-philips-hue-play-hdmi-sync-box-8k/046677579753",
+      note: "Synchronisiert Hue-Lichter mit Bildschirminhalten, 8K-fähig.",
+      done: false, priceUpdated: null },
+    { id: 168, title: "Amazon Echo Studio (neueste Generation)", category: "Entertainment", group: "Smart Speaker", priority: "nice", price: 200,
+      link: "https://www.amazon.de/dp/B0DXN1YWZZ",
+      note: "Test-Option — kompakter Smart Speaker mit räumlichem Klang & Dolby Atmos.",
+      done: false, priceUpdated: null },
+    { id: 169, title: "Amazon Echo Dot Max (neueste Generation)", category: "Entertainment", group: "Smart Speaker", priority: "nice", price: 100,
+      link: "https://www.amazon.de/dp/B0DKLFHZDH",
+      note: "Test-Option — kompakter Smart Speaker mit raumfüllendem Klang.",
+      done: false, priceUpdated: null },
+    { id: 170, title: "Google Assistant Lautsprecher", category: "Entertainment", group: "Smart Speaker", priority: "nice", price: null,
+      link: "https://assistant.google.com/intl/de_de/platforms/speakers/",
+      note: "Test-Option — konkretes Modell noch offen, Übersichtsseite von Google.",
+      done: false, priceUpdated: null },
+    { id: 171, title: "Ember Mug² (Akku-Variante)", category: "Zuhause & Wellness", group: "Ember Mug", priority: "nice", price: 130,
+      link: "https://www.amazon.de/Ember-Smart-Temperatureinstellung-wiederaufladbarer-80-Minuten-Akku/dp/B07Z5H4TF5?ref_=ast_sto_dp",
+      note: "Test-Option — smarte, temperaturregelbare Tasse mit Akku (ca. 80 Min. ohne Ladestation).",
+      done: false, priceUpdated: null },
+    { id: 172, title: "Ember Mug (Ladeuntersetzer-Variante)", category: "Zuhause & Wellness", group: "Ember Mug", priority: "nice", price: 100,
+      link: "https://www.amazon.de/Ember-Temperature-Control-Charging-Coaster/dp/B085LTLTT9?ref_=ast_sto_dp",
+      note: "Test-Option — smarte, temperaturregelbare Tasse mit Ladeuntersetzer statt Akku.",
+      done: false, priceUpdated: null },
+    { id: 173, title: "Soni SM (SEASONS)", category: "Zuhause & Wellness", priority: "nice", price: 60,
+      link: "https://www.seasonslife.com/products/soni-sm?variant=40882430378189",
+      note: "Tragbarer Ultraschall-Aroma-Diffusor, befeuchtet zugleich sanft die Luft.",
+      done: false, priceUpdated: null },
+    { id: 174, title: "Dreame Matrix 10 Ultra", category: "Zuhause & Wellness", priority: "nice", price: 1300,
+      link: "https://www.amazon.de/dp/B0GSRVQB6D/ref=asc_df_B0FN8FR84Q1783591200000/?creative=22662&creativeASIN=B0FN8FR84Q",
+      note: "Saugroboter, Farbe Black. Auch bei MediaMarkt verfügbar: https://www.mediamarkt.de/de/product/_dreame-matrix-10-ultra-black-saugroboter-3005574.html",
+      done: false, priceUpdated: null },
+    { id: 175, title: "ASUS ROG Swift OLED PG32UCDP", category: "Setup", subcategory: "Gaming", group: "Monitor", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 1100,
+      link: "https://rog.asus.com/de/monitors/27-to-31-5-inches/rog-swift-oled-pg32ucdp/#pageContent-sec-ai/",
+      note: "31,5\" UHD 4K OLED-Monitor, 240 Hz nativ, 0,03 ms Reaktionszeit. Bildschirm-Traum. Auch bei MediaMarkt: https://www.mediamarkt.de/de/product/_asus-90lm0a50-b01370-315-zoll-uhd-4k-monitor-003-ms-reaktionszeit-240-hz-240-hz-nativ-148965680.html?emid=6a529f211f40277a83044b93",
+      done: false, priceUpdated: null },
+    { id: 218, title: "UGREEN HDMI 2.1 Kabel (48Gbps)", category: "Setup", subcategory: "Gaming", group: "Monitor", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 38,
+      link: "https://www.amazon.de/dp/B0DT9KJX65",
+      note: "Zubehör zum Monitor — unterstützt volle 48Gbps, damit 4K@240Hz auch wirklich ankommt. Viele Monitore legen nur ein einfaches Compliance-Kabel bei, das die Bandbreite nicht schafft.",
+      done: false, priceUpdated: null },
+    { id: 219, title: "UGREEN Cat 8 Netzwerkkabel", category: "Setup", subcategory: "Gaming", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 12,
+      link: "https://www.amazon.de/UGREEN-Superschnell-Netzwerkkabel-Wlankabel-kompatibel/dp/B0C4KV76C8/ref=ast_sto_dp_puis",
+      note: "40Gbps, für stabile LAN-Verbindung zum PC — z.B. für den Router oder als Verlängerung.",
+      done: false, priceUpdated: null },
+    { id: 220, title: "UGREEN Cat 8 Netzwerkkabel (2. Länge)", category: "Setup", subcategory: "Gaming", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 12,
+      link: "https://www.amazon.de/UGREEN-Netzwerkkabel-Patchkabel-Ethernet-kompatibel/dp/B08R9XTFH5/ref=ast_sto_dp_puis",
+      note: "40Gbps, andere Länge als das erste — z.B. für einen anderen Kabelweg im Zimmer (Router zu Wanddose, Wanddose zu PC o.ä.).",
+      done: false, priceUpdated: null },
+    { id: 176, title: "Ninja Creami Deluxe 10-in-1", category: "Zuhause & Wellness", subcategory: "Küche", priority: "nice", price: 280,
+      link: "https://www.sharkninja.de/ninja-creami-deluxe-10-in-1-eismaschine/NC502EU.html?dwvar_NC502EU_color=99a6b0",
+      note: "Eismaschine, 10-in-1-Funktionen.",
+      done: false, priceUpdated: null },
+    { id: 177, title: "Küchenwaage: Beurer KS 34", category: "Zuhause & Wellness", subcategory: "Küche", group: "Küchenwaage", priority: "nice", price: 25,
+      link: "https://www.amazon.de/dp/B07HM6TB3S/ref=asc_df_B07HM6TB3S1783751400000/?creative=22662&creativeASIN=B07HM6TB3S",
+      note: "Test-Option — bis 15 kg, Tara-Funktion, Magic-LED-Display.",
+      done: false, priceUpdated: null },
+    { id: 178, title: "Küchenwaage: Etekcity", category: "Zuhause & Wellness", subcategory: "Küche", group: "Küchenwaage", priority: "nice", price: 20,
+      link: "https://www.amazon.de/dp/B0FBGM3KZ4/ref=asc_df_B0FBGM3KZ41783724400000/?creative=22662&creativeASIN=B0FBGM3KZ4",
+      note: "Test-Option — bis 10 kg, 1 g genau, USB-Aufladung, Edelstahl.",
+      done: false, priceUpdated: null },
+    { id: 179, title: "PlayStation 6 Pro / PlayStation 7", category: "Setup", subcategory: "Gaming", priority: "dream", price: null,
+      link: "",
+      note: "Sobald verfügbar: PS6 Pro, oder falls die PS7 zu dem Zeitpunkt schon draußen ist, lieber die PS7. Noch kein konkretes Release-Datum bekannt.",
+      done: false, priceUpdated: null },
+    { id: 180, title: "Logitech PRO X2 SUPERSTRIKE", category: "Setup", subcategory: "Gaming", group: "Maus", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 160,
+      link: "https://www.logitechg.com/de-de/shop/p/pro-x2-superstrike-mouse",
+      note: "Test-Option — kabellose Gaming-Maus.",
+      done: false, priceUpdated: null },
+    { id: 181, title: "Razer Viper V4 Pro", category: "Setup", subcategory: "Gaming", group: "Maus", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 160,
+      link: "https://www.razer.com/de-de/gaming-mice/razer-viper-v4-pro",
+      note: "Test-Option — kabellose Gaming-Maus.",
+      done: false, priceUpdated: null },
+    { id: 182, title: "Razer Basilisk V3 Pro 35K", category: "Setup", subcategory: "Gaming", group: "Maus", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 90,
+      link: "https://www.razer.com/de-de/gaming-mice/razer-basilisk-v3-pro-35k",
+      note: "Test-Option — kabellose Gaming-Maus mit 35K-Sensor.",
+      done: false, priceUpdated: null },
+    { id: 183, title: "Logitech G840 Cloth XL", category: "Setup", subcategory: "Gaming", group: "Mauspad", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 40,
+      link: "https://www.logitechg.com/de-de/shop/p/g840-cloth-xl-gaming-mouse-pad.943-000778?sp=1&searchclick=Logitech%20G",
+      note: "Test-Option — großes Stoff-Mauspad.",
+      done: false, priceUpdated: null },
+    { id: 184, title: "Razer Strider Chroma", category: "Setup", subcategory: "Gaming", group: "Mauspad", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 50,
+      link: "https://www.razer.com/de-de/gaming-mouse-mats/razer-strider-chroma",
+      note: "Test-Option — Hybrid-Mauspad mit Chroma-RGB-Beleuchtung.",
+      done: false, priceUpdated: null },
+    { id: 185, title: "Razer Atlas Pro", category: "Setup", subcategory: "Gaming", group: "Mauspad", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 140,
+      link: "https://www.razer.com/de-de/gaming-mouse-mats/razer-atlas-pro",
+      note: "Test-Option — ultradünnes Glas-Mauspad (1,9 mm), für optische Sensoren optimiert.",
+      done: false, priceUpdated: null },
+    { id: 186, title: "Logitech PowerPlay 2", category: "Setup", subcategory: "Gaming", group: "Wireless-Charging-Mauspad", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 150,
+      link: "https://www.logitechg.com/de-de/shop/p/powerplay-2",
+      note: "Test-Option — Mauspad mit kabellosem Laden der Maus.",
+      done: false, priceUpdated: null },
+    { id: 187, title: "Razer HyperFlux V2", category: "Setup", subcategory: "Gaming", group: "Wireless-Charging-Mauspad", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 170,
+      link: "https://www.razer.com/de-de/gaming-mouse-mats/razer-hyperflux-v2-wireless-charging-system",
+      note: "Test-Option — Wireless Charging System für Maus & Mauspad.",
+      done: false, priceUpdated: null },
+    { id: 188, title: "Anker Powerbank 20.000 mAh (integriertes USB-C-Kabel)", category: "Technik", priority: "nice", price: 60,
+      link: "https://www.amazon.de/Anker-Powerbank-integriertem-USB-C-Kabel-Schnelllade-Akku/dp/B0CXDXP8VR/ref=sr_1_3_pp?sr=8-3",
+      note: "87 W max, 1x USB-C + 1x USB-A, integriertes USB-C-Kabel.",
+      done: false, priceUpdated: null },
+    { id: 189, title: "Anker 633 Magnetic Battery (MagGo)", category: "Technik", priority: "nice", price: 70,
+      link: "https://www.anker.com/eu-de/products/a1641?variant=42548593787043&top_filter=10.000mAh-21.000mAh&collections_powerbanks&Sort_by=Preis%20hoch%20-%20niedrig",
+      note: "10.000 mAh, magnetischer Wireless-Akku mit Stand, MagSafe-kompatibel.",
+      done: false, priceUpdated: null },
+    { id: 190, title: "Anker Prime USB-C Kabel 90 cm 240 W", category: "Technik", priority: "nice", price: 35,
+      link: "https://www.anker.com/eu-de/products/a88e2-anker-prime-usb-c-kabel-90cm-240w-upcycled-geflochten",
+      note: "Geflochtenes Kabel aus recyceltem Material, 240 W.",
+      done: false, priceUpdated: null },
+    { id: 191, title: "Anker Prime kabellose Ladestation Qi2 3-in-1", category: "Technik", priority: "nice", price: 130,
+      link: "https://www.anker.com/eu-de/products/b25x7-anker-prime-kabellose-ladestation-qi2-3-in-1",
+      note: "3-in-1 Ladestation für Handy, Kopfhörer und Uhr, Qi2.",
+      done: false, priceUpdated: null },
+    { id: 192, title: "BOOX E-Ink-Tablet", category: "Technik", group: "E-Ink-Notiztablet", priority: "nice", price: null,
+      link: "https://shop.boox.com/",
+      note: "Test-Option — konkretes Modell noch offen, offizieller BOOX-Shop verlinkt.",
+      done: false, priceUpdated: null },
+    { id: 193, title: "iFLYTEK AINOTE", category: "Technik", group: "E-Ink-Notiztablet", priority: "nice", price: null,
+      link: "https://store.iflytek.com/collections/ainote",
+      note: "Test-Option — konkretes Modell (AINOTE 2 oder AINOTE Air 2) noch offen.",
+      done: false, priceUpdated: null },
+    { id: 217, title: "Anker Prime Ladegerät 160W (3 Ports, GaN)", category: "Technik", priority: "nice", price: 110,
+      link: "https://www.anker.com/eu-de/products/a2687-anker-prime-ladegeraet-160w-3-ports-gan?variant=46200507007139",
+      note: "Kompaktes GaN-Netzteil, 3 Ports, bis zu 140W an einem einzelnen Port (z.B. Laptop). Smart Display zeigt Ladeleistung in Echtzeit. So klein wie eine AirPods-Pro-Hülle.",
+      done: false, priceUpdated: null },
+    { id: 194, title: "Lifting Belt (Gewichthebergürtel)", category: "Sport", subcategory: "Krafttraining", priority: "nice", price: null,
+      link: "",
+      note: "Marke/Modell noch offen — klassisches Kraftsport-Basic zum Ergänzen der Ausrüstung.",
+      done: false, priceUpdated: null },
+    { id: 195, title: "Kreidebeutel (Chalk Bag)", category: "Sport", subcategory: "Krafttraining", priority: "nice", price: null,
+      link: "",
+      note: "Marke/Modell noch offen.",
+      done: false, priceUpdated: null },
+    { id: 196, title: "Handgelenkbandagen (Wrist Wraps)", category: "Sport", subcategory: "Krafttraining", priority: "nice", price: null,
+      link: "",
+      note: "Marke/Modell noch offen.",
+      done: false, priceUpdated: null },
+    { id: 197, title: "Knieebandagen (Knee Sleeves)", category: "Sport", subcategory: "Krafttraining", priority: "nice", price: null,
+      link: "",
+      note: "Marke/Modell noch offen.",
+      done: false, priceUpdated: null },
+    { id: 198, title: "Merch (Figuren/Poster) — Auswahl offen", category: "Comics & Manga", priority: "nice", price: null,
+      link: "",
+      note: "Platzhalter für Merch zu deinen Lieblingsserien (Figuren, Poster o.ä.). Welche Serie(n) und welches Merch konkret, ist noch offen — bei Bedarf einfach mit Serie und Link ergänzen.",
+      done: false, priceUpdated: null },
+    { id: 199, title: "2. Schreibtisch (Arbeitsbereich): Secretlab Magnus Pro", category: "Setup", subcategory: "Allgemein", roomArea: "Arbeitsbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 1000,
+      link: "https://secretlab.eu/de/pages/magnus-pro",
+      note: "Zweites Exemplar des Magnus Pro, gleiche Grundkonfiguration wie der Gaming-Schreibtisch — für den separaten Arbeitsbereich. Zusatz-Ausstattung/Addons für diesen Tisch noch offen, der Arbeitsbereich selbst ist noch nicht fertig geplant.",
+      done: false, priceUpdated: null },
+    { id: 200, title: "Mikrofon: Shure SM7dB", category: "Setup", subcategory: "Gaming", group: "Mikrofon", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 569,
+      link: "https://www.shure.com/de-DE/produkte/mikrofone/sm7db?variant=SM7dB",
+      note: "XLR-Mikrofon mit eingebautem Vorverstärker (+18/+28 dB, per Schalter wählbar oder umgehbar). Braucht trotzdem 48V Phantom-Speisung von einem Interface — daher unten das nötige Zubehör.",
+      done: false, priceUpdated: null },
+    { id: 202, title: "Universal Audio Apollo Twin X Duo", category: "Setup", subcategory: "Gaming", group: "Mikrofon", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 899,
+      link: "",
+      note: "Zubehör zum Mikrofon — Audio-Interface mit 48V-Phantomspeisung und Unison-Preamps (Neve/API/Manley-Modelle), liefert weit mehr als genug sauberen Gain fürs SM7dB. Kein Cloudlifter nötig — zwei Gain-Stufen übereinander würden eher Rauschen erzeugen als helfen.",
+      done: false, priceUpdated: null },
+    { id: 203, title: "XLR-Kabel", category: "Setup", subcategory: "Gaming", group: "Mikrofon", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 15,
+      link: "",
+      note: "Zubehör zum Mikrofon — verbindet SM7dB und Audio-Interface.",
+      done: false, priceUpdated: null },
+    { id: 204, title: "Mikrofon-Boom-Arm", category: "Setup", subcategory: "Gaming", group: "Mikrofon", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 130,
+      link: "",
+      note: "Zubehör zum Mikrofon — das SM7dB ist recht schwer, ein normaler Tischständer reicht nicht gut. Ein Arm (z. B. Elgato Wave Mic Arm LP) hält es stabil über der Tastatur und lässt es sich beiseiteschwenken.",
+      done: false, priceUpdated: null },
+    { id: 201, title: "AMD Ryzen 9 9950X3D", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 590,
+      link: "https://www.alternate.de/AMD/Ryzen-9-9950X3D-Prozessor/html/product/100114727",
+      note: "CPU — 16 Kerne mit 3D V-Cache. Fürs reine Gaming wäre der 9800X3D minimal gleichauf und günstiger, aber die zusätzlichen Kerne helfen bei Code/Videobearbeitung (JARVIS, Gym-Video-Analyse). Preis verifiziert via Geizhals (Alternate/Mindfactory).",
+      done: false, priceUpdated: null },
+    { id: 205, title: "ASUS ROG Crosshair X870E Dark Hero", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 670,
+      link: "https://www.alternate.de/ASUS/ROG-CROSSHAIR-X870E-DARK-HERO-Mainboard/html/product/100185735",
+      note: "Mainboard — X870E-Chipsatz, komplett schwarzes Design, starke Spannungsversorgung. ASUS' neues Flaggschiff ist zwar das Crosshair X870E Glacial, bringt aber nur Extras (10G-LAN etc.), die fürs Gaming nichts bringen.",
+      done: false, priceUpdated: null },
+    { id: 206, title: "ASUS ROG Astral RTX 5090 O32G Gaming", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 4299,
+      link: "https://www.alternate.de/ASUS/GeForce-RTX-5090-ROG-ASTRAL-GAMING-OC-Grafikkarte/html/product/100110139",
+      note: "GPU — luftgekühlt (Quad-Fan), 32GB GDDR7, Farbe Black. WICHTIG: Preis war deutlich unterschätzt — aktuell 4.299€ statt der geschätzten 2.500€, RTX-5090-Karten sind gerade knapp/teuer. Bewusst gegen die LC-Variante entschieden (die ist aktuell sogar günstiger, ~3.719€) wegen der saubereren Optik ohne zweiten Radiator.",
+      done: false, priceUpdated: null },
+    { id: 207, title: "G.Skill Trident Z5 Neo RGB 64GB (2x32GB) DDR5-6000 CL30", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 870,
+      link: "https://geizhals.de/g-skill-trident-z5-neo-rgb-schwarz-dimm-kit-64gb-f5-6000j3040g32gx2-tz5nr-a2837569.html",
+      note: "RAM — aktuell das Flaggschiff-Kit fürs AM5/EXPO. WICHTIG: Preis war deutlich unterschätzt — aktuell ~870€ statt der geschätzten 280€, RAM-Preise sind 2026 stark gestiegen (NAND/DRAM-Knappheit). Kein direkter Alternate-Link gefunden, daher Geizhals-Preisvergleich (listet Alternate/Mindfactory/NBB).",
+      done: false, priceUpdated: null },
+    { id: 208, title: "be quiet! Dark Power Pro 13 1300W", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 390,
+      link: "https://geizhals.de/be-quiet-dark-power-pro-13-1300w-atx-3-0-bn331-a2946414.html",
+      note: "Netzteil — be quiet!s aktuelles Flaggschiff, 80+ Titanium, ATX 3.1 mit nativem 12V-2x6-Anschluss (kein Adapter nötig für die GPU). Preis via Geizhals verifiziert (Alternate/NBB gelistet).",
+      done: false, priceUpdated: null },
+    { id: 209, title: "Samsung 9100 PRO 2TB (Hauptlaufwerk)", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 190,
+      link: "https://geizhals.de/samsung-ssd-9100-pro-v191423.html",
+      note: "SSD — Samsungs aktuelles Flaggschiff, PCIe 5.0, bis zu 14.800 MB/s. Für System + aktuelle Spiele. WICHTIG: Variante OHNE Kühlkörper kaufen (Link zeigt die bare Version) — das Dark-Hero-Board hat eigene M.2-Kühlkörper. Preis günstiger als geschätzt (~190€ statt 250€).",
+      done: false, priceUpdated: null },
+    { id: 210, title: "Samsung 9100 PRO 2TB (Zweitlaufwerk)", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 190,
+      link: "https://geizhals.de/samsung-ssd-9100-pro-v191423.html",
+      note: "SSD — zweites Laufwerk für Rohmaterial/Projekte (Gym-Videos, JARVIS etc.). Beide bisherigen 2TB laufen in den zwei PCIe-5.0-Slots des Boards mit vollem Tempo. Auch hier: Variante ohne Kühlkörper.",
+      done: false, priceUpdated: null },
+    { id: 212, title: "Samsung 9100 PRO 2TB (Drittlaufwerk)", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 190,
+      link: "https://geizhals.de/samsung-ssd-9100-pro-v191423.html",
+      note: "SSD — zusätzliche Kapazität, macht 6TB gesamt. Läuft in einem der PCIe-4.0-Slots vom Chipsatz (~7.000 statt 14.800 MB/s), damit die GPU weiterhin volle x16 behält. Auch hier: Variante ohne Kühlkörper.",
+      done: false, priceUpdated: null },
+    { id: 211, title: "ARCTIC Liquid Freezer III Pro 360 A-RGB", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 85,
+      link: "https://geizhals.de/arctic-liquid-freezer-iii-pro-360-a-rgb-acfre00184a-a3455390.html",
+      note: "CPU-Kühler — 360mm AIO, in mehreren aktuellen Tests explizit mit dem 9950X3D geprüft und konstant vorne. Zusätzlicher VRM-Lüfter kühlt die Spannungswandler des Boards mit. Statt der vorgetragenen Paste kommt Thermal Grizzly Duronaut zum Einsatz.",
+      done: false, priceUpdated: null },
+    { id: 213, title: "Windows 11 Pro", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 229,
+      link: "https://www.alternate.de/Microsoft/Windows-11-Pro-Betriebssystem-Software/html/product/1843168",
+      note: "Betriebssystem — wird beim Zusammenbau gerne vergessen, ist aber ein eigener Kaufposten, kein Gratis-Bestandteil der Hardware. Preis für die reguläre Vollversion (USB-Stick), keine Grey-Market-Keys.",
+      done: false, priceUpdated: null },
+    { id: 214, title: "Lian Li O11 Dynamic EVO XL", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 240,
+      link: "https://www.alternate.de/Lian-Li/O11-Dynamic-EVO-XL-Big-Tower-Geh%C3%A4use/html/product/100048854",
+      note: "Gehäuse — Full Tower, unterstützt bis zu 3× 420mm-Radiatoren gleichzeitig (oben/Seite/unten), genug Reserve für die zwei 360mm-AIOs (CPU + GPU). E-ATX-kompatibel, Dark Hero passt locker rein. Kommt ohne vorinstallierte Lüfter.",
+      done: false, priceUpdated: null },
+    { id: 215, title: "Lian Li UNI FAN SL-Infinity 120 ARGB (3er-Pack mit Controller)", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 90,
+      link: "https://geizhals.de/lian-li-uni-fan-sl-inf120-rgb-uf-slin120-3b-a2753206.html",
+      note: "Zusätzliche Gehäuselüfter für frische Zuluft (v.a. für die GPU direkt) — die CPU-AIO bringt 3 eigene Radiator-Lüfter mit, die GPU ihre 4 Quad-Fans.",
+      done: false, priceUpdated: null },
+    { id: 216, title: "Thermal Grizzly Duronaut", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 10,
+      link: "https://www.alternate.de/Thermal-Grizzly/Duronaut-2g-W%C3%A4rmeleitpasten/html/product/100103121",
+      note: "Wärmeleitpaste für den CPU-Kühler, statt der vorgetragenen Paste am Arctic-Kühler. Laut unabhängigen Labormessungen (igor'sLab) höhere Wärmeleitfähigkeit als Kryonaut. Günstiger als geschätzt (~10€ statt 20€).",
+      done: false, priceUpdated: null }
+  ];
+
+  // Produktbilder: lokal gespeicherte Kopien (assets/images/products/),
+  // Original-URLs bleiben als Fallback, falls eine lokale Datei fehlt.
+  const REMOTE_IMAGES = {
+    4: "https://wooting-website.ams3.cdn.digitaloceanspaces.com/products/keyboards/60HEv2/60he-v2-og.webp",
+    5: "https://wooting-website.ams3.cdn.digitaloceanspaces.com/products/misc/detachable_cable_OG.webp",
+    6: "https://wooting-website.ams3.cdn.digitaloceanspaces.com/products/wrist-rests/Wrist Rest Table.jpg",
+    7: "https://images.secretlab.co/theme/common/social_meta_og_magnus_pro-min.jpg",
+    8: "https://images.secretlab.co/theme/common/social_meta_og_magnus_pro-min.jpg",
+    9: "https://images.secretlab.co/theme/common/social_meta_og_magnus_pro-min.jpg",
+    10: "https://images.secretlab.co/theme/common/social_meta_og_magnus_pro-min.jpg",
+    11: "https://images.secretlab.co/theme/common/social_meta_og_magnus_pro-min.jpg",
+    12: "https://images.secretlab.co/theme/common/social_meta_og_magnus_pro-min.jpg",
+    13: "https://images.secretlab.co/theme/common/social_meta_og_magnus_pro-min.jpg",
+    14: "https://images.secretlab.co/theme/common/social_meta_og_magnus_pro-min.jpg",
+    15: "http://tyr.eu/cdn/shop/files/L2-544_main01_08ccde37-ae8b-43a6-8e91-f522677b6c3d.png?v=1758268508",
+    16: "http://sbdgermany.de/cdn/shop/files/SBDLiftingStrapsGymSchwarzRot_1.jpg?v=1768572670&width=2048",
+    17: "http://sbdgermany.de/cdn/shop/files/SBDFigure8LiftingStrapsSchwartRotinAction_1.webp?v=1768572671&width=2048",
+    18: "https://beast.co.uk/cdn/shop/files/NEW_Smelling_Salts_3_Pack_Ecom_Image_1200x1200.png?v=1744372339",
+    19: "https://beast.co.uk/cdn/shop/files/NEW_Smelling_Salts_3_Pack_Ecom_Image_1200x1200.png?v=1744372339",
+    20: "https://beast.co.uk/cdn/shop/files/NEW_Smelling_Salts_3_Pack_Ecom_Image_1200x1200.png?v=1744372339",
+    21: "https://destore.hermanmiller.com/cdn/shop/files/01-Embody_Gaming-Cyan-01_grande.png?v=1723038844",
+    31: "http://www.molten.de/cdn/shop/files/molten-volleyball-V5M5000-DE-web.png?v=1754995533",
+    32: "http://www.molten.de/cdn/shop/files/molten-beachvolleyball-V5B5000-DE_1.png?v=1754995715",
+    35: "http://saintkaizen.com/cdn/shop/files/ThornsCap.png?v=1753947906&width=2048",
+    36: "https://de.citizenwatch.eu/media/thumbs/66/7d/d0ece1570292e1631fe90bdaf9bfcbe7ea92/1200x628_crop=center/managed/d5/80/d5806213c37248792971ce6a0d814e7b/BM8550-81EE_4.png.thumb.png",
+    37: "https://www.tissotwatches.com/on/demandware.static/-/Sites-Tissot-Catalogue/default/dw575d40c4/product-pictures/03fcc26f-3aff-4aef-bdef-df8c850de092_T158-407-11-051-00_Shadow.png",
+    38: "https://www.tissotwatches.com/on/demandware.static/-/Sites-Tissot-Catalogue/default/dwb10f9fe5/product-pictures/6f447114-6f8e-41d5-b0fe-9a6ccd1db96b_T150-410-11-051-00_shadow.png",
+    39: "https://www.tissotwatches.com/on/demandware.static/-/Sites-Tissot-Catalogue/default/dwcfa5d599/product-pictures/9ebd503f-b126-4746-b483-af5fcb826f22_T165-807-11-051-00_shadow.png",
+    40: "https://www.tissotwatches.com/on/demandware.static/-/Sites-Tissot-Catalogue/default/dw4c0a1e32/product-pictures/7a007d05-fde5-4203-8564-248ff706b500_T127-410-11-051-00_shadow.png",
+    41: "https://de.citizenwatch.eu/media/thumbs/43/48/69e31f54bbd20867c97373711f80d07532f4/1200x628_crop=center/managed/cb/2a/cb2adbe6469546b47cc3bb9d1330c582/NJ0150-81E_3.png.thumb.png",
+    42: "https://de.citizenwatch.eu/media/thumbs/56/0d/fe7555afe8f9dbaf1ebf628345688154d27e/1200x628_crop=center/managed/d8/db/d8db644614553cf1ff2af53e693cc696/BM7251-88E.png.thumb.png",
+    43: "http://seikousa.com/cdn/shop/files/SUR557_1.png?v=1744226528",
+    44: "http://seikousa.com/cdn/shop/products/SUR361_1.png?v=1744226760",
+    45: "http://seikousa.com/cdn/shop/products/SUR311_1.png?v=1744227018",
+    48: "https://images-na.ssl-images-amazon.com/images/P/1847941834.01._SL500_.jpg",
+    49: "https://images-na.ssl-images-amazon.com/images/P/152474672X.01._SL500_.jpg",
+    50: "https://images-na.ssl-images-amazon.com/images/P/3962572953.01._SL500_.jpg",
+    51: "https://images-na.ssl-images-amazon.com/images/P/3959724438.01._SL500_.jpg",
+    52: "https://images-na.ssl-images-amazon.com/images/P/3959727186.01._SL500_.jpg",
+    53: "https://images-na.ssl-images-amazon.com/images/P/386493270X.01._SL500_.jpg",
+    54: "https://images-na.ssl-images-amazon.com/images/P/1785044540.01._SL500_.jpg",
+    55: "https://images-na.ssl-images-amazon.com/images/P/0374275637.01._SL500_.jpg",
+    56: "https://images-na.ssl-images-amazon.com/images/P/3886808866.01._SL500_.jpg",
+    57: "https://images-na.ssl-images-amazon.com/images/P/0141195371.01._SL500_.jpg",
+    58: "https://images-na.ssl-images-amazon.com/images/P/0140444491.01._SL500_.jpg",
+    59: "https://images-na.ssl-images-amazon.com/images/P/1319190804.01._SL500_.jpg",
+    60: "https://images-na.ssl-images-amazon.com/images/P/0525428143.01._SL500_.jpg",
+    61: "https://images-na.ssl-images-amazon.com/images/P/3959722303.01._SL500_.jpg",
+    62: "https://images-na.ssl-images-amazon.com/images/P/0670024961.01._SL500_.jpg",
+    66: "https://images-na.ssl-images-amazon.com/images/P/1591847818.01._SL500_.jpg",
+    67: "https://images-na.ssl-images-amazon.com/images/P/0593719913.01._SL500_.jpg",
+    68: "https://images-na.ssl-images-amazon.com/images/P/0593191730.01._SL500_.jpg",
+    69: "https://images-na.ssl-images-amazon.com/images/P/0525538585.01._SL500_.jpg",
+    70: "https://images-na.ssl-images-amazon.com/images/P/0593191692.01._SL500_.jpg",
+    71: "https://images-na.ssl-images-amazon.com/images/P/0593191676.01._SL500_.jpg",
+    72: "https://images-na.ssl-images-amazon.com/images/P/3959728018.01._SL500_.jpg",
+    73: "https://images-na.ssl-images-amazon.com/images/P/3959725159.01._SL500_.jpg",
+    74: "https://images-na.ssl-images-amazon.com/images/P/3959728328.01._SL500_.jpg",
+    75: "https://images-na.ssl-images-amazon.com/images/P/3959723296.01._SL500_.jpg",
+    76: "https://images-na.ssl-images-amazon.com/images/P/3959724888.01._SL500_.jpg",
+    77: "https://images-na.ssl-images-amazon.com/images/P/3959720327.01._SL500_.jpg",
+    78: "https://images-na.ssl-images-amazon.com/images/P/3959725167.01._SL500_.jpg",
+    79: "https://images-na.ssl-images-amazon.com/images/P/1985208725.01._SL500_.jpg",
+    80: "https://images-na.ssl-images-amazon.com/images/P/395972585X.01._SL500_.jpg",
+    81: "https://images-na.ssl-images-amazon.com/images/P/3596513081.01._SL500_.jpg",
+    82: "https://images-na.ssl-images-amazon.com/images/P/9354403778.01._SL500_.jpg",
+    83: "https://images-na.ssl-images-amazon.com/images/P/3959725329.01._SL500_.jpg",
+    84: "https://images-na.ssl-images-amazon.com/images/P/1640321098.01._SL500_.jpg",
+    85: "https://images-na.ssl-images-amazon.com/images/P/1622038320.01._SL500_.jpg",
+    86: "https://images-na.ssl-images-amazon.com/images/P/3570105334.01._SL500_.jpg",
+    87: "https://images-na.ssl-images-amazon.com/images/P/0593138767.01._SL500_.jpg",
+    88: "https://images-na.ssl-images-amazon.com/images/P/B0D9RGLBCP.01._SL500_.jpg",
+    89: "https://images-na.ssl-images-amazon.com/images/P/0140449132.01._SL500_.jpg",
+    92: "https://images-na.ssl-images-amazon.com/images/P/B007KNKV1S.01._SL500_.jpg",
+    93: "https://images-na.ssl-images-amazon.com/images/P/1400042666.01._SL500_.jpg",
+    94: "https://images-na.ssl-images-amazon.com/images/P/3570500632.01._SL500_.jpg",
+    95: "https://images-na.ssl-images-amazon.com/images/P/1846047684.01._SL500_.jpg",
+    96: "https://images-na.ssl-images-amazon.com/images/P/1805467034.01._SL500_.jpg",
+    97: "https://images-na.ssl-images-amazon.com/images/P/3499013371.01._SL500_.jpg",
+    98: "https://images-na.ssl-images-amazon.com/images/P/1785045113.01._SL500_.jpg",
+    99: "https://images-na.ssl-images-amazon.com/images/P/3867813671.01._SL500_.jpg",
+    100: "https://images-na.ssl-images-amazon.com/images/P/1984878107.01._SL500_.jpg",
+    101: "https://images-na.ssl-images-amazon.com/images/P/349207135X.01._SL500_.jpg",
+    102: "https://images-na.ssl-images-amazon.com/images/P/9395741546.01._SL500_.jpg",
+    104: "https://images-na.ssl-images-amazon.com/images/P/1848549601.01._SL500_.jpg",
+    105: "https://images-na.ssl-images-amazon.com/images/P/1455586692.01._SL500_.jpg",
+    106: "https://images-na.ssl-images-amazon.com/images/P/3868816577.01._SL500_.jpg",
+    108: "https://images-na.ssl-images-amazon.com/images/P/3257261160.01._SL500_.jpg",
+    109: "https://images-na.ssl-images-amazon.com/images/P/1476757801.01._SL500_.jpg",
+    110: "https://images-na.ssl-images-amazon.com/images/P/389879914X.01._SL500_.jpg",
+    111: "https://images-na.ssl-images-amazon.com/images/P/0804137382.01._SL500_.jpg",
+    112: "https://images-na.ssl-images-amazon.com/images/P/3962570373.01._SL500_.jpg",
+    115: "https://images-na.ssl-images-amazon.com/images/P/1108425046.01._SL500_.jpg",
+    116: "https://images-na.ssl-images-amazon.com/images/P/0316484911.01._SL500_.jpg",
+    118: "https://images-na.ssl-images-amazon.com/images/P/163286830X.01._SL500_.jpg",
+    119: "https://images-na.ssl-images-amazon.com/images/P/1399642731.01._SL500_.jpg",
+    120: "https://images-na.ssl-images-amazon.com/images/P/3442150426.01._SL500_.jpg",
+    121: "https://images-na.ssl-images-amazon.com/images/P/1501144316.01._SL500_.jpg",
+    122: "https://images-na.ssl-images-amazon.com/images/P/344217791X.01._SL500_.jpg",
+    123: "https://images-na.ssl-images-amazon.com/images/P/1463750358.01._SL500_.jpg",
+    124: "https://images-na.ssl-images-amazon.com/images/P/3426284863.01._SL500_.jpg",
+    125: "https://images-na.ssl-images-amazon.com/images/P/1668032147.01._SL500_.jpg",
+    127: "https://images-na.ssl-images-amazon.com/images/P/1786489031.01._SL500_.jpg",
+    128: "https://images-na.ssl-images-amazon.com/images/P/3426571692.01._SL500_.jpg",
+    129: "https://images-na.ssl-images-amazon.com/images/P/1250398940.01._SL500_.jpg",
+    130: "https://images-na.ssl-images-amazon.com/images/P/1607064111.01._SL500_.jpg",
+    131: "https://images-na.ssl-images-amazon.com/images/P/3959813805.01._SL500_.jpg",
+    132: "https://images.thalia.media/07/-/79bf3d20b5bb461da66717b99fb59b46/invincible-the-ultimate-collection-volume-1-gebundene-ausgabe-robert-kirkman-englisch.jpeg",
+    133: "https://images.thalia.media/07/-/6a713cc191b24046979e3a6f7c2e2d94/attack-on-titan-baende-1-5-im-sammelschuber-mit-extra-schuber-hajime-isayama.jpeg",
+    134: "https://images.thalia.media/07/-/6092f8c9ae724e41ab3cade8ee415906/blue-lock-band-1-taschenbuch-muneyuki-kaneshiro.png",
+    135: "https://images.thalia.media/07/-/cc860282fecd4f22bcd094f5c029bd18/jujutsu-kaisen-band-1-taschenbuch-akutami-gege.jpeg",
+    136: "https://images.thalia.media/07/-/55e21da799ae48268354efdcefaad85c/dragon-ball-massiv-1-taschenbuch-akira-toriyama.jpeg",
+    137: "https://images.thalia.media/07/-/fc58c946551145189dc22a37023a3306/one-piece-1-taschenbuch-eiichiro-oda.jpeg",
+    138: "https://images.thalia.media/07/-/684aefcbb7f54e49a4fd8fc58fde9794/vagabond-01-taschenbuch-takehiko-inoue.jpeg",
+    139: "https://images.thalia.media/07/-/4717fa8266ed4392a1172f37f8704be0/tokyo-ghoul-01-taschenbuch-sui-ishida.png",
+    140: "https://images.thalia.media/07/-/bff315d664fb43b6a0690c0bf610c98b/my-hero-academia-1-taschenbuch-kohei-horikoshi.jpeg",
+    141: "https://images.thalia.media/07/-/06e814c02d074c3c9505667cb89f868f/sword-art-online-progressive-01-taschenbuch-reki-kawahara.jpeg",
+    142: "https://images.thalia.media/07/-/ab419eb640a840c99ce97f1f7adbc46b/haikyu-band-1-taschenbuch-haruichi-furudate.png",
+    143: "https://images.thalia.media/07/-/eb4a442840e74f50a493e630a49615b9/one-punch-man-band-1-taschenbuch-yusuke-murata.jpeg",
+    144: "https://images.thalia.media/07/-/0a83f63ecee844fc80d0dcd49f29c430/re-zero-truth-of-zero-10-taschenbuch-tappei-nagatsuki.jpeg",
+    145: "https://images.thalia.media/07/-/5f45aba5dbb34e2ab5d8df59d4750f46/chainsaw-man-01-taschenbuch-tatsuki-fujimoto.jpeg",
+    146: "https://images.thalia.media/07/-/6c2182296bd24c01bb5bdf34190e83ce/demon-slayer-1-taschenbuch-koyoharu-gotouge.jpeg",
+    147: "https://images.thalia.media/07/-/4bbfca25cf8a44b5a8777eb28549cdae/vinland-saga-01-gebundene-ausgabe-makoto-yukimura-englisch.jpeg",
+    148: "https://images.thalia.media/07/-/97044791ba7b452b982921f3a45194bc/berserk-master-edition-01-gebundene-ausgabe-kentaro-miura.jpeg",
+    149: "https://images.thalia.media/07/-/df2b4a2553f04d5f85c6d91c2d0aaa9b/mob-psycho-100-volume-1-taschenbuch-one-englisch.jpeg",
+    150: "https://images.thalia.media/07/-/b3698fe7c4d64e3bb85f1ead0e91b60f/solo-leveling-01-taschenbuch-chugong.jpeg",
+    151: "https://images.thalia.media/07/-/a0059996df7044b4a7f36a140a851ab3/hell-s-paradise-band-1-taschenbuch-yuji-kaku.png",
+    152: "https://images.thalia.media/07/-/0381986780d0401099f0ad3bfe594e44/black-clover-01-taschenbuch-yuki-tabata.jpeg",
+    153: "https://images.thalia.media/07/-/4d0cc4830a7742418d6c32a2db8d52fc/tokyo-revengers-doppelband-edition-1-taschenbuch-ken-wakui.jpeg",
+    154: "https://images.thalia.media/07/-/5a97b98a1c484f77ba7c99581983443c/death-note-01-taschenbuch-tsugumi-ohba.jpeg",
+    155: "https://images.thalia.media/07/-/d8814b10d5e847fdb31a809f7284b311/hunter-x-hunter-1-taschenbuch-yoshihiro-togashi.jpeg",
+    156: "https://images.thalia.media/07/-/17f6cd5de46f4992bbe76165ef0d40bb/fullmetal-alchemist-ultra-edition-01-taschenbuch-hiromu-arakawa.jpeg",
+    157: "https://images.thalia.media/07/-/968f5bcf00e5487c93a1fddbb457f2d9/hellsing-neue-edition-01-taschenbuch-kohta-hirano.jpeg",
+    158: "https://images.thalia.media/07/-/f55ad6957ab44aa6bad9998cb4ed7005/bleach-extreme-01-paperback-tite-kubo.jpeg",
+    159: "http://www.simplehuman.com/cdn/shop/files/ST4001_153a986f-0a6a-4ecd-8316-2622b06b79e2_1200x1200.png?v=1732246981",
+    162: "http://birdie.design/cdn/shop/files/Birdie_on_packaging_Wood_Edition.png?v=1733324227&width=2048",
+    163: "http://de.walkingpad.com/cdn/shop/files/WalkingPad_A1_Pro_Klappbares_Laufband_0_5-6_km_h_Model_01.jpg?v=1762400032&width=2048",
+    164: "https://www.datocms-assets.com/98401/1769721785-restore-3-carousel-putty-1-v2.webp",
+    167: "https://www.assets.signify.com/is/image/Signify/046677579753-929003499602-Philips-Hue-Sync-Box-gen-2-NAM-RTP",
+    170: "https://lh3.googleusercontent.com/JByKEd4dMw3xhJeGMS1tY_wz6g6pTMkP_P3USMXfsVJbAouEWXrOsvaPmdyIzvmgk0TP-72WMNGwfc7svYdIR75ZXLciJHTXt4V_Ycqr7-DtTsSXsfQ=w880",
+    173: "http://www.seasonslife.com/cdn/shop/files/Soni_1024x.png?v=1754576916",
+    175: "https://dlcdnwebimgs.asus.com/gain/3C1092AE-9230-4B83-92DA-25EDA27A6CA9",
+    177: "https://images-na.ssl-images-amazon.com/images/P/B07HM6TB3S.01._SL500_.jpg",
+    178: "https://images-na.ssl-images-amazon.com/images/P/B0FBGM3KZ4.01._SL500_.jpg",
+    180: "https://resource.logitechg.com/c_fill,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/gaming/og-fallback.jpg",
+    181: "https://assets2.razerzone.com/images/pnx.assets/16c63955eb02ec0e357921bbd2e21410/razer-viper-v4-pro-og-image-1200x630.webp",
+    182: "https://assets2.razerzone.com/images/pnx.assets/a7cea71b6e06d9c59c7de9f354000024/razer-basilisk-v3-pro-35k-ogimage-1200x630.webp",
+    183: "https://resource.logitechg.com/c_fill,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/gaming/en/homepage/logitechg-global-og-image.png",
+    184: "https://assets2.razerzone.com/images/pnx.assets/52cd1dfea729bb0171e74b3231ad22c9/razer-strider-chroma_ogimage-1200x630.jpg",
+    185: "https://assets2.razerzone.com/images/pnx.assets/dc5667968807ef58f90c54a4b02352e4/razer-atlas-pro-ogimage-1200x630.webp",
+    186: "https://resource.logitechg.com/c_fill,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/gaming/en/homepage/logitechg-global-og-image.png",
+    187: "https://assets2.razerzone.com/images/pnx.assets/74af5290b74c647f5f0088a07ba0ab07/hyperfluxv2-charging-system-og.webp",
+    189: "https://cdn.shopify.com/s/files/1/0491/8227/7795/products/A1641011-Anker_633_Magnetic_Battery_5.png?v=1749202642",
+    190: "https://cdn.shopify.com/s/files/1/0491/8227/7795/files/A88E2011_Rich_image_no_copy_2000x2000px.png?v=1754376173",
+    191: "https://cdn.shopify.com/s/files/1/0491/8227/7795/files/image_22_0e7a11c8-de91-47ec-9154-5c8db5ad2995.png?v=1779432435",
+    192: "https://cdn.shopify.com/s/files/1/0604/6410/3654/files/500_0a6d90c0-76d2-433b-8660-2e8793dedfb3.png?v=1634284764",
+    193: "https://img-va.myshopline.com/image/store/1712541173749/Ainote-2-Memorial-Day-6-0.jpg?w&#x3D;2000&h&#x3D;2000",
+    199: "https://images.secretlab.co/theme/common/social_meta_og_magnus_pro-min.jpg",
+    200: "https://products.shureweb.eu/shure_product_db/product_main_images/files/770/d92/92-/setcard/7d2a7b7f3c9d4d3e3e6d556dfaacd968.jpeg",
+    201: "https://www.alternate.de/p/1200x630/7/2/AMD_Ryzen__9_9950X3D__Prozessor@@100114727.jpg",
+    205: "https://www.alternate.de/p/1200x630/5/3/ASUS_ROG_CROSSHAIR_X870E_DARK_HERO__Mainboard@@100185735.jpg",
+    206: "https://www.alternate.de/p/1200x630/9/3/ASUS_GeForce_RTX_5090_ROG_ASTRAL_GAMING_OC__Grafikkarte@@100110139.jpg",
+    207: "https://gzhls.at/pix/ab/52/ab5264299bf4a372-n.webp?ogircp",
+    208: "https://gzhls.at/pix/4a/95/4a9524e98862881a-n.webp?ogircp",
+    209: "https://gzhls.at/pix/73/fb/73fb7c36f84d9fa3-n.webp?ogircp",
+    210: "https://gzhls.at/pix/73/fb/73fb7c36f84d9fa3-n.webp?ogircp",
+    211: "https://gzhls.at/pix/f4/3a/f43a4586f649e247-n.webp?ogircp",
+    212: "https://gzhls.at/pix/73/fb/73fb7c36f84d9fa3-n.webp?ogircp",
+    213: "https://www.alternate.de/p/1200x630/8/6/Microsoft_Windows_11_Pro__Betriebssystem_Software@@1843168.jpg",
+    214: "https://www.alternate.de/p/1200x630/4/5/Lian_Li_O11_Dynamic_EVO_XL_____Big_Tower_Geh_use@@100048854.jpg",
+    215: "https://gzhls.at/pix/6b/b2/6bb293b4b6fdccf5-n.webp?ogircp",
+    216: "https://www.alternate.de/p/1200x630/1/2/Thermal_Grizzly_Duronaut_2g__W_rmeleitpasten@@100103121.jpg",
+    217: "https://cdn.shopify.com/s/files/1/0491/8227/7795/files/2687_11_2.png?v=1772244342"
+  };
+  const LOCAL_IMAGES = {
+    4: "../assets/images/products/4.webp",
+    5: "../assets/images/products/5.webp",
+    6: "../assets/images/products/6.jpg",
+    15: "../assets/images/products/15.png",
+    16: "../assets/images/products/16.jpg",
+    17: "../assets/images/products/17.jpg",
+    18: "../assets/images/products/18.png",
+    19: "../assets/images/products/18.png",
+    20: "../assets/images/products/18.png",
+    21: "../assets/images/products/21.png",
+    31: "../assets/images/products/31.png",
+    32: "../assets/images/products/32.png",
+    35: "../assets/images/products/35.png",
+    36: "../assets/images/products/36.png",
+    37: "../assets/images/products/37.png",
+    38: "../assets/images/products/38.png",
+    39: "../assets/images/products/39.png",
+    40: "../assets/images/products/40.png",
+    41: "../assets/images/products/41.png",
+    42: "../assets/images/products/42.png",
+    43: "../assets/images/products/43.png",
+    44: "../assets/images/products/44.png",
+    45: "../assets/images/products/45.png",
+    48: "../assets/images/products/48.jpg",
+    49: "../assets/images/products/49.jpg",
+    50: "../assets/images/products/50.jpg",
+    51: "../assets/images/products/51.jpg",
+    52: "../assets/images/products/52.jpg",
+    53: "../assets/images/products/53.jpg",
+    54: "../assets/images/products/54.jpg",
+    55: "../assets/images/products/55.jpg",
+    56: "../assets/images/products/56.jpg",
+    57: "../assets/images/products/57.jpg",
+    58: "../assets/images/products/58.jpg",
+    59: "../assets/images/products/59.jpg",
+    60: "../assets/images/products/60.jpg",
+    61: "../assets/images/products/61.jpg",
+    62: "../assets/images/products/62.jpg",
+    66: "../assets/images/products/66.jpg",
+    67: "../assets/images/products/67.jpg",
+    68: "../assets/images/products/68.jpg",
+    69: "../assets/images/products/69.jpg",
+    70: "../assets/images/products/70.jpg",
+    71: "../assets/images/products/71.jpg",
+    72: "../assets/images/products/72.jpg",
+    73: "../assets/images/products/73.jpg",
+    74: "../assets/images/products/74.jpg",
+    75: "../assets/images/products/75.jpg",
+    76: "../assets/images/products/76.jpg",
+    77: "../assets/images/products/77.jpg",
+    78: "../assets/images/products/78.jpg",
+    79: "../assets/images/products/79.jpg",
+    80: "../assets/images/products/80.jpg",
+    81: "../assets/images/products/81.jpg",
+    82: "../assets/images/products/82.jpg",
+    83: "../assets/images/products/83.jpg",
+    84: "../assets/images/products/84.jpg",
+    85: "../assets/images/products/85.jpg",
+    86: "../assets/images/products/86.jpg",
+    87: "../assets/images/products/87.jpg",
+    88: "../assets/images/products/88.jpg",
+    89: "../assets/images/products/89.jpg",
+    92: "../assets/images/products/92.jpg",
+    93: "../assets/images/products/93.jpg",
+    94: "../assets/images/products/94.jpg",
+    95: "../assets/images/products/95.jpg",
+    96: "../assets/images/products/96.jpg",
+    97: "../assets/images/products/97.jpg",
+    98: "../assets/images/products/98.jpg",
+    99: "../assets/images/products/99.jpg",
+    100: "../assets/images/products/100.jpg",
+    101: "../assets/images/products/101.jpg",
+    102: "../assets/images/products/102.jpg",
+    104: "../assets/images/products/104.jpg",
+    105: "../assets/images/products/105.jpg",
+    106: "../assets/images/products/106.jpg",
+    108: "../assets/images/products/108.jpg",
+    109: "../assets/images/products/109.jpg",
+    110: "../assets/images/products/110.jpg",
+    111: "../assets/images/products/111.jpg",
+    112: "../assets/images/products/112.jpg",
+    115: "../assets/images/products/115.jpg",
+    116: "../assets/images/products/116.jpg",
+    118: "../assets/images/products/118.jpg",
+    119: "../assets/images/products/119.jpg",
+    120: "../assets/images/products/120.jpg",
+    121: "../assets/images/products/121.jpg",
+    122: "../assets/images/products/122.jpg",
+    123: "../assets/images/products/123.jpg",
+    124: "../assets/images/products/124.jpg",
+    125: "../assets/images/products/125.jpg",
+    127: "../assets/images/products/127.jpg",
+    128: "../assets/images/products/128.jpg",
+    129: "../assets/images/products/129.jpg",
+    130: "../assets/images/products/130.jpg",
+    131: "../assets/images/products/131.jpg",
+    132: "../assets/images/products/132.jpg",
+    133: "../assets/images/products/133.jpg",
+    134: "../assets/images/products/134.jpg",
+    135: "../assets/images/products/135.jpg",
+    136: "../assets/images/products/136.jpg",
+    137: "../assets/images/products/137.jpg",
+    138: "../assets/images/products/138.jpg",
+    139: "../assets/images/products/139.jpg",
+    140: "../assets/images/products/140.jpg",
+    141: "../assets/images/products/141.jpg",
+    142: "../assets/images/products/142.jpg",
+    143: "../assets/images/products/143.jpg",
+    144: "../assets/images/products/144.jpg",
+    145: "../assets/images/products/145.jpg",
+    146: "../assets/images/products/146.jpg",
+    147: "../assets/images/products/147.jpg",
+    148: "../assets/images/products/148.jpg",
+    150: "../assets/images/products/150.jpg",
+    151: "../assets/images/products/151.jpg",
+    152: "../assets/images/products/152.jpg",
+    153: "../assets/images/products/153.jpg",
+    154: "../assets/images/products/154.jpg",
+    155: "../assets/images/products/155.jpg",
+    156: "../assets/images/products/156.jpg",
+    157: "../assets/images/products/157.jpg",
+    158: "../assets/images/products/158.jpg",
+    159: "../assets/images/products/159.png",
+    162: "../assets/images/products/162.png",
+    163: "../assets/images/products/163.jpg",
+    164: "../assets/images/products/164.webp",
+    167: "../assets/images/products/167.webp",
+    170: "../assets/images/products/170.jpg",
+    173: "../assets/images/products/173.png",
+    177: "../assets/images/products/177.jpg",
+    178: "../assets/images/products/178.jpg",
+    180: "../assets/images/products/180.webp",
+    181: "../assets/images/products/181.webp",
+    182: "../assets/images/products/182.webp",
+    183: "../assets/images/products/183.webp",
+    184: "../assets/images/products/184.jpg",
+    185: "../assets/images/products/185.webp",
+    186: "../assets/images/products/183.webp",
+    187: "../assets/images/products/187.webp",
+    189: "../assets/images/products/189.png",
+    190: "../assets/images/products/190.png",
+    191: "../assets/images/products/191.png",
+    192: "../assets/images/products/192.png",
+    193: "../assets/images/products/193.jpg",
+    200: "../assets/images/products/200.webp",
+    201: "../assets/images/products/201.jpg",
+    205: "../assets/images/products/205.jpg",
+    206: "../assets/images/products/206.jpg",
+    207: "../assets/images/products/207.webp",
+    208: "../assets/images/products/208.webp",
+    209: "../assets/images/products/209.webp",
+    210: "../assets/images/products/209.webp",
+    211: "../assets/images/products/211.webp",
+    212: "../assets/images/products/209.webp",
+    213: "../assets/images/products/213.jpg",
+    214: "../assets/images/products/214.jpg",
+    215: "../assets/images/products/215.webp",
+    216: "../assets/images/products/216.jpg",
+    217: "../assets/images/products/217.png"
+  };
+  const ITEM_IMAGES = Object.assign({}, REMOTE_IMAGES, LOCAL_IMAGES);
+
+  let activeTab = "Alle";
+  let expandedGroups = new Set();
+  let searchQuery = "";
+  let allExpanded = false;
+  let dreamMode = false;
+  let lbGallery = [];
+  let lbIndex = -1;
+
+  // Abhak-Zustand: ueberlebt Neuladen via localStorage
+  const STORAGE_KEY = 'nzh-purchased';
+  let purchased;
+  try {
+    purchased = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
+  } catch (e) {
+    purchased = new Set();
+  }
+  function savePurchased(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify([...purchased])); } catch (e) {}
+  }
+
+  // --- Filter-Zustand ---
+  let hideDone = false;
+  try { hideDone = localStorage.getItem('nzh-hidedone') === '1'; } catch (e) {}
+  let prioFilter = null;
+  let sortMode = 'default';
+  let budgetMax = null;
+
+  function applyFilters(list){
+    return list.filter(i => {
+      if (hideDone && purchased.has(i.id)) return false;
+      if (prioFilter && i.priority !== prioFilter) return false;
+      if (budgetMax !== null && (i.price === null || Number(i.price) > budgetMax)) return false;
+      return true;
+    });
+  }
+
+  function toggleHideDone(){
+    hideDone = !hideDone;
+    try { localStorage.setItem('nzh-hidedone', hideDone ? '1' : '0'); } catch (e) {}
+    updateFilterUI();
+    renderLists();
+  }
+  function setPrioFilter(p){
+    prioFilter = (prioFilter === p) ? null : p;
+    updateFilterUI();
+    renderLists();
+  }
+  function setSort(v){
+    sortMode = v;
+    renderLists();
+  }
+  let budgetTimer = null;
+  function setBudget(v){
+    clearTimeout(budgetTimer);
+    budgetTimer = setTimeout(() => {
+      budgetMax = v === '' ? null : Math.max(0, Number(v) || 0);
+      updateFilterUI();
+      renderLists();
+    }, 250);
+  }
+  function updateFilterUI(){
+    document.getElementById('hideDoneBtn').classList.toggle('on', hideDone);
+    document.querySelectorAll('.fchip.prio').forEach(b => b.classList.toggle('on', b.dataset.prio === prioFilter));
+    const active = hideDone || prioFilter || budgetMax !== null;
+    const info = document.getElementById('filterInfo');
+    info.style.display = active ? '' : 'none';
+    if (active){
+      info.textContent = `${applyFilters(items).length} von ${items.length} Einträgen sichtbar — Filter aktiv`;
+    }
+  }
+
+  // --- Abhaken: aktualisiert gezielt statt alles neu zu rendern ---
+  function togglePurchased(id, opts){
+    opts = opts || {};
+    const item = items.find(x => x.id === id);
+    if (!item) return;
+    const nowDone = !purchased.has(id);
+    if (nowDone) purchased.add(id);
+    else purchased.delete(id);
+    savePurchased();
+
+    document.querySelectorAll(`.card[data-id="${id}"]`).forEach(card => {
+      card.classList.toggle('done', nowDone);
+      const cb = card.querySelector('.checkbox');
+      if (cb){
+        cb.classList.toggle('done', nowDone);
+        cb.setAttribute('aria-label', nowDone ? 'Wieder als offen markieren' : 'Als erledigt abhaken');
+        if (nowDone && !opts.silent){
+          const d = cb.querySelector('.cb-diamond');
+          d.classList.remove('pop'); void d.offsetWidth; d.classList.add('pop');
+        }
+      }
+    });
+    renderLedger();
+    updateHero();
+    updateCategoryProgress(item.category);
+    updateLightboxCheck();
+    updateFilterUI();
+
+    if (hideDone && nowDone){
+      setTimeout(renderLists, 350);
+    }
+    if (!opts.silent){
+      if (nowDone){
+        const catItems = items.filter(i => i.category === item.category);
+        const allDone = catItems.every(i => purchased.has(i.id));
+        showToast(
+          allDone ? `${item.category} komplett — alles erledigt!` : `„${item.title}" abgehakt`,
+          () => togglePurchased(id, { silent: true })
+        );
+      } else {
+        showToast(`„${item.title}" wieder offen`, null);
+      }
+    }
+  }
+
+  function updateCategoryProgress(cat){
+    const catItems = items.filter(i => i.category === cat);
+    const done = catItems.filter(i => purchased.has(i.id)).length;
+    const isFull = catItems.length > 0 && done === catItems.length;
+    document.querySelectorAll(`.cat-progress[data-cat="${cat}"]`).forEach(el => {
+      el.textContent = `${done}/${catItems.length} erledigt`;
+      el.classList.toggle('some', done > 0);
+      el.classList.toggle('full', isFull);
+    });
+    document.querySelectorAll(`.cat-bar[data-cat="${cat}"] span`).forEach(el => {
+      el.style.width = (catItems.length ? (done / catItems.length) * 100 : 0) + '%';
+    });
+  }
+
+  // --- Toast mit Rückgängig ---
+  let toastTimer = null;
+  function showToast(msg, undoFn){
+    const t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    const btn = document.getElementById('toastUndo');
+    btn.style.display = undoFn ? '' : 'none';
+    btn.onclick = () => { if (undoFn) undoFn(); hideToast(); };
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(hideToast, 4500);
+  }
+  function hideToast(){
+    document.getElementById('toast').classList.remove('show');
+  }
+
+  // --- Stand sichern / laden ---
+  function exportState(){
+    const data = { app: 'noch-zu-holen', exported: new Date().toISOString(), purchased: [...purchased] };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'noch-zu-holen-stand.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+    showToast(`Stand gesichert — ${purchased.size} Haken exportiert`, null);
+  }
+  function importState(input){
+    const file = input.files && input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(reader.result);
+        const ids = Array.isArray(data) ? data : data.purchased;
+        if (!Array.isArray(ids)) throw new Error('format');
+        const valid = new Set(items.map(i => i.id));
+        purchased = new Set(ids.filter(id => valid.has(id)));
+        savePurchased();
+        render();
+        updateHero();
+        updateFilterUI();
+        showToast(`Stand geladen — ${purchased.size} Haken übernommen`, null);
+      } catch (e) {
+        showToast('Konnte die Datei nicht lesen — ist das ein gesicherter Stand?', null);
+      }
+      input.value = '';
+    };
+    reader.readAsText(file);
+  }
+
+  // --- Druckansicht: alles aufklappen, drucken, Zustand wiederherstellen ---
+  function printList(){
+    const prevExpanded = new Set(expandedGroups);
+    items.forEach(i => { if (i.group) expandedGroups.add(groupKey(i)); });
+    renderLists();
+    window.print();
+    expandedGroups = prevExpanded;
+    renderLists();
+  }
+
+  function money(n){
+    if (n === null || n === undefined || n === "") return "";
+    return Number(n).toLocaleString('de-DE', {minimumFractionDigits:0}) + " €";
+  }
+
+  function renderTabs(){
+    const el = document.getElementById('tabs');
+    const tabs = ["Alle", ...CATEGORIES];
+    el.innerHTML = tabs.map(t =>
+      `<button class="tab ${t===activeTab?'active':''}" onclick="setTab('${t}')">${t}</button>`
+    ).join('');
+  }
+  function setTab(t){ activeTab = t; render(); }
+
+  function updateHero(){
+    const total = items.length;
+    const done = purchased.size;
+    const restSum = items.filter(i => !purchased.has(i.id)).reduce((s,i) => s + (Number(i.price)||0), 0);
+    const doneSum = items.filter(i => purchased.has(i.id)).reduce((s,i) => s + (Number(i.price)||0), 0);
+    const C = 2 * Math.PI * 76;
+    const bar = document.getElementById('ringBar');
+    bar.style.strokeDasharray = C;
+    bar.style.strokeDashoffset = C * (1 - (total ? done/total : 0));
+    document.getElementById('ringNum').textContent = done;
+    document.getElementById('ringLabel').textContent = `von ${total} erledigt`;
+    document.getElementById('ringSub').innerHTML = done > 0
+      ? `schon <b>${money(doneSum)}</b> erledigt · Rest ${money(restSum)}`
+      : `noch ${money(restSum)} vor mir`;
+  }
+
+  function renderLedger(){
+    const el = document.getElementById('ledger');
+    const done = purchased.size;
+    const open = items.length - done;
+    const restSum = items.filter(i => !purchased.has(i.id)).reduce((s,i) => s + (Number(i.price)||0), 0);
+    el.innerHTML = `
+      <div class="ledger-item">
+        <div class="label">Einträge gesamt</div>
+        <div class="value">${items.length}</div>
+      </div>
+      <div class="ledger-item">
+        <div class="label">Noch offen</div>
+        <div class="value">${open}</div>
+      </div>
+      <div class="ledger-item">
+        <div class="label">Erledigt</div>
+        <div class="value green">${done}</div>
+      </div>
+      <div class="ledger-item">
+        <div class="label">Restsumme</div>
+        <div class="value amber">${money(restSum)}</div>
+      </div>
+    `;
+  }
+
+  function renderLists(){
+    const el = document.getElementById('lists');
+    const pool = applyFilters(items);
+
+    if (searchQuery.trim() === "" && dreamMode){
+      renderDreamRoom();
+      return;
+    }
+
+    if (searchQuery.trim() !== ""){
+      const q = searchQuery.trim().toLowerCase();
+      const matches = pool.filter(i =>
+        i.title.toLowerCase().includes(q) ||
+        (i.note && i.note.toLowerCase().includes(q)) ||
+        (i.group && i.group.toLowerCase().includes(q)) ||
+        (i.subcategory && i.subcategory.toLowerCase().includes(q))
+      );
+      if (matches.length === 0){
+        el.innerHTML = `<div class="empty">Keine Treffer für „${escapeHtml(searchQuery)}" — vielleicht anders geschrieben?</div>`;
+        return;
+      }
+      let html = `<div class="search-info sans">${matches.length} Treffer für „${escapeHtml(searchQuery)}"</div>`;
+      CATEGORIES.forEach(cat => {
+        const catMatches = matches.filter(i => i.category === cat);
+        if (catMatches.length === 0) return;
+        html += `<div class="category-block">
+          <div class="category-head"><div class="category-title"><h2>${cat}</h2></div></div>`;
+        catMatches.forEach(i => { html += renderCard(i); });
+        html += `</div>`;
+      });
+      el.innerHTML = html;
+      return;
+    }
+
+    const cats = activeTab === "Alle" ? CATEGORIES : [activeTab];
+    let html = '';
+    cats.forEach(cat => {
+      const allCatItems = items.filter(i => i.category === cat);
+      const catItems = pool.filter(i => i.category === cat);
+      if (catItems.length === 0 && activeTab !== "Alle") {
+        html += `<div class="empty">${allCatItems.length === 0
+          ? `Noch nichts unter „${cat}" — muss ich noch auffüllen.`
+          : `Unter „${cat}" bleibt mit den aktuellen Filtern nichts übrig.`}</div>`;
+        return;
+      }
+      if (catItems.length === 0) return;
+      const sum = catItems.reduce((s,i) => s + (Number(i.price)||0), 0);
+      const doneCat = allCatItems.filter(i => purchased.has(i.id)).length;
+      const isFull = allCatItems.length > 0 && doneCat === allCatItems.length;
+      html += `<div class="category-block">
+        <div class="category-head">
+          <div class="category-title">
+            <h2>${cat}</h2>
+            <span class="cat-progress ${doneCat>0?'some':''} ${isFull?'full':''}" data-cat="${cat}">${doneCat}/${allCatItems.length} erledigt</span>
+          </div>
+          <span class="sum mono">${money(sum)}</span>
+        </div>
+        <div class="cat-bar" data-cat="${cat}"><span style="width:${allCatItems.length ? (doneCat/allCatItems.length)*100 : 0}%"></span></div>`;
+
+      const subcats = [...new Set(catItems.map(i => i.subcategory).filter(Boolean))];
+      const noSub = catItems.filter(i => !i.subcategory);
+
+      html += renderItemsAndGroups(noSub);
+
+      subcats.forEach(sub => {
+        const subItems = catItems.filter(i => i.subcategory === sub);
+        const subSum = subItems.reduce((s,i) => s + (Number(i.price)||0), 0);
+        html += `<div class="subcategory-head">
+          <h3>${sub}</h3>
+          <span class="sub-sum mono">${money(subSum)}</span>
+        </div>`;
+        html += renderItemsAndGroups(subItems);
+      });
+
+      html += `</div>`;
+    });
+    if (html === ''){
+      html = `<div class="empty">Mit den aktuellen Filtern bleibt nichts übrig — vielleicht einen Filter lockern?</div>`;
+    }
+    el.innerHTML = html;
+  }
+
+  let searchTimer = null;
+  function onSearch(){
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+      searchQuery = document.getElementById('searchBox').value;
+      renderLists();
+    }, 150);
+  }
+
+  function toggleExpandAll(){
+    allExpanded = !allExpanded;
+    if (allExpanded){
+      items.forEach(i => { if (i.group) expandedGroups.add(groupKey(i)); });
+    } else {
+      expandedGroups.clear();
+    }
+    document.getElementById('expandAllBtn').textContent = allExpanded ? 'Alle Gruppen zuklappen' : 'Alle Gruppen aufklappen';
+    document.getElementById('expandAllBtn').classList.toggle('active', allExpanded);
+    renderLists();
+  }
+
+  function renderDreamRoom(){
+    const el = document.getElementById('lists');
+    const dreamPool = applyFilters(items);
+    const projects = [...new Set(dreamPool.filter(i => i.dreamProject).map(i => i.dreamProject))];
+    if (projects.length === 0){
+      el.innerHTML = `<div class="empty">Noch kein großer Traum angelegt — oder die Filter blenden gerade alles aus.</div>`;
+      return;
+    }
+    let html = `<div class="search-info sans">Meine großen Träume — Projekte, die sich über mehrere Bereiche der Liste ziehen. Taucht auch ganz normal unter der jeweiligen Kategorie auf, zählt also nicht doppelt zur Gesamtsumme oben.</div>`;
+    projects.forEach(project => {
+      const projectItems = dreamPool.filter(i => i.dreamProject === project);
+      const areas = [...new Set(projectItems.map(i => i.roomArea).filter(Boolean))];
+      const knownPrice = projectItems.reduce((s,i) => s + (Number(i.price)||0), 0);
+      const openCount = projectItems.filter(i => i.price === null).length;
+      html += `<div class="dream-project">
+        <div class="dream-project-head">
+          <h2>${escapeHtml(project)}</h2>
+          <span class="dream-project-sum mono">${money(knownPrice)}${openCount ? ` + ${openCount} offen` : ''}</span>
+        </div>`;
+      areas.forEach(area => {
+        const areaItems = projectItems.filter(i => i.roomArea === area);
+        const areaSum = areaItems.reduce((s,i) => s + (Number(i.price)||0), 0);
+        html += `<div class="subcategory-head">
+          <h3>${escapeHtml(area)}</h3>
+          <span class="sub-sum mono">${money(areaSum)}</span>
+        </div>`;
+        html += renderItemsAndGroups(areaItems, true);
+      });
+      html += `</div>`;
+    });
+    el.innerHTML = html;
+  }
+
+  function toggleDreamMode(){
+    dreamMode = !dreamMode;
+    document.getElementById('dreamModeBtn').classList.toggle('active', dreamMode);
+    document.getElementById('tabs').style.display = dreamMode ? 'none' : 'flex';
+    renderLists();
+  }
+
+  function renderItemsAndGroups(list, hidePriority){
+    hidePriority = hidePriority || false;
+    let html = '';
+    let ungrouped = list.filter(i => !i.group);
+    if (sortMode !== 'default'){
+      ungrouped = ungrouped.slice().sort((a,b) => (Number(a.price)||0) - (Number(b.price)||0));
+      if (sortMode === 'desc') ungrouped.reverse();
+    }
+    ungrouped.forEach(i => { html += renderCard(i, null, hidePriority); });
+
+    let groupNames = [...new Set(list.map(i => i.group).filter(Boolean))];
+    if (sortMode !== 'default'){
+      const sums = {};
+      groupNames.forEach(g => {
+        sums[g] = list.filter(i => i.group === g).reduce((s,i) => s + (Number(i.price)||0), 0);
+      });
+      groupNames.sort((a,b) => sortMode === 'asc' ? sums[a]-sums[b] : sums[b]-sums[a]);
+    }
+    groupNames.forEach(g => {
+      const groupItems = list.filter(i => i.group === g);
+      const key = groupKey(groupItems[0]);
+      const isOpen = expandedGroups.has(key);
+      const groupSum = groupItems.reduce((s,i) => s + (Number(i.price)||0), 0);
+      const kind = classifyGroup(groupItems);
+
+      if (kind.type === 'main-accessory'){
+        html += renderCard(kind.main, { count: kind.accessories.length, isOpen, key }, hidePriority);
+        if (isOpen){
+          html += `<div class="group-items">`;
+          kind.accessories.forEach(i => { html += renderCard(i, null, hidePriority); });
+          html += `</div>`;
+        }
+      } else if (kind.type === 'alternatives'){
+        html += `<div class="group-block">
+          <div class="group-header alt-header" onclick="toggleGroup('${key}')">
+            <div class="group-header-left">
+              <span class="chevron ${isOpen ? 'open':''}">▸</span>
+              <span class="alt-icon">⇄</span>
+              <span class="group-name">${escapeHtml(g)}</span>
+              <span class="group-count alt-count">${groupItems.length} Optionen · alle okay, noch nicht entschieden</span>
+            </div>
+            <span class="group-sum mono">${money(groupSum)}</span>
+          </div>`;
+        if (isOpen){
+          html += `<div class="group-items">`;
+          groupItems.forEach(i => { html += renderCard(i, null, hidePriority); });
+          html += `</div>`;
+        }
+        html += `</div>`;
+      } else {
+        html += `<div class="group-block">
+          <div class="group-header" onclick="toggleGroup('${key}')">
+            <div class="group-header-left">
+              <span class="chevron ${isOpen ? 'open':''}">▸</span>
+              <span class="group-name">${escapeHtml(g)}</span>
+              <span class="group-count">${groupItems.length} Teile</span>
+            </div>
+            <span class="group-sum mono">${money(groupSum)}</span>
+          </div>`;
+        if (isOpen){
+          html += `<div class="group-items">`;
+          groupItems.forEach(i => { html += renderCard(i, null, hidePriority); });
+          html += `</div>`;
+        }
+        html += `</div>`;
+      }
+    });
+    return html;
+  }
+
+  function classifyGroup(groupItems){
+    const accessories = groupItems.filter(i => i.note && i.note.indexOf('Zubehör') !== -1);
+    const mainCandidates = groupItems.filter(i => !(i.note && i.note.indexOf('Zubehör') !== -1));
+    if (accessories.length > 0 && mainCandidates.length === 1){
+      return { type: 'main-accessory', main: mainCandidates[0], accessories };
+    }
+    const allOptions = groupItems.every(i => i.note && i.note.indexOf('Test-Option') === 0);
+    if (allOptions){
+      return { type: 'alternatives' };
+    }
+    return { type: 'generic' };
+  }
+
+  function groupKey(item){
+    return `${item.category}::${item.subcategory||''}::${item.group||''}`;
+  }
+
+  function toggleGroup(key){
+    if (expandedGroups.has(key)) expandedGroups.delete(key);
+    else expandedGroups.add(key);
+    renderLists();
+  }
+
+  function renderCard(i, accessoryInfo, hidePriority){
+    accessoryInfo = accessoryInfo || null;
+    hidePriority = hidePriority || false;
+    const isDone = purchased.has(i.id);
+    const isSeries = i.note && i.note.indexOf('Alle aktuell erschienenen Bände gewünscht') !== -1;
+    const imgUrl = ITEM_IMAGES[i.id];
+    const remoteUrl = REMOTE_IMAGES[i.id];
+    const monoSrc = i.title.indexOf(': ') !== -1 ? i.title.split(': ')[1] : i.title;
+    const initial = (monoSrc.trim().charAt(0) || '?').toUpperCase();
+    const remoteAttr = (remoteUrl && remoteUrl !== imgUrl) ? ` data-remote="${escapeHtml(remoteUrl)}"` : '';
+    const thumb = imgUrl
+      ? `<button class="thumb" onclick="openLightbox(${i.id})" aria-label="Produktbild ansehen"><img src="${escapeHtml(imgUrl)}" alt="" loading="lazy" data-initial="${escapeHtml(initial)}"${remoteAttr} onerror="thumbFallback(this)"></button>`
+      : `<div class="thumb thumb-mono" aria-hidden="true">${escapeHtml(initial)}</div>`;
+    return `
+      <div class="card ${isDone ? 'done' : ''}" data-id="${i.id}">
+        <button class="checkbox ${isDone ? 'done' : ''}" onclick="togglePurchased(${i.id})" aria-label="${isDone ? 'Wieder als offen markieren' : 'Als erledigt abhaken'}" title="${isDone ? 'Wieder als offen markieren' : 'Abhaken'}"><span class="cb-diamond"><span>✓</span></span></button>
+        ${thumb}
+        <div class="card-body">
+          <div class="item-top">
+            <div class="item-title">${escapeHtml(i.title)}${isSeries ? ' <span class="series-badge">ganze Serie · DE/EN · TB/HC</span>' : ''}</div>
+            <div class="price-meta">
+              <div class="item-price">${money(i.price)}</div>
+            </div>
+          </div>
+          ${i.note ? `<div class="item-note">${escapeHtml(i.note)}</div>` : ''}
+          <div class="item-tags">
+            ${hidePriority ? '' : `<span class="prio-tag ${PRIO_CLASS[i.priority]}">${PRIO_LABEL[i.priority]}</span>`}
+            ${i.link ? `<a class="link-btn" href="${escapeHtml(i.link)}" target="_blank" rel="noopener">Zum Produkt ↗</a>` : ''}
+            ${accessoryInfo ? `<button class="accessory-toggle-btn" onclick="toggleGroup('${accessoryInfo.key}')">${accessoryInfo.isOpen ? 'Zubehör ausblenden' : `+ ${accessoryInfo.count} Zubehör`}</button>` : ''}
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function escapeHtml(str){
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+  }
+
+  function render(){
+    renderTabs();
+    renderLedger();
+    renderLists();
+  }
+
+  render();
+  updateFilterUI();
+  requestAnimationFrame(() => requestAnimationFrame(updateHero));
+
+  // --- Produktbild-Lightbox ---
+  function thumbFallback(img){
+    const remote = img.getAttribute('data-remote');
+    if (remote){
+      img.removeAttribute('data-remote');
+      img.src = remote;
+      return;
+    }
+    const d = document.createElement('div');
+    d.className = 'thumb thumb-mono';
+    d.setAttribute('aria-hidden', 'true');
+    d.textContent = img.getAttribute('data-initial') || '?';
+    img.closest('.thumb').replaceWith(d);
+  }
+  function openLightbox(id){
+    lbGallery = items.filter(i => ITEM_IMAGES[i.id]).map(i => i.id);
+    lbIndex = lbGallery.indexOf(id);
+    if (lbIndex === -1) return;
+    renderLightbox();
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function renderLightbox(){
+    const id = lbGallery[lbIndex];
+    const item = items.find(x => x.id === id);
+    if (!item) return;
+    document.getElementById('lbImg').src = ITEM_IMAGES[id];
+    document.getElementById('lbTitle').textContent = item.title;
+    document.getElementById('lbPrice').textContent = money(item.price);
+    document.getElementById('lbCount').textContent = `${lbIndex + 1} / ${lbGallery.length} · blättern mit ← →`;
+    const link = document.getElementById('lbLink');
+    if (item.link){ link.href = item.link; link.style.display = ''; }
+    else { link.style.display = 'none'; }
+    updateLightboxCheck();
+  }
+  function updateLightboxCheck(){
+    if (lbIndex < 0) return;
+    const btn = document.getElementById('lbCheck');
+    const done = purchased.has(lbGallery[lbIndex]);
+    btn.classList.toggle('done', done);
+    btn.textContent = done ? '✓ Erledigt' : 'Abhaken';
+  }
+  function lbToggleCheck(){
+    if (lbIndex < 0) return;
+    togglePurchased(lbGallery[lbIndex]);
+  }
+  function lbNav(dir){
+    if (lbIndex < 0 || lbGallery.length === 0) return;
+    lbIndex = (lbIndex + dir + lbGallery.length) % lbGallery.length;
+    renderLightbox();
+  }
+  function closeLightbox(){
+    const lb = document.getElementById('lightbox');
+    if (!lb.classList.contains('open')) return;
+    lb.classList.remove('open');
+    lbIndex = -1;
+    document.body.style.overflow = '';
+  }
+  document.getElementById('lightbox').addEventListener('click', function(e){
+    if (e.target === this) closeLightbox();
+  });
+
+  // --- Tastatur: / fokussiert die Suche, Esc schließt/leert, Pfeile blättern ---
+  document.addEventListener('keydown', function(e){
+    const lbOpen = document.getElementById('lightbox').classList.contains('open');
+    const ae = document.activeElement;
+    const inInput = ae && /^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName);
+    if (e.key === 'Escape'){
+      if (lbOpen){ closeLightbox(); return; }
+      if (inInput && ae.id === 'searchBox'){
+        ae.value = ''; onSearch(); ae.blur();
+      }
+      return;
+    }
+    if (lbOpen){
+      if (e.key === 'ArrowRight'){ e.preventDefault(); lbNav(1); }
+      else if (e.key === 'ArrowLeft'){ e.preventDefault(); lbNav(-1); }
+      return;
+    }
+    if (e.key === '/' && !inInput){
+      e.preventDefault();
+      document.getElementById('searchBox').focus();
+    }
+  });
+
+  // --- Scroll-Reveal ---
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const revealObserver = (prefersReduced || !('IntersectionObserver' in window)) ? null :
+    new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (en.isIntersecting){ en.target.classList.add('in'); revealObserver.unobserve(en.target); }
+      });
+    }, { rootMargin: '0px 0px -6% 0px', threshold: 0.05 });
+  function armReveal(){
+    if (!revealObserver) return;
+    document.getElementById('lists').querySelectorAll('.card, .group-header, .dream-project').forEach(function(el){
+      if (el.classList.contains('reveal')) return;
+      el.classList.add('reveal');
+      revealObserver.observe(el);
+    });
+  }
+  document.addEventListener('animationend', function(e){
+    if (e.animationName === 'cardIn') e.target.classList.remove('reveal', 'in');
+  });
+  new MutationObserver(armReveal).observe(document.getElementById('lists'), { childList: true });
+  armReveal();
+</script>
+
+</body>
+</html>
