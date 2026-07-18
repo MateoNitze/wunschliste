@@ -148,9 +148,11 @@ Keine Stockfotos, keine externen Medien im Hero.
 
 ---
 
-### Nächste Schritte (bewusst noch nicht ausgeführt)
+### Nächste Schritte
 
-- [ ] `website/index.html` bauen (Struktur + Design nach diesem Kit)
-- [ ] Daten (`items` + `ITEM_IMAGES`) aus `Downloads/wunschliste.html` übernehmen
-- [ ] Abhak-Logik + `localStorage` + Fortschrittsanzeigen
-- [ ] Screenshots/Feinschliff, Eltern-Test
+- [x] `website/index.html` bauen (Struktur + Design nach diesem Kit)
+- [x] Daten (`items` + `ITEM_IMAGES`) aus `Downloads/wunschliste.html` übernehmen
+- [x] Abhak-Logik + `localStorage` + Fortschrittsanzeigen
+- [x] Ausbau: lokale Bilder, Filter, Undo, Export/Import, Lightbox-Galerie,
+      Druckansicht, Shortcuts, README + git
+- [ ] Eltern-Test
