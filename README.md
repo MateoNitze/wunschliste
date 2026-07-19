@@ -21,8 +21,8 @@ lokalen Produktbilder aus `assets/` laden.
 - **Suche** über Titel, Notizen, Marken und Gruppen (`/` fokussiert die Suche).
 - **Produktbilder** — 205 von 209 Einträgen bebildert, fast alle lokal gespeichert
   (`assets/images/products/`); Fallback-Kette lokal → remote → Monogramm.
-- **Geprüfte Preise** — 66 Preise gegen die Produktseiten abgeglichen (37 korrigiert),
-  erkennbar am „Preis geprüft"-Badge.
+- **Geprüfte Preise** — 140 von 209 Preisen gegen die Produktseiten abgeglichen
+  (Shops direkt, Amazon per Browser; 117 korrigiert), erkennbar am „Preis geprüft"-Badge.
 - **Gruppen-Abhaken, Statistik-Panel, „Womit anfangen?"-Empfehlung, Abhak-Datum,
   Such-Highlighting, Tab-Link in der URL, Scroll-to-top** — Details siehe Website.
 - **Lightbox** mit Blättern (`←`/`→`), Abhaken direkt im Bild.
@@ -47,6 +47,14 @@ lokalen Produktbilder aus `assets/` laden.
 └── website/
     └── index.html            # die komplette App — eine Datei, kein Backend
 ```
+
+## Neuen Wunsch eintragen
+
+`website/index.html` im Editor öffnen und nach `NEUEN WUNSCH EINTRAGEN` suchen —
+dort steht eine kommentierte Vorlage zum Kopieren. Kurzfassung: Eintrag mit
+einmaliger `id` ins `items`-Array setzen, optional ein Bild in
+`assets/images/products/` legen und in der `LOCAL_IMAGES`-Map verlinken.
+Speichern, Seite neu laden, fertig.
 
 ## Technik
 
