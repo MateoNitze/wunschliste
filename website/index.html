@@ -982,6 +982,67 @@
   }
   .cat-progress.celebrate{ animation:catGlow 1.2s ease; }
 
+  /* ---------- Mini-Fortschritt (sticky Leiste) ---------- */
+  .mini-progress{
+    display:none;
+    font-family:'JetBrains Mono',Consolas,monospace;
+    font-size:11px;
+    color:var(--amber);
+    white-space:nowrap;
+    padding-right:2px;
+  }
+  .mini-progress.show{ display:block; }
+
+  /* ---------- Träume-Projektfortschritt ---------- */
+  .dream-progress{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin:2px 0 16px;
+  }
+  .dream-progress .sbar{
+    flex:1;
+    height:4px;
+    background:rgba(255,255,255,0.07);
+    border-radius:2px;
+    overflow:hidden;
+  }
+  .dream-progress .sbar span{ display:block; height:100%; background:var(--amber); border-radius:2px; }
+  .dream-progress .sval{
+    font-family:'JetBrains Mono',Consolas,monospace;
+    font-size:10.5px;
+    color:var(--muted);
+    white-space:nowrap;
+  }
+
+  /* ---------- Zuletzt abgehakt ---------- */
+  .stat-last{ margin-top:18px; }
+  .stat-last-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap:10px;
+    padding:7px 0;
+    border-bottom:1px solid var(--line);
+    font-size:12.5px;
+    cursor:pointer;
+    background:none;
+    border-left:none; border-right:none; border-top:none;
+    color:var(--text);
+    width:100%;
+    text-align:left;
+    font-family:'Inter',sans-serif;
+  }
+  .stat-last-row:hover{ color:var(--amber); }
+  .stat-last-row .sval{
+    font-family:'JetBrains Mono',Consolas,monospace;
+    font-size:10.5px;
+    color:var(--green);
+    white-space:nowrap;
+  }
+
+  .ring{ cursor:pointer; }
+
   /* ---------- Performance ---------- */
   .card{ content-visibility:auto; contain-intrinsic-size:auto 132px; }
 
@@ -1139,7 +1200,7 @@
         <div class="hero-sub">209 Wünsche über neun Kategorien — sortiert, priorisiert, abhakbar. Was ich abhake, bleibt abgehakt.</div>
       </div>
       <div class="ring-wrap">
-        <div class="ring">
+        <div class="ring" onclick="jumpToStats()" title="Statistik ansehen" role="button" tabindex="0" onkeydown="if(event.key==='Enter')jumpToStats()">
           <svg width="170" height="170" viewBox="0 0 170 170">
             <circle class="track" cx="85" cy="85" r="76"></circle>
             <circle class="bar" id="ringBar" cx="85" cy="85" r="76"></circle>
@@ -1164,6 +1225,7 @@
 
 <main>
   <div class="controls-bar sans">
+    <div class="mini-progress" id="miniProgress" aria-hidden="true"></div>
     <input type="text" id="searchBox" placeholder="Suchen (Titel, Notiz, Marke …)" oninput="onSearch()">
     <button class="ctrl-btn" id="expandAllBtn" onclick="toggleExpandAll()">Alle Gruppen aufklappen</button>
     <button class="ctrl-btn dream-toggle" id="dreamModeBtn" onclick="toggleDreamMode()">◆ Große Träume</button>
@@ -1178,6 +1240,7 @@
     <span class="fsep"></span>
     <select class="fselect" id="sortSelect" onchange="setSort(this.value)" aria-label="Sortierung">
       <option value="default">Reihenfolge: Standard</option>
+      <option value="prio">Priorität: Muss zuerst</option>
       <option value="asc">Preis aufsteigend</option>
       <option value="desc">Preis absteigend</option>
     </select>
@@ -2522,8 +2585,14 @@
     }, 250);
   }
   function updateFilterUI(){
-    document.getElementById('hideDoneBtn').classList.toggle('on', hideDone);
-    document.querySelectorAll('.fchip.prio').forEach(b => b.classList.toggle('on', b.dataset.prio === prioFilter));
+    const hd = document.getElementById('hideDoneBtn');
+    hd.classList.toggle('on', hideDone);
+    hd.setAttribute('aria-pressed', hideDone);
+    document.querySelectorAll('.fchip.prio').forEach(b => {
+      const on = b.dataset.prio === prioFilter;
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-pressed', on);
+    });
     const active = hideDone || prioFilter || budgetMax !== null;
     const info = document.getElementById('filterInfo');
     info.style.display = active ? '' : 'none';
@@ -2790,7 +2859,25 @@
       prioHtml += `<div class="stat-prio-row"><span>${label}</span><span class="sval">${pi.length} offen · ${money(sum)}</span></div>`;
     });
     const noPrice = items.filter(i => i.price === null && !purchased.has(i.id)).length;
-    prioHtml += `<div class="stat-prio-row"><span>Preis noch offen</span><span class="sval">${noPrice} Einträge</span></div></div></div>`;
+    prioHtml += `<div class="stat-prio-row"><span>Preis noch offen</span><span class="sval">${noPrice} Einträge</span></div></div>`;
+    const recent = [...purchased]
+      .map(id => ({ id, date: purchaseDates[id] || '' }))
+      .sort((a,b) => b.date.localeCompare(a.date))
+      .slice(0, 5);
+    prioHtml += '<div class="stat-last"><div class="stats-h">Zuletzt abgehakt</div>';
+    if (recent.length === 0){
+      prioHtml += '<div style="font-size:12.5px;color:var(--muted)">Noch nichts abgehakt.</div>';
+    } else {
+      recent.forEach(r => {
+        const it = items.find(x => x.id === r.id);
+        if (!it) return;
+        prioHtml += `<button class="stat-last-row" onclick="jumpToItem(${r.id})">
+          <span>${escapeHtml(it.title.length > 34 ? it.title.slice(0, 33) + '…' : it.title)}</span>
+          <span class="sval">${formatDate(r.date) || ''}</span>
+        </button>`;
+      });
+    }
+    prioHtml += '</div></div>';
     body.innerHTML = catHtml + prioHtml;
   }
 
@@ -2844,9 +2931,12 @@
 
   function renderTabs(){
     const el = document.getElementById('tabs');
-    const tabs = ["Alle", ...CATEGORIES];
+    // Leere Kategorien bekommen keinen Tab, solange nichts drinsteht
+    const filled = CATEGORIES.filter(c => items.some(i => i.category === c));
+    if (activeTab !== "Alle" && !filled.includes(activeTab)) activeTab = "Alle";
+    const tabs = ["Alle", ...filled];
     el.innerHTML = tabs.map(t =>
-      `<button class="tab ${t===activeTab?'active':''}" onclick="setTab('${t}')">${t}</button>`
+      `<button class="tab ${t===activeTab?'active':''}" ${t===activeTab?'aria-current="true"':''} onclick="setTab('${t}')">${t}</button>`
     ).join('');
   }
   function setTab(t){
@@ -2869,6 +2959,8 @@
     document.getElementById('ringSub').innerHTML = done > 0
       ? `schon <b>${money(doneSum)}</b> erledigt · Rest ${money(restSum)}`
       : `noch ${money(restSum)} vor mir`;
+    document.getElementById('miniProgress').textContent = `◆ ${done}/${total} · Rest ${money(restSum)}`;
+    document.title = (done > 0 ? `✓ ${done}/${total} — ` : '') + 'Noch zu holen — meine Kaufliste';
   }
 
   function renderLedger(){
@@ -2997,6 +3089,7 @@
     }
     document.getElementById('expandAllBtn').textContent = allExpanded ? 'Alle Gruppen zuklappen' : 'Alle Gruppen aufklappen';
     document.getElementById('expandAllBtn').classList.toggle('active', allExpanded);
+    document.getElementById('expandAllBtn').setAttribute('aria-pressed', allExpanded);
     renderLists();
   }
 
@@ -3014,10 +3107,16 @@
       const areas = [...new Set(projectItems.map(i => i.roomArea).filter(Boolean))];
       const knownPrice = projectItems.reduce((s,i) => s + (Number(i.price)||0), 0);
       const openCount = projectItems.filter(i => i.price === null).length;
+      const pDone = projectItems.filter(i => purchased.has(i.id)).length;
+      const pPct = projectItems.length ? Math.round(pDone / projectItems.length * 100) : 0;
       html += `<div class="dream-project">
         <div class="dream-project-head">
           <h2>${escapeHtml(project)}</h2>
           <span class="dream-project-sum mono">${money(knownPrice)}${openCount ? ` + ${openCount} offen` : ''}</span>
+        </div>
+        <div class="dream-progress">
+          <span class="sbar"><span style="width:${pPct}%"></span></span>
+          <span class="sval">${pDone}/${projectItems.length} erledigt</span>
         </div>`;
       areas.forEach(area => {
         const areaItems = projectItems.filter(i => i.roomArea === area);
@@ -3036,6 +3135,7 @@
   function toggleDreamMode(){
     dreamMode = !dreamMode;
     document.getElementById('dreamModeBtn').classList.toggle('active', dreamMode);
+    document.getElementById('dreamModeBtn').setAttribute('aria-pressed', dreamMode);
     document.getElementById('tabs').style.display = dreamMode ? 'none' : 'flex';
     renderLists();
     renderStarter();
@@ -3044,15 +3144,25 @@
   function renderItemsAndGroups(list, hidePriority){
     hidePriority = hidePriority || false;
     let html = '';
+    const PRIO_ORDER = { must: 0, nice: 1, dream: 2 };
     let ungrouped = list.filter(i => !i.group);
-    if (sortMode !== 'default'){
+    if (sortMode === 'prio'){
+      ungrouped = ungrouped.slice().sort((a,b) =>
+        (PRIO_ORDER[a.priority] - PRIO_ORDER[b.priority]) || ((Number(a.price)||0) - (Number(b.price)||0)));
+    } else if (sortMode !== 'default'){
       ungrouped = ungrouped.slice().sort((a,b) => (Number(a.price)||0) - (Number(b.price)||0));
       if (sortMode === 'desc') ungrouped.reverse();
     }
     ungrouped.forEach(i => { html += renderCard(i, null, hidePriority); });
 
     let groupNames = [...new Set(list.map(i => i.group).filter(Boolean))];
-    if (sortMode !== 'default'){
+    if (sortMode === 'prio'){
+      const best = {};
+      groupNames.forEach(g => {
+        best[g] = Math.min(...list.filter(i => i.group === g).map(i => PRIO_ORDER[i.priority]));
+      });
+      groupNames.sort((a,b) => best[a] - best[b]);
+    } else if (sortMode !== 'default'){
       const sums = {};
       groupNames.forEach(g => {
         sums[g] = list.filter(i => i.group === g).reduce((s,i) => s + (Number(i.price)||0), 0);
@@ -3077,7 +3187,7 @@
         }
       } else if (kind.type === 'alternatives'){
         html += `<div class="group-block">
-          <div class="group-header alt-header ${gDone ? 'all-done' : ''}" onclick="toggleGroup('${key}')">
+          <div class="group-header alt-header ${gDone ? 'all-done' : ''}" onclick="toggleGroup('${key}')" role="button" tabindex="0" aria-expanded="${isOpen}">
             <div class="group-header-left">
               <span class="chevron ${isOpen ? 'open':''}">▸</span>
               <span class="alt-icon">⇄</span>
@@ -3094,7 +3204,7 @@
         html += `</div>`;
       } else {
         html += `<div class="group-block">
-          <div class="group-header ${gDone ? 'all-done' : ''}" onclick="toggleGroup('${key}')">
+          <div class="group-header ${gDone ? 'all-done' : ''}" onclick="toggleGroup('${key}')" role="button" tabindex="0" aria-expanded="${isOpen}">
             <div class="group-header-left">
               <span class="chevron ${isOpen ? 'open':''}">▸</span>
               <span class="group-name">${escapeHtml(g)}</span>
@@ -3194,8 +3304,16 @@
   updateFilterUI();
 
   window.addEventListener('scroll', function(){
-    document.getElementById('scrollTop').classList.toggle('show', window.scrollY > 600);
+    const deep = window.scrollY > 600;
+    document.getElementById('scrollTop').classList.toggle('show', deep);
+    document.getElementById('miniProgress').classList.toggle('show', deep);
   }, { passive: true });
+
+  function jumpToStats(){
+    const body = document.getElementById('statsBody');
+    if (body.style.display === 'none') toggleStats();
+    document.querySelector('.stats').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
   requestAnimationFrame(() => requestAnimationFrame(updateHero));
 
   // --- Produktbild-Lightbox ---
@@ -3280,6 +3398,11 @@
     if (e.key === '/' && !inInput){
       e.preventDefault();
       document.getElementById('searchBox').focus();
+      return;
+    }
+    if ((e.key === 'Enter' || e.key === ' ') && document.activeElement && document.activeElement.classList.contains('group-header')){
+      e.preventDefault();
+      document.activeElement.click();
     }
   });
 
