@@ -2,3 +2,5 @@ Thumbs.db
 .DS_Store
 Desktop.ini
 *.tmp
+dist/
+noch-zu-holen.zip
