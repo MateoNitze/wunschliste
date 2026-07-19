@@ -1,6 +1,6 @@
 # ◆ Noch zu holen
 
-Meine komplette Kaufliste als Website — 209 Wünsche über neun Kategorien,
+Meine komplette Kaufliste als Website — 196 Wünsche über acht gefüllte Kategorien,
 sortiert, priorisiert, abhakbar. Gebaut mit [Claude Code](https://claude.com/claude-code).
 
 ![Screenshot der Website](assets/images/site-preview.png)
@@ -19,9 +19,9 @@ lokalen Produktbilder aus `assets/` laden.
 - **Filter** — Erledigte ausblenden, nach Priorität filtern (Muss / Nice / Traum),
   nach Preis sortieren, Budget-Grenze setzen („max €").
 - **Suche** über Titel, Notizen, Marken und Gruppen (`/` fokussiert die Suche).
-- **Produktbilder** — 205 von 209 Einträgen bebildert, fast alle lokal gespeichert
+- **Produktbilder** — fast alle Einträge bebildert, fast alle lokal gespeichert
   (`assets/images/products/`); Fallback-Kette lokal → remote → Monogramm.
-- **Geprüfte Preise** — 140 von 209 Preisen gegen die Produktseiten abgeglichen
+- **Geprüfte Preise** — der Großteil der Preise gegen die Produktseiten abgeglichen
   (Shops direkt, Amazon per Browser; 117 korrigiert), erkennbar am „Preis geprüft"-Badge.
 - **Gruppen-Abhaken, Statistik-Panel, „Womit anfangen?"-Empfehlung, Abhak-Datum,
   Such-Highlighting, Tab-Link in der URL, Scroll-to-top** — Details siehe Website.
