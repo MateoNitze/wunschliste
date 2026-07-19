@@ -800,6 +800,188 @@
   .lb-check:hover{ border-color:var(--green); color:var(--green); }
   .lb-check.done{ background:var(--green-soft); border-color:rgba(121,201,158,0.4); color:var(--green); }
 
+  /* ---------- Statistik ---------- */
+  .stats{
+    width:min(972px, calc(100% - 48px));
+    margin:14px auto 0;
+  }
+  .stats-toggle{
+    background:transparent;
+    border:1px solid var(--line);
+    color:var(--muted);
+    padding:8px 14px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:500;
+    cursor:pointer;
+    font-family:'Inter',sans-serif;
+    transition:color 0.15s ease, border-color 0.15s ease;
+  }
+  .stats-toggle:hover{ color:var(--text); border-color:var(--line-strong); }
+  .stats-toggle.on{ color:var(--amber); border-color:rgba(232,163,61,0.4); background:var(--amber-soft); }
+  .stats-body{
+    margin-top:12px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:20px 22px;
+    display:grid;
+    grid-template-columns:1.4fr 1fr;
+    gap:28px;
+  }
+  .stats-h{
+    font-family:'JetBrains Mono',Consolas,monospace;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.16em;
+    color:var(--muted);
+    margin-bottom:12px;
+  }
+  .stat-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:9px;
+    font-size:12.5px;
+  }
+  .stat-row .sname{ width:130px; flex-shrink:0; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .stat-row .sbar{ flex:1; height:5px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden; }
+  .stat-row .sbar span{ display:block; height:100%; background:var(--green); border-radius:3px; }
+  .stat-row .sval{
+    font-family:'JetBrains Mono',Consolas,monospace;
+    font-size:11px;
+    color:var(--muted);
+    white-space:nowrap;
+  }
+  .stat-prio{ display:flex; flex-direction:column; gap:10px; }
+  .stat-prio-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap:10px;
+    padding:10px 14px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    font-size:12.5px;
+  }
+  .stat-prio-row .sval{ font-family:'JetBrains Mono',Consolas,monospace; font-size:11px; color:var(--muted); }
+
+  /* ---------- Womit anfangen ---------- */
+  .starter{
+    border:1px solid rgba(232,163,61,0.3);
+    background:radial-gradient(420px 140px at 12% 0%, rgba(232,163,61,0.07), transparent 60%), var(--surface);
+    border-radius:14px;
+    padding:16px 20px;
+    margin-bottom:28px;
+  }
+  .starter-h{
+    font-family:'JetBrains Mono',Consolas,monospace;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.16em;
+    color:var(--amber);
+    margin-bottom:10px;
+  }
+  .starter-items{ display:flex; gap:8px; flex-wrap:wrap; }
+  .starter-chip{
+    background:transparent;
+    border:1px solid var(--line-strong);
+    color:var(--text);
+    padding:7px 13px;
+    border-radius:999px;
+    font-size:12.5px;
+    cursor:pointer;
+    font-family:'Inter',sans-serif;
+    transition:border-color 0.15s ease, background 0.15s ease;
+  }
+  .starter-chip:hover{ border-color:var(--amber); background:var(--amber-soft); }
+  .starter-chip .sp{
+    font-family:'JetBrains Mono',Consolas,monospace;
+    font-size:11px;
+    color:var(--amber);
+    margin-left:8px;
+  }
+
+  /* ---------- Suche: Treffer-Highlight ---------- */
+  mark{
+    background:rgba(232,163,61,0.32);
+    color:inherit;
+    border-radius:3px;
+    padding:0 1px;
+  }
+
+  /* ---------- Gruppen-Abhaken ---------- */
+  .group-check{
+    width:22px; height:22px;
+    padding:0;
+    background:transparent;
+    border:none;
+    flex-shrink:0;
+    cursor:pointer;
+    position:relative;
+    margin-right:2px;
+  }
+  .group-check .cb-diamond{
+    position:absolute;
+    inset:3px;
+    border:1.5px solid var(--line-strong);
+    transform:rotate(45deg);
+    border-radius:2px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:border-color 0.15s ease, background 0.15s ease;
+  }
+  .group-check .cb-diamond span{ transform:rotate(-45deg); font-size:10px; color:transparent; }
+  .group-check:hover .cb-diamond{ border-color:var(--amber); }
+  .group-check.done .cb-diamond{ background:var(--green); border-color:var(--green); }
+  .group-check.done .cb-diamond span{ color:#0c0b09; }
+  .group-header.all-done{ opacity:0.55; }
+
+  /* ---------- Abhak-Datum & Preis-geprüft ---------- */
+  .done-date{
+    font-family:'JetBrains Mono',Consolas,monospace;
+    font-size:10px;
+    color:var(--green);
+    white-space:nowrap;
+  }
+  .price-checked{
+    font-family:'JetBrains Mono',Consolas,monospace;
+    font-size:9.5px;
+    color:var(--muted);
+    white-space:nowrap;
+  }
+
+  /* ---------- Scroll-to-top ---------- */
+  .scroll-top{
+    position:fixed;
+    right:24px;
+    bottom:26px;
+    z-index:60;
+    width:42px; height:42px;
+    border-radius:50%;
+    border:1px solid var(--line-strong);
+    background:var(--surface-2);
+    color:var(--text);
+    font-size:17px;
+    cursor:pointer;
+    opacity:0;
+    pointer-events:none;
+    transform:translateY(8px);
+    transition:opacity 0.2s ease, transform 0.2s ease, border-color 0.15s ease;
+    box-shadow:0 10px 30px rgba(0,0,0,0.4);
+  }
+  .scroll-top.show{ opacity:1; pointer-events:auto; transform:none; }
+  .scroll-top:hover{ border-color:var(--amber); color:var(--amber); }
+
+  /* ---------- Kategorie-Komplett-Moment ---------- */
+  @keyframes catGlow{
+    0%{ box-shadow:0 0 0 0 rgba(232,163,61,0.0); }
+    30%{ box-shadow:0 0 0 6px rgba(232,163,61,0.25); }
+    100%{ box-shadow:0 0 0 0 rgba(232,163,61,0.0); }
+  }
+  .cat-progress.celebrate{ animation:catGlow 1.2s ease; }
+
   /* ---------- Performance ---------- */
   .card{ content-visibility:auto; contain-intrinsic-size:auto 132px; }
 
@@ -808,7 +990,8 @@
     body{ background:#fff; color:#000; font-size:12px; border:none; }
     body::after, header, .ledger, .controls-bar, .filter-bar, .filter-info,
     .toolbar, footer, .lb-overlay, .toast, .checkbox, .thumb, .item-tags,
-    .chevron, .cat-bar, .alt-icon{ display:none !important; }
+    .chevron, .cat-bar, .alt-icon, .stats, .starter, .scroll-top, .group-check,
+    .done-date, .price-checked{ display:none !important; }
     main{ padding:0; max-width:none; animation:none; }
     main::before{
       content:'Noch zu holen — offene Einträge';
@@ -974,6 +1157,11 @@
 
 <div class="ledger sans" id="ledger"></div>
 
+<section class="stats sans">
+  <button class="stats-toggle" id="statsToggle" onclick="toggleStats()">Statistik anzeigen</button>
+  <div class="stats-body" id="statsBody" style="display:none"></div>
+</section>
+
 <main>
   <div class="controls-bar sans">
     <input type="text" id="searchBox" placeholder="Suchen (Titel, Notiz, Marke …)" oninput="onSearch()">
@@ -998,14 +1186,19 @@
     <button class="fchip ghost" onclick="exportState()">Stand sichern</button>
     <button class="fchip ghost" onclick="document.getElementById('importFile').click()">Stand laden</button>
     <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importState(this)">
+    <button class="fchip ghost" onclick="copyList()">Liste kopieren</button>
     <button class="fchip ghost" onclick="printList()">Drucken</button>
   </div>
   <div class="filter-info" id="filterInfo" style="display:none"></div>
 
   <div class="toolbar" id="tabs"></div>
 
+  <div id="starterBox"></div>
+
   <div id="lists"></div>
 </main>
+
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Nach oben scrollen">↑</button>
 
 <div class="lb-overlay" id="lightbox">
   <div class="lb-panel" role="dialog" aria-modal="true" aria-label="Produktbild">
@@ -1053,27 +1246,27 @@
       link: "https://wooting.io/product/wooting-60he-v2-wrist-rest",
       note: "Zubehör zur Wooting 60HE v2.",
       done: false, priceUpdated: null },
-    { id: 7, title: "Schreibtisch: Secretlab Magnus Pro", category: "Setup", subcategory: "Gaming", group: "Schreibtisch", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 1000,
+    { id: 7, title: "Schreibtisch: Secretlab Magnus Pro", category: "Setup", subcategory: "Gaming", group: "Schreibtisch", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 1000,
       link: "https://secretlab.eu/de/pages/magnus-pro",
       note: "Größe: XL · Farbe: Black · Schreibtischunterlage: Signature Black",
       done: false, priceUpdated: null },
-    { id: 8, title: "Basicly Performance Bundle", category: "Setup", subcategory: "Gaming", group: "Schreibtisch", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 180,
+    { id: 8, title: "Basicly Performance Bundle", category: "Setup", subcategory: "Gaming", group: "Schreibtisch", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 180,
       link: "https://secretlab.eu/de/pages/magnus-pro",
       note: "Zubehör-Bundle zum Secretlab Magnus Pro.",
       done: false, priceUpdated: null },
-    { id: 9, title: "Magnetische Kopfhörer-Halterung", category: "Setup", subcategory: "Gaming", group: "Schreibtisch", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 35,
+    { id: 9, title: "Magnetische Kopfhörer-Halterung", category: "Setup", subcategory: "Gaming", group: "Schreibtisch", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 35,
       link: "https://secretlab.eu/de/pages/magnus-pro",
       note: "Zubehör zum Secretlab Magnus Pro.",
       done: false, priceUpdated: null },
-    { id: 10, title: "Magnetischer Ethernetkabel-Extender", category: "Setup", subcategory: "Gaming", group: "Schreibtisch", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 30,
+    { id: 10, title: "Magnetischer Ethernetkabel-Extender", category: "Setup", subcategory: "Gaming", group: "Schreibtisch", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 30,
       link: "https://secretlab.eu/de/pages/magnus-pro",
       note: "Zubehör zum Secretlab Magnus Pro.",
       done: false, priceUpdated: null },
-    { id: 11, title: "Premium PC-Halterung", category: "Setup", subcategory: "Gaming", group: "Schreibtisch", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 90,
+    { id: 11, title: "Premium PC-Halterung", category: "Setup", subcategory: "Gaming", group: "Schreibtisch", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 90,
       link: "https://secretlab.eu/de/pages/magnus-pro",
       note: "Zubehör zum Secretlab Magnus Pro.",
       done: false, priceUpdated: null },
-    { id: 12, title: "MAGRGB™ (Smart Lighting Edition)", category: "Setup", subcategory: "Gaming", group: "Schreibtisch", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 80,
+    { id: 12, title: "MAGRGB™ (Smart Lighting Edition)", category: "Setup", subcategory: "Gaming", group: "Schreibtisch", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 80,
       link: "https://secretlab.eu/de/pages/magnus-pro",
       note: "Zubehör zum Secretlab Magnus Pro.",
       done: false, priceUpdated: null },
@@ -1085,22 +1278,22 @@
       link: "https://secretlab.eu/de/pages/magnus-pro",
       note: "Idee, noch nicht final entschieden — Zubehör (Dual-Monitorarm) für den Secretlab Magnus Pro.",
       done: false, priceUpdated: null },
-    { id: 21, title: "Gaming-Stuhl: Herman Miller Embody", category: "Setup", subcategory: "Gaming", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 1800,
+    { id: 21, title: "Gaming-Stuhl: Herman Miller Embody", category: "Setup", subcategory: "Gaming", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 2037,
       link: "https://destore.hermanmiller.com/products/embody-gaming-chair?variant=43930847805590",
       note: "Herman Miller Embody Gaming Chair.",
-      done: false, priceUpdated: null },
-    { id: 15, title: "Gewichtheberschuhe: TYR Mens L-2 Lifter", category: "Sport", subcategory: "Krafttraining", priority: "nice", price: 100,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 15, title: "Gewichtheberschuhe: TYR Mens L-2 Lifter", category: "Sport", subcategory: "Krafttraining", priority: "must", price: 220,
       link: "https://tyr.eu/de/products/tyr-mens-l-2-lifter-1",
       note: "Größe: 45–45.5 (EU) bzw. 12 Inches · Farbe: BLACK/GUM oder BLK/GOLD (noch nicht entschieden welche Farbe).",
-      done: false, priceUpdated: null },
-    { id: 16, title: "SBD Lifting Straps", category: "Sport", subcategory: "Krafttraining", priority: "nice", price: 30,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 16, title: "SBD Lifting Straps", category: "Sport", subcategory: "Krafttraining", priority: "must", price: 32,
       link: "https://sbdgermany.de/products/sbd-lifting-straps",
       note: "Größe: One Size.",
-      done: false, priceUpdated: null },
-    { id: 17, title: "SBD Figure 8 Lifting Straps", category: "Sport", subcategory: "Krafttraining", priority: "nice", price: 30,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 17, title: "SBD Figure 8 Lifting Straps", category: "Sport", subcategory: "Krafttraining", priority: "must", price: 40,
       link: "https://sbdgermany.de/products/sbd-figure-8-lifting-straps",
       note: "Größe: One Size.",
-      done: false, priceUpdated: null },
+      done: false, priceUpdated: "2026-07-18" },
     { id: 18, title: "Smelling Salts – Strong", category: "Sport", subcategory: "Krafttraining", priority: "nice", price: 15,
       link: "https://beast.co.uk/collections/smelling-salts/products/beast-smelling-salts?variant=54207086723457",
       note: "Beast Smelling Salts, Variante Strong.",
@@ -1113,58 +1306,58 @@
       link: "https://beast.co.uk/collections/smelling-salts/products/beast-smelling-salts?variant=54207086788993",
       note: "Beast Smelling Salts, Variante Worlds Strongest.",
       done: false, priceUpdated: null },
-    { id: 30, title: "Mikasa V200W", category: "Sport", subcategory: "Ballsport", group: "Volleyball", priority: "nice", price: 45,
+    { id: 30, title: "Mikasa V200W", category: "Sport", subcategory: "Ballsport", group: "Volleyball", priority: "nice", price: 110,
       link: "https://mikasasports.eu/product/v200w/",
       note: "Test-Option für normalen Volleyball.",
-      done: false, priceUpdated: null },
-    { id: 31, title: "Molten V5M5000", category: "Sport", subcategory: "Ballsport", group: "Volleyball", priority: "nice", price: 55,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 31, title: "Molten V5M5000", category: "Sport", subcategory: "Ballsport", group: "Volleyball", priority: "nice", price: 95,
       link: "https://www.molten.de/products/v5m5000-de?_pos=1&_sid=db6cfbdee&_ss=r",
       note: "Test-Option für normalen Volleyball.",
-      done: false, priceUpdated: null },
-    { id: 32, title: "Molten V5B5000", category: "Sport", subcategory: "Ballsport", group: "Beachvolleyball", priority: "nice", price: 55,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 32, title: "Molten V5B5000", category: "Sport", subcategory: "Ballsport", group: "Beachvolleyball", priority: "nice", price: 75,
       link: "https://www.molten.de/products/v5b5000-de?_pos=4&_sid=42ec2639b&_ss=r",
       note: "Test-Option für Beachvolleyball.",
-      done: false, priceUpdated: null },
-    { id: 33, title: "Mikasa BV550C-WYBR", category: "Sport", subcategory: "Ballsport", group: "Beachvolleyball", priority: "nice", price: 50,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 33, title: "Mikasa BV550C-WYBR", category: "Sport", subcategory: "Ballsport", group: "Beachvolleyball", priority: "nice", price: 110,
       link: "https://mikasasports.eu/product/bv550c-wybr/",
       note: "Test-Option für Beachvolleyball.",
-      done: false, priceUpdated: null },
-    { id: 34, title: "Tattoo (Unterarm, klein bis mittelgroß)", category: "Körperliches", priority: "nice", price: 250,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 34, title: "Tattoo (Unterarm, klein bis mittelgroß)", category: "Körperliches", priority: "dream", price: 250,
       link: "",
       note: "Preis ist eine grobe Schätzung: kleine bis mittelgroße Tattoos kosten in Deutschland meist zwischen 150–400 €, je nach Motiv, Detailgrad und Studio (Stundensätze liegen oft bei 100–150 €).",
       done: false, priceUpdated: null },
-    { id: 35, title: "Cap: Thorns Cap (Saint Kaizen)", category: "Körperliches", priority: "nice", price: 40,
+    { id: 35, title: "Cap: Thorns Cap (Saint Kaizen)", category: "Körperliches", priority: "nice", price: 35,
       link: "https://saintkaizen.com/products/thorns-cap",
       note: "",
-      done: false, priceUpdated: null },
-    { id: 36, title: "Citizen BM8550-81EC", category: "Körperliches", group: "Uhr", priority: "nice", price: 300,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 36, title: "Citizen BM8550-81EC", category: "Körperliches", group: "Uhr", priority: "nice", price: 159,
       link: "https://de.citizenwatch.eu/de/p/bm8550-81ec/",
       note: "Test-Option — Edelstahl, Schwarz, cleanes Zifferblatt.",
-      done: false, priceUpdated: null },
-    { id: 37, title: "Tissot T1584071105100", category: "Körperliches", group: "Uhr", priority: "nice", price: 450,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 37, title: "Tissot T1584071105100", category: "Körperliches", group: "Uhr", priority: "nice", price: 495,
       link: "https://www.tissotwatches.com/de-de/T1584071105100.html",
       note: "Test-Option — Edelstahl, Schwarz, cleanes Zifferblatt.",
-      done: false, priceUpdated: null },
-    { id: 38, title: "Tissot T1504101105100", category: "Körperliches", group: "Uhr", priority: "nice", price: 400,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 38, title: "Tissot T1504101105100", category: "Körperliches", group: "Uhr", priority: "nice", price: 295,
       link: "https://www.tissotwatches.com/de-de/T1504101105100.html",
       note: "Test-Option — Edelstahl, Schwarz, cleanes Zifferblatt.",
-      done: false, priceUpdated: null },
-    { id: 39, title: "Tissot T1658071105100", category: "Körperliches", group: "Uhr", priority: "nice", price: 480,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 39, title: "Tissot T1658071105100", category: "Körperliches", group: "Uhr", priority: "nice", price: 795,
       link: "https://www.tissotwatches.com/de-de/T1658071105100.html",
       note: "Test-Option — Edelstahl, Schwarz, cleanes Zifferblatt.",
-      done: false, priceUpdated: null },
-    { id: 40, title: "Tissot T1274101105100", category: "Körperliches", group: "Uhr", priority: "nice", price: 420,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 40, title: "Tissot T1274101105100", category: "Körperliches", group: "Uhr", priority: "nice", price: 475,
       link: "https://www.tissotwatches.com/de-de/T1274101105100.html",
       note: "Test-Option — Edelstahl, Schwarz, cleanes Zifferblatt.",
-      done: false, priceUpdated: null },
-    { id: 41, title: "Citizen NJ0150-81E", category: "Körperliches", group: "Uhr", priority: "nice", price: 320,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 41, title: "Citizen NJ0150-81E", category: "Körperliches", group: "Uhr", priority: "nice", price: 299,
       link: "https://de.citizenwatch.eu/de/p/nj0150-81e/",
       note: "Test-Option — Edelstahl, Schwarz, cleanes Zifferblatt.",
-      done: false, priceUpdated: null },
-    { id: 42, title: "Citizen BM7251-88E", category: "Körperliches", group: "Uhr", priority: "nice", price: 280,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 42, title: "Citizen BM7251-88E", category: "Körperliches", group: "Uhr", priority: "nice", price: 229,
       link: "https://de.citizenwatch.eu/de/p/bm7251-88e/",
       note: "Test-Option — Edelstahl, Schwarz, cleanes Zifferblatt.",
-      done: false, priceUpdated: null },
+      done: false, priceUpdated: "2026-07-18" },
     { id: 43, title: "Seiko SUR557", category: "Körperliches", group: "Uhr", priority: "nice", price: 320,
       link: "https://seikousa.com/products/sur557?_pos=41&_sid=8f7c24e56&_ss=r",
       note: "Test-Option — Edelstahl, Schwarz, cleanes Zifferblatt.",
@@ -1177,11 +1370,11 @@
       link: "https://seikousa.com/products/sur311?_pos=53&_sid=8f7c24e56&_ss=r",
       note: "Test-Option — Edelstahl, Schwarz, cleanes Zifferblatt.",
       done: false, priceUpdated: null },
-    { id: 46, title: "Soundsystem: Sonos Ultimate Immersive Set", category: "Entertainment", roomArea: "Entertainment-Ecke", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 2500,
+    { id: 46, title: "Soundsystem: Sonos Ultimate Immersive Set", category: "Entertainment", roomArea: "Entertainment-Ecke", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 2500,
       link: "https://www.sonos.com/de-de/shop/ultimate-immersive-set-arc-ultra-sub-era-300-pair-black",
       note: "Arc Ultra + Sub + Era 300 Pair, Farbe Black.",
       done: false, priceUpdated: null },
-    { id: 47, title: "LG OLED65G57LW", category: "Entertainment", roomArea: "Entertainment-Ecke", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 2200,
+    { id: 47, title: "LG OLED65G57LW", category: "Entertainment", roomArea: "Entertainment-Ecke", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 2200,
       link: "https://www.amazon.de/dp/B0F2JBN3QH/ref=asc_df_B0F2JBN3QH1783672200000/?creative=22662&creativeASIN=B0F2JBN3QH",
       note: "65\\\" 4K OLED evo AI TV, α11 Gen2 Prozessor, webOS 25, 120 Hz (VRR bis 165 Hz), Modelljahr 2025. Ersetzt den alten Platzhalter-Eintrag.",
       done: false, priceUpdated: null }
@@ -1522,10 +1715,10 @@
       link: "https://www.amazon.de/Invincible-1-Robert-Kirkman/dp/3959813805/ref=sr_1_3?__mk_de_DE=%C3%85M%C3%85%C5%BD%C3%95%C3%91&sr=8-3",
       note: "Robert Kirkman – Deutsche Ausgabe, Einzelbände (die ganze Reihe verfügbar).",
       done: false, priceUpdated: null },
-    { id: 132, title: "Invincible: The Ultimate Collection Vol. 1", category: "Comics & Manga", group: "Invincible", priority: "nice", price: 45,
+    { id: 132, title: "Invincible: The Ultimate Collection Vol. 1", category: "Comics & Manga", group: "Invincible", priority: "nice", price: 35,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1001418991",
       note: "Robert Kirkman – Englische Ausgabe, Ultimate-Collection-Hardcover-Reihe (die ganze Reihe verfügbar).",
-      done: false, priceUpdated: null },
+      done: false, priceUpdated: "2026-07-18" },
     { id: 133, title: "Attack on Titan", category: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1034481409",
       note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
@@ -1646,10 +1839,10 @@
       link: "https://birdie.design/de-de/products/birdie-wood-edition",
       note: "Fresh Air Monitor mit CO2-Sensor aus der Schweiz, Gehäuse aus Eichenholz — zeigt an, wann gelüftet werden sollte.",
       done: false, priceUpdated: null },
-    { id: 163, title: "WalkingPad A1 Pro", category: "Setup", subcategory: "Allgemein", priority: "nice", price: 600,
+    { id: 163, title: "WalkingPad A1 Pro", category: "Setup", subcategory: "Allgemein", priority: "dream", price: 559,
       link: "https://de.walkingpad.com/products/walkingpad-a1-pro-klappbares-laufband-schreibtisch",
       note: "Klappbares Laufband fürs Homeoffice / den Schreibtisch.",
-      done: false, priceUpdated: null },
+      done: false, priceUpdated: "2026-07-18" },
     { id: 164, title: "Hatch Restore", category: "Zuhause & Wellness", priority: "nice", price: 130,
       link: "https://www.hatch.co/restore",
       note: "Sonnenaufgangswecker mit Schlaf- und Meditations-Sounds.",
@@ -1690,35 +1883,35 @@
       link: "https://www.seasonslife.com/products/soni-sm?variant=40882430378189",
       note: "Tragbarer Ultraschall-Aroma-Diffusor, befeuchtet zugleich sanft die Luft.",
       done: false, priceUpdated: null },
-    { id: 174, title: "Dreame Matrix 10 Ultra", category: "Zuhause & Wellness", priority: "nice", price: 1300,
+    { id: 174, title: "Dreame Matrix 10 Ultra", category: "Zuhause & Wellness", priority: "dream", price: 1300,
       link: "https://www.amazon.de/dp/B0GSRVQB6D/ref=asc_df_B0FN8FR84Q1783591200000/?creative=22662&creativeASIN=B0FN8FR84Q",
       note: "Saugroboter, Farbe Black. Auch bei MediaMarkt verfügbar: https://www.mediamarkt.de/de/product/_dreame-matrix-10-ultra-black-saugroboter-3005574.html",
       done: false, priceUpdated: null },
-    { id: 175, title: "ASUS ROG Swift OLED PG32UCDP", category: "Setup", subcategory: "Gaming", group: "Monitor", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 1100,
+    { id: 175, title: "ASUS ROG Swift OLED PG32UCDP", category: "Setup", subcategory: "Gaming", group: "Monitor", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 1100,
       link: "https://rog.asus.com/de/monitors/27-to-31-5-inches/rog-swift-oled-pg32ucdp/#pageContent-sec-ai/",
       note: "31,5\" UHD 4K OLED-Monitor, 240 Hz nativ, 0,03 ms Reaktionszeit. Bildschirm-Traum. Auch bei MediaMarkt: https://www.mediamarkt.de/de/product/_asus-90lm0a50-b01370-315-zoll-uhd-4k-monitor-003-ms-reaktionszeit-240-hz-240-hz-nativ-148965680.html?emid=6a529f211f40277a83044b93",
       done: false, priceUpdated: null },
-    { id: 218, title: "UGREEN HDMI 2.1 Kabel (48Gbps)", category: "Setup", subcategory: "Gaming", group: "Monitor", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 38,
+    { id: 218, title: "UGREEN HDMI 2.1 Kabel (48Gbps)", category: "Setup", subcategory: "Gaming", group: "Monitor", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 38,
       link: "https://www.amazon.de/dp/B0DT9KJX65",
       note: "Zubehör zum Monitor — unterstützt volle 48Gbps, damit 4K@240Hz auch wirklich ankommt. Viele Monitore legen nur ein einfaches Compliance-Kabel bei, das die Bandbreite nicht schafft.",
       done: false, priceUpdated: null },
-    { id: 219, title: "UGREEN Cat 8 Netzwerkkabel", category: "Setup", subcategory: "Gaming", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 12,
+    { id: 219, title: "UGREEN Cat 8 Netzwerkkabel", category: "Setup", subcategory: "Gaming", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "must", price: 12,
       link: "https://www.amazon.de/UGREEN-Superschnell-Netzwerkkabel-Wlankabel-kompatibel/dp/B0C4KV76C8/ref=ast_sto_dp_puis",
       note: "40Gbps, für stabile LAN-Verbindung zum PC — z.B. für den Router oder als Verlängerung.",
       done: false, priceUpdated: null },
-    { id: 220, title: "UGREEN Cat 8 Netzwerkkabel (2. Länge)", category: "Setup", subcategory: "Gaming", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 12,
+    { id: 220, title: "UGREEN Cat 8 Netzwerkkabel (2. Länge)", category: "Setup", subcategory: "Gaming", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "must", price: 12,
       link: "https://www.amazon.de/UGREEN-Netzwerkkabel-Patchkabel-Ethernet-kompatibel/dp/B08R9XTFH5/ref=ast_sto_dp_puis",
       note: "40Gbps, andere Länge als das erste — z.B. für einen anderen Kabelweg im Zimmer (Router zu Wanddose, Wanddose zu PC o.ä.).",
       done: false, priceUpdated: null },
-    { id: 176, title: "Ninja Creami Deluxe 10-in-1", category: "Zuhause & Wellness", subcategory: "Küche", priority: "nice", price: 280,
+    { id: 176, title: "Ninja Creami Deluxe 10-in-1", category: "Zuhause & Wellness", subcategory: "Küche", priority: "nice", price: 270,
       link: "https://www.sharkninja.de/ninja-creami-deluxe-10-in-1-eismaschine/NC502EU.html?dwvar_NC502EU_color=99a6b0",
       note: "Eismaschine, 10-in-1-Funktionen.",
-      done: false, priceUpdated: null },
-    { id: 177, title: "Küchenwaage: Beurer KS 34", category: "Zuhause & Wellness", subcategory: "Küche", group: "Küchenwaage", priority: "nice", price: 25,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 177, title: "Küchenwaage: Beurer KS 34", category: "Zuhause & Wellness", subcategory: "Küche", group: "Küchenwaage", priority: "must", price: 25,
       link: "https://www.amazon.de/dp/B07HM6TB3S/ref=asc_df_B07HM6TB3S1783751400000/?creative=22662&creativeASIN=B07HM6TB3S",
       note: "Test-Option — bis 15 kg, Tara-Funktion, Magic-LED-Display.",
       done: false, priceUpdated: null },
-    { id: 178, title: "Küchenwaage: Etekcity", category: "Zuhause & Wellness", subcategory: "Küche", group: "Küchenwaage", priority: "nice", price: 20,
+    { id: 178, title: "Küchenwaage: Etekcity", category: "Zuhause & Wellness", subcategory: "Küche", group: "Küchenwaage", priority: "must", price: 20,
       link: "https://www.amazon.de/dp/B0FBGM3KZ4/ref=asc_df_B0FBGM3KZ41783724400000/?creative=22662&creativeASIN=B0FBGM3KZ4",
       note: "Test-Option — bis 10 kg, 1 g genau, USB-Aufladung, Edelstahl.",
       done: false, priceUpdated: null },
@@ -1726,22 +1919,22 @@
       link: "",
       note: "Sobald verfügbar: PS6 Pro, oder falls die PS7 zu dem Zeitpunkt schon draußen ist, lieber die PS7. Noch kein konkretes Release-Datum bekannt.",
       done: false, priceUpdated: null },
-    { id: 180, title: "Logitech PRO X2 SUPERSTRIKE", category: "Setup", subcategory: "Gaming", group: "Maus", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 160,
+    { id: 180, title: "Logitech PRO X2 SUPERSTRIKE", category: "Setup", subcategory: "Gaming", group: "Maus", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 180,
       link: "https://www.logitechg.com/de-de/shop/p/pro-x2-superstrike-mouse",
       note: "Test-Option — kabellose Gaming-Maus.",
-      done: false, priceUpdated: null },
-    { id: 181, title: "Razer Viper V4 Pro", category: "Setup", subcategory: "Gaming", group: "Maus", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 160,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 181, title: "Razer Viper V4 Pro", category: "Setup", subcategory: "Gaming", group: "Maus", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 180,
       link: "https://www.razer.com/de-de/gaming-mice/razer-viper-v4-pro",
       note: "Test-Option — kabellose Gaming-Maus.",
-      done: false, priceUpdated: null },
-    { id: 182, title: "Razer Basilisk V3 Pro 35K", category: "Setup", subcategory: "Gaming", group: "Maus", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 90,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 182, title: "Razer Basilisk V3 Pro 35K", category: "Setup", subcategory: "Gaming", group: "Maus", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 180,
       link: "https://www.razer.com/de-de/gaming-mice/razer-basilisk-v3-pro-35k",
       note: "Test-Option — kabellose Gaming-Maus mit 35K-Sensor.",
-      done: false, priceUpdated: null },
+      done: false, priceUpdated: "2026-07-18" },
     { id: 183, title: "Logitech G840 Cloth XL", category: "Setup", subcategory: "Gaming", group: "Mauspad", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 40,
       link: "https://www.logitechg.com/de-de/shop/p/g840-cloth-xl-gaming-mouse-pad.943-000778?sp=1&searchclick=Logitech%20G",
       note: "Test-Option — großes Stoff-Mauspad.",
-      done: false, priceUpdated: null },
+      done: false, priceUpdated: "2026-07-18" },
     { id: 184, title: "Razer Strider Chroma", category: "Setup", subcategory: "Gaming", group: "Mauspad", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 50,
       link: "https://www.razer.com/de-de/gaming-mouse-mats/razer-strider-chroma",
       note: "Test-Option — Hybrid-Mauspad mit Chroma-RGB-Beleuchtung.",
@@ -1749,31 +1942,31 @@
     { id: 185, title: "Razer Atlas Pro", category: "Setup", subcategory: "Gaming", group: "Mauspad", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 140,
       link: "https://www.razer.com/de-de/gaming-mouse-mats/razer-atlas-pro",
       note: "Test-Option — ultradünnes Glas-Mauspad (1,9 mm), für optische Sensoren optimiert.",
-      done: false, priceUpdated: null },
-    { id: 186, title: "Logitech PowerPlay 2", category: "Setup", subcategory: "Gaming", group: "Wireless-Charging-Mauspad", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 150,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 186, title: "Logitech PowerPlay 2", category: "Setup", subcategory: "Gaming", group: "Wireless-Charging-Mauspad", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 100,
       link: "https://www.logitechg.com/de-de/shop/p/powerplay-2",
       note: "Test-Option — Mauspad mit kabellosem Laden der Maus.",
-      done: false, priceUpdated: null },
-    { id: 187, title: "Razer HyperFlux V2", category: "Setup", subcategory: "Gaming", group: "Wireless-Charging-Mauspad", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 170,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 187, title: "Razer HyperFlux V2", category: "Setup", subcategory: "Gaming", group: "Wireless-Charging-Mauspad", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 140,
       link: "https://www.razer.com/de-de/gaming-mouse-mats/razer-hyperflux-v2-wireless-charging-system",
       note: "Test-Option — Wireless Charging System für Maus & Mauspad.",
-      done: false, priceUpdated: null },
-    { id: 188, title: "Anker Powerbank 20.000 mAh (integriertes USB-C-Kabel)", category: "Technik", priority: "nice", price: 60,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 188, title: "Anker Powerbank 20.000 mAh (integriertes USB-C-Kabel)", category: "Technik", priority: "must", price: 60,
       link: "https://www.amazon.de/Anker-Powerbank-integriertem-USB-C-Kabel-Schnelllade-Akku/dp/B0CXDXP8VR/ref=sr_1_3_pp?sr=8-3",
       note: "87 W max, 1x USB-C + 1x USB-A, integriertes USB-C-Kabel.",
       done: false, priceUpdated: null },
-    { id: 189, title: "Anker 633 Magnetic Battery (MagGo)", category: "Technik", priority: "nice", price: 70,
+    { id: 189, title: "Anker 633 Magnetic Battery (MagGo)", category: "Technik", priority: "nice", price: 50,
       link: "https://www.anker.com/eu-de/products/a1641?variant=42548593787043&top_filter=10.000mAh-21.000mAh&collections_powerbanks&Sort_by=Preis%20hoch%20-%20niedrig",
       note: "10.000 mAh, magnetischer Wireless-Akku mit Stand, MagSafe-kompatibel.",
-      done: false, priceUpdated: null },
-    { id: 190, title: "Anker Prime USB-C Kabel 90 cm 240 W", category: "Technik", priority: "nice", price: 35,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 190, title: "Anker Prime USB-C Kabel 90 cm 240 W", category: "Technik", priority: "must", price: 25,
       link: "https://www.anker.com/eu-de/products/a88e2-anker-prime-usb-c-kabel-90cm-240w-upcycled-geflochten",
       note: "Geflochtenes Kabel aus recyceltem Material, 240 W.",
-      done: false, priceUpdated: null },
-    { id: 191, title: "Anker Prime kabellose Ladestation Qi2 3-in-1", category: "Technik", priority: "nice", price: 130,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 191, title: "Anker Prime kabellose Ladestation Qi2 3-in-1", category: "Technik", priority: "nice", price: 160,
       link: "https://www.anker.com/eu-de/products/b25x7-anker-prime-kabellose-ladestation-qi2-3-in-1",
       note: "3-in-1 Ladestation für Handy, Kopfhörer und Uhr, Qi2.",
-      done: false, priceUpdated: null },
+      done: false, priceUpdated: "2026-07-18" },
     { id: 192, title: "BOOX E-Ink-Tablet", category: "Technik", group: "E-Ink-Notiztablet", priority: "nice", price: null,
       link: "https://shop.boox.com/",
       note: "Test-Option — konkretes Modell noch offen, offizieller BOOX-Shop verlinkt.",
@@ -1782,23 +1975,23 @@
       link: "https://store.iflytek.com/collections/ainote",
       note: "Test-Option — konkretes Modell (AINOTE 2 oder AINOTE Air 2) noch offen.",
       done: false, priceUpdated: null },
-    { id: 217, title: "Anker Prime Ladegerät 160W (3 Ports, GaN)", category: "Technik", priority: "nice", price: 110,
+    { id: 217, title: "Anker Prime Ladegerät 160W (3 Ports, GaN)", category: "Technik", priority: "nice", price: 130,
       link: "https://www.anker.com/eu-de/products/a2687-anker-prime-ladegeraet-160w-3-ports-gan?variant=46200507007139",
       note: "Kompaktes GaN-Netzteil, 3 Ports, bis zu 140W an einem einzelnen Port (z.B. Laptop). Smart Display zeigt Ladeleistung in Echtzeit. So klein wie eine AirPods-Pro-Hülle.",
-      done: false, priceUpdated: null },
-    { id: 194, title: "Lifting Belt (Gewichthebergürtel)", category: "Sport", subcategory: "Krafttraining", priority: "nice", price: null,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 194, title: "Lifting Belt (Gewichthebergürtel)", category: "Sport", subcategory: "Krafttraining", priority: "must", price: null,
       link: "",
       note: "Marke/Modell noch offen — klassisches Kraftsport-Basic zum Ergänzen der Ausrüstung.",
       done: false, priceUpdated: null },
-    { id: 195, title: "Kreidebeutel (Chalk Bag)", category: "Sport", subcategory: "Krafttraining", priority: "nice", price: null,
+    { id: 195, title: "Kreidebeutel (Chalk Bag)", category: "Sport", subcategory: "Krafttraining", priority: "must", price: null,
       link: "",
       note: "Marke/Modell noch offen.",
       done: false, priceUpdated: null },
-    { id: 196, title: "Handgelenkbandagen (Wrist Wraps)", category: "Sport", subcategory: "Krafttraining", priority: "nice", price: null,
+    { id: 196, title: "Handgelenkbandagen (Wrist Wraps)", category: "Sport", subcategory: "Krafttraining", priority: "must", price: null,
       link: "",
       note: "Marke/Modell noch offen.",
       done: false, priceUpdated: null },
-    { id: 197, title: "Knieebandagen (Knee Sleeves)", category: "Sport", subcategory: "Krafttraining", priority: "nice", price: null,
+    { id: 197, title: "Knieebandagen (Knee Sleeves)", category: "Sport", subcategory: "Krafttraining", priority: "must", price: null,
       link: "",
       note: "Marke/Modell noch offen.",
       done: false, priceUpdated: null },
@@ -1829,55 +2022,55 @@
     { id: 201, title: "AMD Ryzen 9 9950X3D", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 590,
       link: "https://www.alternate.de/AMD/Ryzen-9-9950X3D-Prozessor/html/product/100114727",
       note: "CPU — 16 Kerne mit 3D V-Cache. Fürs reine Gaming wäre der 9800X3D minimal gleichauf und günstiger, aber die zusätzlichen Kerne helfen bei Code/Videobearbeitung (JARVIS, Gym-Video-Analyse). Preis verifiziert via Geizhals (Alternate/Mindfactory).",
-      done: false, priceUpdated: null },
-    { id: 205, title: "ASUS ROG Crosshair X870E Dark Hero", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 670,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 205, title: "ASUS ROG Crosshair X870E Dark Hero", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 703,
       link: "https://www.alternate.de/ASUS/ROG-CROSSHAIR-X870E-DARK-HERO-Mainboard/html/product/100185735",
       note: "Mainboard — X870E-Chipsatz, komplett schwarzes Design, starke Spannungsversorgung. ASUS' neues Flaggschiff ist zwar das Crosshair X870E Glacial, bringt aber nur Extras (10G-LAN etc.), die fürs Gaming nichts bringen.",
-      done: false, priceUpdated: null },
-    { id: 206, title: "ASUS ROG Astral RTX 5090 O32G Gaming", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 4299,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 206, title: "ASUS ROG Astral RTX 5090 O32G Gaming", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 5089,
       link: "https://www.alternate.de/ASUS/GeForce-RTX-5090-ROG-ASTRAL-GAMING-OC-Grafikkarte/html/product/100110139",
       note: "GPU — luftgekühlt (Quad-Fan), 32GB GDDR7, Farbe Black. WICHTIG: Preis war deutlich unterschätzt — aktuell 4.299€ statt der geschätzten 2.500€, RTX-5090-Karten sind gerade knapp/teuer. Bewusst gegen die LC-Variante entschieden (die ist aktuell sogar günstiger, ~3.719€) wegen der saubereren Optik ohne zweiten Radiator.",
-      done: false, priceUpdated: null },
-    { id: 207, title: "G.Skill Trident Z5 Neo RGB 64GB (2x32GB) DDR5-6000 CL30", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 870,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 207, title: "G.Skill Trident Z5 Neo RGB 64GB (2x32GB) DDR5-6000 CL30", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 1000,
       link: "https://geizhals.de/g-skill-trident-z5-neo-rgb-schwarz-dimm-kit-64gb-f5-6000j3040g32gx2-tz5nr-a2837569.html",
       note: "RAM — aktuell das Flaggschiff-Kit fürs AM5/EXPO. WICHTIG: Preis war deutlich unterschätzt — aktuell ~870€ statt der geschätzten 280€, RAM-Preise sind 2026 stark gestiegen (NAND/DRAM-Knappheit). Kein direkter Alternate-Link gefunden, daher Geizhals-Preisvergleich (listet Alternate/Mindfactory/NBB).",
-      done: false, priceUpdated: null },
-    { id: 208, title: "be quiet! Dark Power Pro 13 1300W", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 390,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 208, title: "be quiet! Dark Power Pro 13 1300W", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 280,
       link: "https://geizhals.de/be-quiet-dark-power-pro-13-1300w-atx-3-0-bn331-a2946414.html",
       note: "Netzteil — be quiet!s aktuelles Flaggschiff, 80+ Titanium, ATX 3.1 mit nativem 12V-2x6-Anschluss (kein Adapter nötig für die GPU). Preis via Geizhals verifiziert (Alternate/NBB gelistet).",
-      done: false, priceUpdated: null },
-    { id: 209, title: "Samsung 9100 PRO 2TB (Hauptlaufwerk)", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 190,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 209, title: "Samsung 9100 PRO 2TB (Hauptlaufwerk)", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 180,
       link: "https://geizhals.de/samsung-ssd-9100-pro-v191423.html",
       note: "SSD — Samsungs aktuelles Flaggschiff, PCIe 5.0, bis zu 14.800 MB/s. Für System + aktuelle Spiele. WICHTIG: Variante OHNE Kühlkörper kaufen (Link zeigt die bare Version) — das Dark-Hero-Board hat eigene M.2-Kühlkörper. Preis günstiger als geschätzt (~190€ statt 250€).",
-      done: false, priceUpdated: null },
-    { id: 210, title: "Samsung 9100 PRO 2TB (Zweitlaufwerk)", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 190,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 210, title: "Samsung 9100 PRO 2TB (Zweitlaufwerk)", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 180,
       link: "https://geizhals.de/samsung-ssd-9100-pro-v191423.html",
       note: "SSD — zweites Laufwerk für Rohmaterial/Projekte (Gym-Videos, JARVIS etc.). Beide bisherigen 2TB laufen in den zwei PCIe-5.0-Slots des Boards mit vollem Tempo. Auch hier: Variante ohne Kühlkörper.",
-      done: false, priceUpdated: null },
-    { id: 212, title: "Samsung 9100 PRO 2TB (Drittlaufwerk)", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 190,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 212, title: "Samsung 9100 PRO 2TB (Drittlaufwerk)", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 180,
       link: "https://geizhals.de/samsung-ssd-9100-pro-v191423.html",
       note: "SSD — zusätzliche Kapazität, macht 6TB gesamt. Läuft in einem der PCIe-4.0-Slots vom Chipsatz (~7.000 statt 14.800 MB/s), damit die GPU weiterhin volle x16 behält. Auch hier: Variante ohne Kühlkörper.",
-      done: false, priceUpdated: null },
-    { id: 211, title: "ARCTIC Liquid Freezer III Pro 360 A-RGB", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 85,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 211, title: "ARCTIC Liquid Freezer III Pro 360 A-RGB", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 80,
       link: "https://geizhals.de/arctic-liquid-freezer-iii-pro-360-a-rgb-acfre00184a-a3455390.html",
       note: "CPU-Kühler — 360mm AIO, in mehreren aktuellen Tests explizit mit dem 9950X3D geprüft und konstant vorne. Zusätzlicher VRM-Lüfter kühlt die Spannungswandler des Boards mit. Statt der vorgetragenen Paste kommt Thermal Grizzly Duronaut zum Einsatz.",
-      done: false, priceUpdated: null },
+      done: false, priceUpdated: "2026-07-18" },
     { id: 213, title: "Windows 11 Pro", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 229,
       link: "https://www.alternate.de/Microsoft/Windows-11-Pro-Betriebssystem-Software/html/product/1843168",
       note: "Betriebssystem — wird beim Zusammenbau gerne vergessen, ist aber ein eigener Kaufposten, kein Gratis-Bestandteil der Hardware. Preis für die reguläre Vollversion (USB-Stick), keine Grey-Market-Keys.",
-      done: false, priceUpdated: null },
+      done: false, priceUpdated: "2026-07-18" },
     { id: 214, title: "Lian Li O11 Dynamic EVO XL", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 240,
       link: "https://www.alternate.de/Lian-Li/O11-Dynamic-EVO-XL-Big-Tower-Geh%C3%A4use/html/product/100048854",
       note: "Gehäuse — Full Tower, unterstützt bis zu 3× 420mm-Radiatoren gleichzeitig (oben/Seite/unten), genug Reserve für die zwei 360mm-AIOs (CPU + GPU). E-ATX-kompatibel, Dark Hero passt locker rein. Kommt ohne vorinstallierte Lüfter.",
-      done: false, priceUpdated: null },
+      done: false, priceUpdated: "2026-07-18" },
     { id: 215, title: "Lian Li UNI FAN SL-Infinity 120 ARGB (3er-Pack mit Controller)", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 90,
       link: "https://geizhals.de/lian-li-uni-fan-sl-inf120-rgb-uf-slin120-3b-a2753206.html",
       note: "Zusätzliche Gehäuselüfter für frische Zuluft (v.a. für die GPU direkt) — die CPU-AIO bringt 3 eigene Radiator-Lüfter mit, die GPU ihre 4 Quad-Fans.",
-      done: false, priceUpdated: null },
-    { id: 216, title: "Thermal Grizzly Duronaut", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 10,
+      done: false, priceUpdated: "2026-07-18" },
+    { id: 216, title: "Thermal Grizzly Duronaut", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 12,
       link: "https://www.alternate.de/Thermal-Grizzly/Duronaut-2g-W%C3%A4rmeleitpasten/html/product/100103121",
       note: "Wärmeleitpaste für den CPU-Kühler, statt der vorgetragenen Paste am Arctic-Kühler. Laut unabhängigen Labormessungen (igor'sLab) höhere Wärmeleitfähigkeit als Kryonaut. Günstiger als geschätzt (~10€ statt 20€).",
-      done: false, priceUpdated: null }
+      done: false, priceUpdated: "2026-07-18" }
   ];
 
   // Produktbilder: lokal gespeicherte Kopien (assets/images/products/),
@@ -2055,6 +2248,41 @@
     217: "https://cdn.shopify.com/s/files/1/0491/8227/7795/files/2687_11_2.png?v=1772244342"
   };
   const LOCAL_IMAGES = {
+    30: "../assets/images/products/30.jpg",
+    33: "../assets/images/products/33.jpg",
+    46: "../assets/images/products/46.jpg",
+    47: "../assets/images/products/47.jpg",
+    90: "../assets/images/products/90.jpg",
+    160: "../assets/images/products/160.jpg",
+    161: "../assets/images/products/161.jpg",
+    165: "../assets/images/products/165.jpg",
+    166: "../assets/images/products/166.jpg",
+    171: "../assets/images/products/171.jpg",
+    172: "../assets/images/products/172.jpg",
+    176: "../assets/images/products/176.jpg",
+    194: "../assets/images/products/194.jpg",
+    195: "../assets/images/products/195.jpg",
+    196: "../assets/images/products/196.jpg",
+    197: "../assets/images/products/197.jpg",
+    202: "../assets/images/products/202.jpg",
+    203: "../assets/images/products/203.jpg",
+    204: "../assets/images/products/204.jpg",
+    218: "../assets/images/products/218.jpg",
+    219: "../assets/images/products/219.jpg",
+    220: "../assets/images/products/220.jpg",
+    63: "../assets/images/products/63.jpg",
+    64: "../assets/images/products/64.jpg",
+    65: "../assets/images/products/65.jpg",
+    91: "../assets/images/products/91.jpg",
+    103: "../assets/images/products/103.jpg",
+    113: "../assets/images/products/113.jpg",
+    114: "../assets/images/products/114.jpg",
+    117: "../assets/images/products/117.jpg",
+    126: "../assets/images/products/126.jpg",
+    168: "../assets/images/products/168.jpg",
+    169: "../assets/images/products/169.jpg",
+    174: "../assets/images/products/174.jpg",
+    188: "../assets/images/products/188.jpg",
     4: "../assets/images/products/4.webp",
     5: "../assets/images/products/5.webp",
     6: "../assets/images/products/6.jpg",
@@ -2227,14 +2455,30 @@
 
   // Abhak-Zustand: ueberlebt Neuladen via localStorage
   const STORAGE_KEY = 'nzh-purchased';
+  const DATES_KEY = 'nzh-dates';
   let purchased;
+  let purchaseDates = {};
   try {
     purchased = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
   } catch (e) {
     purchased = new Set();
   }
+  try {
+    purchaseDates = JSON.parse(localStorage.getItem(DATES_KEY) || '{}') || {};
+  } catch (e) {
+    purchaseDates = {};
+  }
   function savePurchased(){
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify([...purchased])); } catch (e) {}
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify([...purchased]));
+      localStorage.setItem(DATES_KEY, JSON.stringify(purchaseDates));
+    } catch (e) {}
+  }
+  function formatDate(iso){
+    if (!iso) return null;
+    const d = new Date(iso);
+    if (isNaN(d)) return null;
+    return d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
   }
 
   // --- Filter-Zustand ---
@@ -2294,8 +2538,13 @@
     const item = items.find(x => x.id === id);
     if (!item) return;
     const nowDone = !purchased.has(id);
-    if (nowDone) purchased.add(id);
-    else purchased.delete(id);
+    if (nowDone){
+      purchased.add(id);
+      purchaseDates[id] = new Date().toISOString().slice(0, 10);
+    } else {
+      purchased.delete(id);
+      delete purchaseDates[id];
+    }
     savePurchased();
 
     document.querySelectorAll(`.card[data-id="${id}"]`).forEach(card => {
@@ -2309,12 +2558,33 @@
           d.classList.remove('pop'); void d.offsetWidth; d.classList.add('pop');
         }
       }
+      const meta = card.querySelector('.price-meta');
+      if (meta){
+        const old = meta.querySelector('.done-date');
+        if (old) old.remove();
+        if (nowDone){
+          const dd = document.createElement('div');
+          dd.className = 'done-date';
+          dd.textContent = 'abgehakt am ' + formatDate(purchaseDates[id]);
+          meta.appendChild(dd);
+        }
+      }
     });
     renderLedger();
     updateHero();
     updateCategoryProgress(item.category);
     updateLightboxCheck();
     updateFilterUI();
+    renderStarter();
+    if (document.getElementById('statsBody').style.display !== 'none') renderStats();
+    if (nowDone){
+      const catAll = items.filter(i => i.category === item.category);
+      if (catAll.every(i => purchased.has(i.id))){
+        document.querySelectorAll(`.cat-progress[data-cat="${item.category}"]`).forEach(el => {
+          el.classList.remove('celebrate'); void el.offsetWidth; el.classList.add('celebrate');
+        });
+      }
+    }
 
     if (hideDone && nowDone){
       setTimeout(renderLists, 350);
@@ -2365,7 +2635,7 @@
 
   // --- Stand sichern / laden ---
   function exportState(){
-    const data = { app: 'noch-zu-holen', exported: new Date().toISOString(), purchased: [...purchased] };
+    const data = { app: 'noch-zu-holen', exported: new Date().toISOString(), purchased: [...purchased], dates: purchaseDates };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
@@ -2385,6 +2655,12 @@
         if (!Array.isArray(ids)) throw new Error('format');
         const valid = new Set(items.map(i => i.id));
         purchased = new Set(ids.filter(id => valid.has(id)));
+        purchaseDates = {};
+        if (data.dates && typeof data.dates === 'object'){
+          for (const k in data.dates){
+            if (purchased.has(Number(k))) purchaseDates[k] = data.dates[k];
+          }
+        }
         savePurchased();
         render();
         updateHero();
@@ -2396,6 +2672,159 @@
       input.value = '';
     };
     reader.readAsText(file);
+  }
+
+  // --- Ganze Gruppe abhaken / wieder öffnen ---
+  function toggleGroupDone(key, ev){
+    if (ev) ev.stopPropagation();
+    const parts = key.split('::');
+    const gi = items.filter(i => i.category === parts[0] && (i.subcategory || '') === parts[1] && (i.group || '') === parts[2]);
+    if (gi.length === 0) return;
+    const allDone = gi.every(i => purchased.has(i.id));
+    gi.forEach(i => {
+      if (allDone){
+        purchased.delete(i.id);
+        delete purchaseDates[i.id];
+      } else if (!purchased.has(i.id)){
+        purchased.add(i.id);
+        purchaseDates[i.id] = new Date().toISOString().slice(0, 10);
+      }
+    });
+    savePurchased();
+    renderLists();
+    renderLedger();
+    updateHero();
+    updateCategoryProgress(parts[0]);
+    updateFilterUI();
+    renderStarter();
+    if (document.getElementById('statsBody').style.display !== 'none') renderStats();
+    showToast(allDone
+      ? `„${parts[2]}" wieder offen (${gi.length} Teile)`
+      : `„${parts[2]}" komplett abgehakt — ${gi.length} Teile`,
+      () => toggleGroupDone(key));
+  }
+
+  // --- Such-Treffer hervorheben ---
+  function markHits(escaped){
+    const q = searchQuery.trim();
+    if (!q) return escaped;
+    const eq = escapeHtml(q).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    try {
+      return escaped.replace(new RegExp(eq, 'gi'), function(m){ return '<mark>' + m + '</mark>'; });
+    } catch (e) {
+      return escaped;
+    }
+  }
+
+  // --- Womit anfangen? Die günstigsten offenen Muss-Käufe ---
+  function renderStarter(){
+    const box = document.getElementById('starterBox');
+    if (searchQuery.trim() !== '' || dreamMode){
+      box.innerHTML = '';
+      return;
+    }
+    const cands = items
+      .filter(i => i.priority === 'must' && !purchased.has(i.id) && i.price !== null)
+      .sort((a,b) => Number(a.price) - Number(b.price))
+      .slice(0, 3);
+    if (cands.length === 0){ box.innerHTML = ''; return; }
+    box.innerHTML = `<div class="starter">
+      <div class="starter-h">◆ Womit anfangen? Die günstigsten Muss-Käufe</div>
+      <div class="starter-items">${cands.map(i =>
+        `<button class="starter-chip" onclick="jumpToItem(${i.id})">${escapeHtml(i.title)}<span class="sp">${money(i.price)}</span></button>`
+      ).join('')}</div>
+    </div>`;
+  }
+  function jumpToItem(id){
+    const item = items.find(x => x.id === id);
+    if (!item) return;
+    if (activeTab !== 'Alle' && activeTab !== item.category){ activeTab = item.category; renderTabs(); }
+    if (item.group) expandedGroups.add(groupKey(item));
+    renderLists();
+    let card = document.querySelector(`.card[data-id="${id}"]`);
+    if (!card && (prioFilter || budgetMax !== null)){
+      prioFilter = null; budgetMax = null;
+      document.getElementById('budgetInput').value = '';
+      updateFilterUI();
+      renderLists();
+      card = document.querySelector(`.card[data-id="${id}"]`);
+    }
+    if (card){
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      card.classList.remove('reveal');
+      card.style.borderColor = 'var(--amber)';
+      setTimeout(() => { card.style.borderColor = ''; }, 1600);
+    }
+  }
+
+  // --- Statistik ---
+  function toggleStats(){
+    const body = document.getElementById('statsBody');
+    const btn = document.getElementById('statsToggle');
+    const open = body.style.display === 'none';
+    body.style.display = open ? '' : 'none';
+    btn.textContent = open ? 'Statistik ausblenden' : 'Statistik anzeigen';
+    btn.classList.toggle('on', open);
+    if (open) renderStats();
+  }
+  function renderStats(){
+    const body = document.getElementById('statsBody');
+    let catHtml = '<div><div class="stats-h">Fortschritt je Kategorie</div>';
+    CATEGORIES.forEach(cat => {
+      const ci = items.filter(i => i.category === cat);
+      if (ci.length === 0) return;
+      const done = ci.filter(i => purchased.has(i.id)).length;
+      const rest = ci.filter(i => !purchased.has(i.id)).reduce((s,i) => s + (Number(i.price)||0), 0);
+      const pct = Math.round(done / ci.length * 100);
+      catHtml += `<div class="stat-row">
+        <span class="sname">${cat}</span>
+        <span class="sbar"><span style="width:${pct}%"></span></span>
+        <span class="sval">${done}/${ci.length} · Rest ${money(rest)}</span>
+      </div>`;
+    });
+    catHtml += '</div>';
+    let prioHtml = '<div><div class="stats-h">Offen nach Priorität</div><div class="stat-prio">';
+    [['must','Muss bald her'],['nice','Nice to have'],['dream','Großer Traum']].forEach(([p, label]) => {
+      const pi = items.filter(i => i.priority === p && !purchased.has(i.id));
+      const sum = pi.reduce((s,i) => s + (Number(i.price)||0), 0);
+      prioHtml += `<div class="stat-prio-row"><span>${label}</span><span class="sval">${pi.length} offen · ${money(sum)}</span></div>`;
+    });
+    const noPrice = items.filter(i => i.price === null && !purchased.has(i.id)).length;
+    prioHtml += `<div class="stat-prio-row"><span>Preis noch offen</span><span class="sval">${noPrice} Einträge</span></div></div></div>`;
+    body.innerHTML = catHtml + prioHtml;
+  }
+
+  // --- Offene Einträge als Text kopieren ---
+  function copyList(){
+    const open = items.filter(i => !purchased.has(i.id));
+    let out = 'NOCH ZU HOLEN — offene Einträge (Stand ' + new Date().toLocaleDateString('de-DE') + ')\n';
+    CATEGORIES.forEach(cat => {
+      const ci = open.filter(i => i.category === cat);
+      if (ci.length === 0) return;
+      const sum = ci.reduce((s,i) => s + (Number(i.price)||0), 0);
+      out += '\n' + cat.toUpperCase() + ' (' + ci.length + ' offen · ' + money(sum) + ')\n';
+      ci.forEach(i => {
+        out += '- ' + i.title + (i.price !== null ? ' — ' + money(i.price) : ' — Preis offen') + '\n';
+      });
+    });
+    const restSum = open.reduce((s,i) => s + (Number(i.price)||0), 0);
+    out += '\nGesamt: ' + open.length + ' offene Einträge · ' + money(restSum) + '\n';
+    const done = () => showToast('Liste kopiert — ' + open.length + ' offene Einträge', null);
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(out).then(done, () => fallbackCopy(out, done));
+    } else {
+      fallbackCopy(out, done);
+    }
+  }
+  function fallbackCopy(text, done){
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); done(); } catch (e) { showToast('Kopieren hat nicht geklappt', null); }
+    ta.remove();
   }
 
   // --- Druckansicht: alles aufklappen, drucken, Zustand wiederherstellen ---
@@ -2420,7 +2849,11 @@
       `<button class="tab ${t===activeTab?'active':''}" onclick="setTab('${t}')">${t}</button>`
     ).join('');
   }
-  function setTab(t){ activeTab = t; render(); }
+  function setTab(t){
+    activeTab = t;
+    try { history.replaceState(null, '', t === 'Alle' ? location.pathname : '#' + encodeURIComponent(t)); } catch (e) {}
+    render();
+  }
 
   function updateHero(){
     const total = items.length;
@@ -2551,6 +2984,7 @@
     searchTimer = setTimeout(() => {
       searchQuery = document.getElementById('searchBox').value;
       renderLists();
+      renderStarter();
     }, 150);
   }
 
@@ -2604,6 +3038,7 @@
     document.getElementById('dreamModeBtn').classList.toggle('active', dreamMode);
     document.getElementById('tabs').style.display = dreamMode ? 'none' : 'flex';
     renderLists();
+    renderStarter();
   }
 
   function renderItemsAndGroups(list, hidePriority){
@@ -2629,6 +3064,8 @@
       const key = groupKey(groupItems[0]);
       const isOpen = expandedGroups.has(key);
       const groupSum = groupItems.reduce((s,i) => s + (Number(i.price)||0), 0);
+      const gDone = groupItems.every(i => purchased.has(i.id));
+      const gCheck = `<button class="group-check ${gDone ? 'done' : ''}" onclick="toggleGroupDone('${key}', event)" aria-label="${gDone ? 'Gruppe wieder als offen markieren' : 'Ganze Gruppe abhaken'}" title="${gDone ? 'Gruppe wieder öffnen' : 'Ganze Gruppe abhaken'}"><span class="cb-diamond"><span>✓</span></span></button>`;
       const kind = classifyGroup(groupItems);
 
       if (kind.type === 'main-accessory'){
@@ -2640,14 +3077,14 @@
         }
       } else if (kind.type === 'alternatives'){
         html += `<div class="group-block">
-          <div class="group-header alt-header" onclick="toggleGroup('${key}')">
+          <div class="group-header alt-header ${gDone ? 'all-done' : ''}" onclick="toggleGroup('${key}')">
             <div class="group-header-left">
               <span class="chevron ${isOpen ? 'open':''}">▸</span>
               <span class="alt-icon">⇄</span>
               <span class="group-name">${escapeHtml(g)}</span>
               <span class="group-count alt-count">${groupItems.length} Optionen · alle okay, noch nicht entschieden</span>
             </div>
-            <span class="group-sum mono">${money(groupSum)}</span>
+            <span style="display:flex;align-items:center;gap:12px;">${gCheck}<span class="group-sum mono">${money(groupSum)}</span></span>
           </div>`;
         if (isOpen){
           html += `<div class="group-items">`;
@@ -2657,13 +3094,13 @@
         html += `</div>`;
       } else {
         html += `<div class="group-block">
-          <div class="group-header" onclick="toggleGroup('${key}')">
+          <div class="group-header ${gDone ? 'all-done' : ''}" onclick="toggleGroup('${key}')">
             <div class="group-header-left">
               <span class="chevron ${isOpen ? 'open':''}">▸</span>
               <span class="group-name">${escapeHtml(g)}</span>
               <span class="group-count">${groupItems.length} Teile</span>
             </div>
-            <span class="group-sum mono">${money(groupSum)}</span>
+            <span style="display:flex;align-items:center;gap:12px;">${gCheck}<span class="group-sum mono">${money(groupSum)}</span></span>
           </div>`;
         if (isOpen){
           html += `<div class="group-items">`;
@@ -2718,12 +3155,14 @@
         ${thumb}
         <div class="card-body">
           <div class="item-top">
-            <div class="item-title">${escapeHtml(i.title)}${isSeries ? ' <span class="series-badge">ganze Serie · DE/EN · TB/HC</span>' : ''}</div>
+            <div class="item-title">${markHits(escapeHtml(i.title))}${isSeries ? ' <span class="series-badge">ganze Serie · DE/EN · TB/HC</span>' : ''}</div>
             <div class="price-meta">
               <div class="item-price">${money(i.price)}</div>
+              ${i.priceUpdated ? `<div class="price-checked">Preis geprüft: ${formatDate(i.priceUpdated)}</div>` : ''}
+              ${isDone && purchaseDates[i.id] ? `<div class="done-date">abgehakt am ${formatDate(purchaseDates[i.id])}</div>` : ''}
             </div>
           </div>
-          ${i.note ? `<div class="item-note">${escapeHtml(i.note)}</div>` : ''}
+          ${i.note ? `<div class="item-note">${markHits(escapeHtml(i.note))}</div>` : ''}
           <div class="item-tags">
             ${hidePriority ? '' : `<span class="prio-tag ${PRIO_CLASS[i.priority]}">${PRIO_LABEL[i.priority]}</span>`}
             ${i.link ? `<a class="link-btn" href="${escapeHtml(i.link)}" target="_blank" rel="noopener">Zum Produkt ↗</a>` : ''}
@@ -2743,10 +3182,20 @@
     renderTabs();
     renderLedger();
     renderLists();
+    renderStarter();
   }
+
+  try {
+    const h = decodeURIComponent(location.hash.slice(1));
+    if (CATEGORIES.includes(h)) activeTab = h;
+  } catch (e) {}
 
   render();
   updateFilterUI();
+
+  window.addEventListener('scroll', function(){
+    document.getElementById('scrollTop').classList.toggle('show', window.scrollY > 600);
+  }, { passive: true });
   requestAnimationFrame(() => requestAnimationFrame(updateHero));
 
   // --- Produktbild-Lightbox ---

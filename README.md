@@ -19,8 +19,12 @@ lokalen Produktbilder aus `assets/` laden.
 - **Filter** — Erledigte ausblenden, nach Priorität filtern (Muss / Nice / Traum),
   nach Preis sortieren, Budget-Grenze setzen („max €").
 - **Suche** über Titel, Notizen, Marken und Gruppen (`/` fokussiert die Suche).
-- **Produktbilder** — 159 lokal gespeichert (`assets/images/products/`), Rest lädt
-  von den Shop-Servern; Fallback-Kette lokal → remote → Monogramm.
+- **Produktbilder** — 205 von 209 Einträgen bebildert, fast alle lokal gespeichert
+  (`assets/images/products/`); Fallback-Kette lokal → remote → Monogramm.
+- **Geprüfte Preise** — 66 Preise gegen die Produktseiten abgeglichen (37 korrigiert),
+  erkennbar am „Preis geprüft"-Badge.
+- **Gruppen-Abhaken, Statistik-Panel, „Womit anfangen?"-Empfehlung, Abhak-Datum,
+  Such-Highlighting, Tab-Link in der URL, Scroll-to-top** — Details siehe Website.
 - **Lightbox** mit Blättern (`←`/`→`), Abhaken direkt im Bild.
 - **Gruppen** — Hauptprodukt + Zubehör, Alternativen („noch nicht entschieden"),
   Serien-Pakete; einzeln oder alle auf einmal aufklappbar.
