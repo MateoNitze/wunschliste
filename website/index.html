@@ -10,6 +10,7 @@
 <meta property="og:description" content="Alles, was noch fehlt. An einem Ort. 209 Wünsche, abhakbar mit gespeichertem Fortschritt.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='4' y='4' width='8' height='8' transform='rotate(45 8 8)' fill='%23e8a33d'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="../assets/images/icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -33,7 +34,7 @@
     --red-soft:rgba(217,138,117,0.12);
   }
   *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
+  html{scroll-behavior:smooth; overflow-x:clip;}
   body{
     margin:0;
     background:var(--bg);
@@ -502,7 +503,7 @@
     gap:12px;
     flex-wrap:wrap;
   }
-  .item-title{ font-size:15px; font-weight:500; line-height:1.45; color:var(--text); }
+  .item-title{ font-size:15px; font-weight:500; line-height:1.45; color:var(--text); overflow-wrap:anywhere; }
   .series-badge{
     font-family:'JetBrains Mono',Consolas,monospace;
     font-size:9.5px;
@@ -525,7 +526,7 @@
     font-size:13.5px;
     white-space:nowrap;
   }
-  .item-note{ margin-top:6px; font-size:13px; color:var(--muted); line-height:1.6; }
+  .item-note{ margin-top:6px; font-size:13px; color:var(--muted); line-height:1.6; overflow-wrap:anywhere; }
   .item-tags{
     margin-top:12px;
     display:flex;
@@ -1148,7 +1149,7 @@
     border-top:1px solid var(--line);
   }
   .lb-text{ min-width:0; }
-  .lb-title{ font-weight:500; font-size:15px; color:var(--text); }
+  .lb-title{ font-weight:500; font-size:15px; color:var(--text); overflow-wrap:anywhere; }
   .lb-price{
     font-family:'JetBrains Mono',Consolas,monospace;
     font-size:13px;
@@ -1172,7 +1173,10 @@
 
   @media (max-width:720px){
     .wordmark{ margin-bottom:44px; }
-    .hero-grid{ justify-content:center; }
+    .hero-grid{ justify-content:center; gap:32px; }
+    h1{ font-size:31px; }
+    .controls-bar{ position:static; padding:8px 0; }
+    .mini-progress{ display:none !important; }
     .ledger{ grid-template-columns:1fr 1fr; }
     .ledger-item:nth-child(-n+2){ border-bottom:1px solid var(--line); }
     .ledger-item:nth-child(2){ border-right:none; }
