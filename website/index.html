@@ -95,6 +95,20 @@
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth; overflow-x:clip;}
+  /* Kein versehentliches Markieren/Antippen von Text — nur Eingabefelder bleiben auswählbar */
+  body{
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    user-select:none;
+    -webkit-tap-highlight-color:transparent;
+    caret-color:transparent;
+  }
+  input, textarea{
+    -webkit-user-select:text;
+    -moz-user-select:text;
+    user-select:text;
+    caret-color:var(--amber);
+  }
   body{
     margin:0;
     background:var(--bg);
@@ -783,6 +797,11 @@
     100%{ transform:rotate(45deg) scale(1); }
   }
   .cb-diamond.pop{ animation:diamondPop 0.35s ease; }
+  @keyframes cardFlash{
+    0%{ background:var(--green-soft); border-color:rgba(121,201,158,0.55); }
+    100%{ background:var(--surface); border-color:var(--line); }
+  }
+  .card.flash{ animation:cardFlash 0.7s ease; }
 
   /* ---------- Toast ---------- */
   .toast{
@@ -927,41 +946,18 @@
   }
   .stat-prio-row .sval{ font-family:'JetBrains Mono',Consolas,monospace; font-size:11px; color:var(--muted); }
 
-  /* ---------- Womit anfangen ---------- */
-  .starter{
-    border:1px solid rgba(232,163,61,0.3);
-    background:radial-gradient(420px 140px at 12% 0%, rgba(232,163,61,0.07), transparent 60%), var(--surface);
-    border-radius:14px;
-    padding:16px 20px;
-    margin-bottom:28px;
-  }
-  .starter-h{
-    font-family:'JetBrains Mono',Consolas,monospace;
-    font-size:10px;
-    text-transform:uppercase;
-    letter-spacing:0.16em;
-    color:var(--amber);
-    margin-bottom:10px;
-  }
-  .starter-items{ display:flex; gap:8px; flex-wrap:wrap; }
-  .starter-chip{
-    background:transparent;
-    border:1px solid var(--line-strong);
-    color:var(--text);
-    padding:7px 13px;
-    border-radius:999px;
+  /* ---------- Gruppen-Intro (Erklärtext beim Aufklappen) ---------- */
+  .group-intro{
     font-size:12.5px;
-    cursor:pointer;
-    font-family:'Inter',sans-serif;
-    transition:border-color 0.15s ease, background 0.15s ease;
+    line-height:1.6;
+    color:var(--muted);
+    background:var(--amber-soft);
+    border:1px solid rgba(232,163,61,0.25);
+    border-radius:10px;
+    padding:11px 14px;
+    margin-bottom:12px;
   }
-  .starter-chip:hover{ border-color:var(--amber); background:var(--amber-soft); }
-  .starter-chip .sp{
-    font-family:'JetBrains Mono',Consolas,monospace;
-    font-size:11px;
-    color:var(--amber);
-    margin-left:8px;
-  }
+  .group-intro b{ color:var(--text); font-weight:600; }
 
   /* ---------- Suche: Treffer-Highlight ---------- */
   mark{
@@ -1129,7 +1125,7 @@
     body{ background:#fff; color:#000; font-size:12px; border:none; }
     body::after, header, .ledger, .controls-bar, .filter-bar, .filter-info,
     .toolbar, footer, .lb-overlay, .toast, .checkbox, .thumb, .item-tags,
-    .chevron, .cat-bar, .alt-icon, .stats, .starter, .scroll-top, .group-check,
+    .chevron, .cat-bar, .alt-icon, .stats, .scroll-top, .group-check,
     .done-date, .price-checked{ display:none !important; }
     main{ padding:0; max-width:none; animation:none; }
     main::before{
@@ -1347,7 +1343,6 @@
 
   <div class="toolbar" id="tabs"></div>
 
-  <div id="starterBox"></div>
 
   <div id="lists"></div>
 </main>
@@ -1382,7 +1377,7 @@
 </footer>
 
 <script>
-  const CATEGORIES = ["Setup", "Sport", "Körperliches", "Entertainment", "Bücher", "Technik", "Comics & Manga", "Zuhause & Wellness", "Kleidung & Mode"];
+  const CATEGORIES = ["Setup", "Sport", "Körperliches", "Entertainment", "Lesestoff", "Technik", "Zuhause & Wellness", "Kleidung & Mode"];
   const PRIO_LABEL = { must: "Muss bald her", nice: "Nice to have", dream: "Großer Traum" };
   const PRIO_CLASS = { must: "prio-must", nice: "prio-nice", dream: "prio-dream" };
 
@@ -1406,7 +1401,7 @@
   // (id: "../assets/images/products/DATEINAME.jpg").
   // ============================================================
   let items = [
-    { id: 4, title: "Tastatur: Wooting 60HE v2", category: "Setup", subcategory: "Gaming", group: "Tastatur", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 244.99,
+    { id: 4, title: "Tastatur: Wooting 60HE v2", category: "Setup", subcategory: "Gaming", group: "Tastatur", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 244.99,
       link: "https://wooting.io/wooting-60he-v2",
       note: "Layout: ISO · Sprache: Deutsch · Style: Aluminium, Colour Black · Keycaps: Wooting Double Shot Backlit PBT Keycap Set (Split Spacebar Included)",
       done: false, priceUpdated: "2026-07-19" },
@@ -1422,15 +1417,15 @@
       link: "https://secretlab.eu/de/pages/magnus-pro",
       note: "Größe: XL · Farbe: Black · Schreibtischunterlage: Signature Black. Wird 2× gebraucht — einmal Zockbereich, einmal Arbeitsbereich.",
       done: false, priceUpdated: null },
-    { id: 8, title: "Performance Bundle", category: "Setup", subcategory: "Gaming", group: "Schreibtisch", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 180,
+    { id: 8, title: "Performance Bundle", category: "Setup", subcategory: "Gaming", group: "Schreibtisch", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 180,
       link: "https://secretlab.eu/de/pages/magnus-pro",
       note: "Zubehör zum Secretlab Magnus Pro — im Bundle enthalten: magnetische Kopfhörer-Halterung, magnetischer Ethernetkabel-Extender, Premium-PC-Halterung und MAGRGB-Beleuchtung (Smart Lighting Edition).",
       done: false, priceUpdated: null },
-    { id: 13, title: "Kabelmanagement Bundle XL", category: "Setup", subcategory: "Gaming", group: "Schreibtisch", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 45,
+    { id: 13, title: "Kabelmanagement Bundle XL", category: "Setup", subcategory: "Gaming", group: "Schreibtisch", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 45,
       link: "https://secretlab.eu/de/pages/magnus-pro",
       note: "Idee, noch nicht final entschieden — Zubehör zum Secretlab Magnus Pro.",
       done: false, priceUpdated: null },
-    { id: 14, title: "MAGNUS Monitorarm Dual (Black)", category: "Setup", subcategory: "Gaming", group: "Schreibtisch", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 320,
+    { id: 14, title: "MAGNUS Monitorarm Dual (Black)", category: "Setup", subcategory: "Gaming", group: "Schreibtisch", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 320,
       link: "https://secretlab.eu/de/pages/magnus-pro",
       note: "Idee, noch nicht final entschieden — Zubehör (Dual-Monitorarm) für den Secretlab Magnus Pro.",
       done: false, priceUpdated: null },
@@ -1438,16 +1433,16 @@
       link: "https://destore.hermanmiller.com/products/embody-gaming-chair?variant=43930847805590",
       note: "Herman Miller Embody Gaming Chair.",
       done: false, priceUpdated: "2026-07-18" },
-    { id: 15, title: "Gewichtheberschuhe: TYR Mens L-2 Lifter", category: "Sport", subcategory: "Krafttraining", priority: "must", price: 220,
+    { id: 15, title: "Gewichtheberschuhe: TYR Mens L-2 Lifter", category: "Sport", subcategory: "Krafttraining", priority: "dream", price: 220,
       link: "https://tyr.eu/de/products/tyr-mens-l-2-lifter-1",
       linkLabel: "TYR EU", link2: "https://tyr.com/products/tyr-mens-l-2-lifter", link2Label: "TYR US",
       note: "Farbe: am liebsten 008 Blk/Gold, zur Not 544 Black/Gum · Größe: US 12 — die Schuhe fallen eine Nummer kleiner aus, US 12 entspricht damit meiner EU 46.",
       done: false, priceUpdated: "2026-07-18" },
-    { id: 16, title: "SBD Lifting Straps", category: "Sport", subcategory: "Krafttraining", priority: "must", price: 32,
+    { id: 16, title: "SBD Lifting Straps", category: "Sport", subcategory: "Krafttraining", priority: "nice", price: 32,
       link: "https://sbdgermany.de/products/sbd-lifting-straps",
       note: "Klassische Zughilfen fürs schwere Ziehen — Kreuzheben, Rudern, Shrugs.",
       done: false, priceUpdated: "2026-07-18" },
-    { id: 17, title: "SBD Figure 8 Lifting Straps", category: "Sport", subcategory: "Krafttraining", priority: "must", price: 40,
+    { id: 17, title: "SBD Figure 8 Lifting Straps", category: "Sport", subcategory: "Krafttraining", priority: "nice", price: 40,
       link: "https://sbdgermany.de/products/sbd-figure-8-lifting-straps",
       note: "Figure-8-Zughilfen: geschlossene Schlaufen für maximalen Halt bei schweren Zügen.",
       done: false, priceUpdated: "2026-07-18" },
@@ -1538,175 +1533,175 @@
       note: "65-Zoll-OLED-evo (G5-Serie), 4K mit bis zu 165 Hz — Galerie-Design für die Wand. Preis je nach Angebot, UVP 3.999 €.",
       done: false, priceUpdated: "2026-07-19" }
 ,
-    { id: 48, title: "Atomic Habits", category: "Bücher", priority: "nice", price: 16,
+    { id: 48, title: "Atomic Habits", category: "Lesestoff", subcategory: "Bücher", priority: "nice", price: 16,
       link: "https://www.amazon.de/Atomic-Habits-Proven-Build-Break/dp/1847941834/ref=sr_1_1?__mk_de_DE=%C3%85M%C3%85%C5%BD%C3%95%C3%91&sr=8-1",
       note: "James Clear – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 49, title: "Dopamine Nation", category: "Bücher", group: "Dopamine Nation", priority: "nice", price: 25,
+    { id: 49, title: "Dopamine Nation", category: "Lesestoff", subcategory: "Bücher", group: "Dopamine Nation", priority: "nice", price: 25,
       link: "https://www.amazon.de/Dopamine-Nation-Finding-Balance-Indulgence/dp/152474672X/ref=tmm_hrd_swatch_0?_encoding=UTF8&sr=1-3",
       note: "Anna Lembke – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 50, title: "Die Dopamin-Nation", category: "Bücher", group: "Dopamine Nation", priority: "nice", price: 25,
+    { id: 50, title: "Die Dopamin-Nation", category: "Lesestoff", subcategory: "Bücher", group: "Dopamine Nation", priority: "nice", price: 25,
       link: "https://www.amazon.de/Die-Dopamin-Nation-Balance-Zeitalter-Vergn%C3%BCgens/dp/3962572953/ref=tmm_pap_swatch_0",
       note: "Anna Lembke – Deutsche Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 51, title: "Die Psychologie des Geldes", category: "Bücher", priority: "nice", price: 18,
+    { id: 51, title: "Die Psychologie des Geldes", category: "Lesestoff", subcategory: "Bücher", priority: "nice", price: 18,
       link: "https://www.amazon.de/%C3%9Cber-die-Psychologie-Geldes-Lektionen/dp/3959724438/ref=tmm_pap_swatch_0",
       note: "Morgan Housel – Deutsche Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 52, title: "Same As Ever", category: "Bücher", priority: "nice", price: 18,
+    { id: 52, title: "Same As Ever", category: "Lesestoff", subcategory: "Bücher", priority: "nice", price: 18,
       link: "https://www.amazon.de/Same-Ever-Geschichten-niemals-%C3%A4ndern/dp/3959727186/ref=tmm_pap_swatch_0",
       note: "Morgan Housel – Deutsche Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 53, title: "Outlive", category: "Bücher", group: "Outlive", priority: "nice", price: 30,
+    { id: 53, title: "Outlive", category: "Lesestoff", subcategory: "Bücher", group: "Outlive", priority: "nice", price: 30,
       link: "https://www.amazon.de/OUTLIVE-Standardwerk-f%C3%BChrenden-Mediziner-Langlebigkeit/dp/386493270X/ref=tmm_hrd_swatch_0?_encoding=UTF8&sr=1-3",
       note: "Peter Attia – Deutsche Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 54, title: "Outlive", category: "Bücher", group: "Outlive", priority: "nice", price: 24,
+    { id: 54, title: "Outlive", category: "Lesestoff", subcategory: "Bücher", group: "Outlive", priority: "nice", price: 24,
       link: "https://www.amazon.de/Outlive-Science-Longevity-Peter-Attia/dp/1785044540/?_encoding=UTF8",
       note: "Peter Attia – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 55, title: "Thinking, Fast and Slow", category: "Bücher", group: "Thinking, Fast and Slow", priority: "nice", price: 16,
+    { id: 55, title: "Thinking, Fast and Slow", category: "Lesestoff", subcategory: "Bücher", group: "Thinking, Fast and Slow", priority: "nice", price: 16,
       link: "https://www.amazon.de/Thinking-Fast-Slow-Daniel-Kahneman/dp/0374275637/ref=tmm_hrd_swatch_0",
       note: "Daniel Kahneman – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 56, title: "Schnelles Denken, langsames Denken", category: "Bücher", group: "Thinking, Fast and Slow", priority: "nice", price: 30,
+    { id: 56, title: "Schnelles Denken, langsames Denken", category: "Lesestoff", subcategory: "Bücher", group: "Thinking, Fast and Slow", priority: "nice", price: 30,
       link: "https://www.amazon.de/Schnelles-Denken-langsames-Daniel-Kahneman/dp/3886808866/?_encoding=UTF8",
       note: "Daniel Kahneman – Deutsche Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 57, title: "On the Genealogy of Morals", category: "Bücher", priority: "nice", price: 10,
+    { id: 57, title: "On the Genealogy of Morals", category: "Lesestoff", subcategory: "Bücher", priority: "nice", price: 10,
       link: "https://www.amazon.de/Genealogy-Morals-Penguin-Classics/dp/0141195371/ref=sr_1_3?s=books&sr=1-3&text=Robert+C.+Holub",
       note: "Friedrich Nietzsche – Penguin Classics, Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 58, title: "Fear and Trembling", category: "Bücher", priority: "nice", price: 9,
+    { id: 58, title: "Fear and Trembling", category: "Lesestoff", subcategory: "Bücher", priority: "nice", price: 9,
       link: "https://www.amazon.de/Fear-Trembling-Dialectical-Johannes-Silentio/dp/0140444491/ref=tmm_pap_swatch_0?_encoding=UTF8&sr=8-1",
       note: "Søren Kierkegaard – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 59, title: "Psychology", category: "Bücher", priority: "nice", price: 179,
+    { id: 59, title: "Psychology", category: "Lesestoff", subcategory: "Bücher", priority: "nice", price: 179,
       link: "https://www.amazon.de/dp/1319190804/ref=cm_cr_arp_d_btm?ie=UTF8",
       note: "Schacter/Gilbert/Nock/Wegner – Psychologie-Lehrbuch, Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 60, title: "The Laws of Human Nature", category: "Bücher", group: "The Laws of Human Nature", priority: "nice", price: 30,
+    { id: 60, title: "The Laws of Human Nature", category: "Lesestoff", subcategory: "Bücher", group: "The Laws of Human Nature", priority: "nice", price: 30,
       link: "https://www.amazon.de/Laws-Human-Nature-Robert-Greene/dp/0525428143/ref=tmm_hrd_swatch_0",
       note: "Robert Greene – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 61, title: "Die Gesetze der menschlichen Natur", category: "Bücher", group: "The Laws of Human Nature", priority: "nice", price: 30,
+    { id: 61, title: "Die Gesetze der menschlichen Natur", category: "Lesestoff", subcategory: "Bücher", group: "The Laws of Human Nature", priority: "nice", price: 30,
       link: "https://www.amazon.de/Gesetze-menschlichen-Natur-einzigartigen-entschl%C3%BCsseln/dp/3959722303/ref=tmm_hrd_swatch_0",
       note: "Robert Greene – Deutsche Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 62, title: "Mastery", category: "Bücher", group: "Mastery", priority: "nice", price: 30,
+    { id: 62, title: "Mastery", category: "Lesestoff", subcategory: "Bücher", group: "Mastery", priority: "nice", price: 30,
       link: "https://www.amazon.de/Mastery-Robert-Greene/dp/0670024961/ref=tmm_hrd_swatch_0",
       note: "Robert Greene – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 63, title: "The Art of Seduction", category: "Bücher", priority: "nice", price: 47,
+    { id: 63, title: "The Art of Seduction", category: "Lesestoff", subcategory: "Bücher", priority: "nice", price: 47,
       link: "https://www.amazon.de/Art-Seduction-Robert-Greene/dp/B0F58ZS7QC/ref=tmm_hrd_swatch_0",
       note: "Robert Greene – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 64, title: "The 33 Strategies of War", category: "Bücher", priority: "nice", price: 41,
+    { id: 64, title: "The 33 Strategies of War", category: "Lesestoff", subcategory: "Bücher", priority: "nice", price: 41,
       link: "https://www.amazon.de/33-Strategies-War-Robert-Greene/dp/0670034576/ref=tmm_hrd_swatch_0",
       note: "Robert Greene – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 65, title: "Perfekt! Der überlegene Weg zum Erfolg", category: "Bücher", group: "Mastery", priority: "nice", price: 28,
+    { id: 65, title: "Perfekt! Der überlegene Weg zum Erfolg", category: "Lesestoff", subcategory: "Bücher", group: "Mastery", priority: "nice", price: 28,
       link: "https://www.amazon.de/Perfekt-%C3%BCberlegene-Weg-zum-Erfolg/dp/3446436790/ref=tmm_hrd_swatch_0",
       note: "Robert Greene – Deutsche Ausgabe von „Mastery“.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 66, title: "Ego Is the Enemy", category: "Bücher", group: "Ego Is the Enemy", priority: "nice", price: 20,
+    { id: 66, title: "Ego Is the Enemy", category: "Lesestoff", subcategory: "Bücher", group: "Ego Is the Enemy", priority: "nice", price: 20,
       link: "https://www.amazon.de/Ego-Enemy-Ryan-Holiday/dp/1591847818/ref=tmm_hrd_swatch_0",
       note: "Ryan Holiday – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 67, title: "The Obstacle Is the Way", category: "Bücher", group: "The Obstacle Is the Way", priority: "nice", price: 28,
+    { id: 67, title: "The Obstacle Is the Way", category: "Lesestoff", subcategory: "Bücher", group: "The Obstacle Is the Way", priority: "nice", price: 28,
       link: "https://www.amazon.de/Obstacle-Way-Expanded-10th-Anniversary/dp/0593719913/ref=tmm_hrd_swatch_0",
       note: "Ryan Holiday – Englische Ausgabe, erweiterte 10th-Anniversary-Edition.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 68, title: "Wisdom Takes Work", category: "Bücher", group: "Wisdom Takes Work", priority: "nice", price: 14,
+    { id: 68, title: "Wisdom Takes Work", category: "Lesestoff", subcategory: "Bücher", group: "Wisdom Takes Work", priority: "nice", price: 14,
       link: "https://www.amazon.de/Wisdom-Takes-Work-Repeat-Virtues/dp/0593191730/ref=tmm_hrd_swatch_0",
       note: "Ryan Holiday – Englische Ausgabe (Stoic Virtues Series).",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 69, title: "Stillness Is the Key", category: "Bücher", group: "Stillness Is the Key", priority: "nice", price: 11,
+    { id: 69, title: "Stillness Is the Key", category: "Lesestoff", subcategory: "Bücher", group: "Stillness Is the Key", priority: "nice", price: 11,
       link: "https://www.amazon.de/Stillness-Key-Ryan-Holiday/dp/0525538585/ref=tmm_hrd_swatch_0",
       note: "Ryan Holiday – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 70, title: "Discipline Is Destiny", category: "Bücher", group: "Discipline Is Destiny", priority: "nice", price: 14,
+    { id: 70, title: "Discipline Is Destiny", category: "Lesestoff", subcategory: "Bücher", group: "Discipline Is Destiny", priority: "nice", price: 14,
       link: "https://www.amazon.de/Discipline-Destiny-Power-Self-Control-Virtues/dp/0593191692/ref=tmm_hrd_swatch_0",
       note: "Ryan Holiday – Englische Ausgabe (Stoic Virtues Series).",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 71, title: "Courage Is Calling", category: "Bücher", group: "Courage Is Calling", priority: "nice", price: 14,
+    { id: 71, title: "Courage Is Calling", category: "Lesestoff", subcategory: "Bücher", group: "Courage Is Calling", priority: "nice", price: 14,
       link: "https://www.amazon.de/Courage-Calling-Fortune-Favors-Brave/dp/0593191676/ref=tmm_hrd_swatch_0",
       note: "Ryan Holiday – Englische Ausgabe (Stoic Virtues Series).",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 72, title: "Das Hindernis ist der Weg", category: "Bücher", group: "The Obstacle Is the Way", priority: "nice", price: 20,
+    { id: 72, title: "Das Hindernis ist der Weg", category: "Lesestoff", subcategory: "Bücher", group: "The Obstacle Is the Way", priority: "nice", price: 20,
       link: "https://www.amazon.de/Dein-Hindernis-ist-Jubil%C3%A4umsausgabe-Schwierigkeiten/dp/3959728018/ref=tmm_hrd_swatch_0",
       note: "Ryan Holiday – Deutsche Jubiläumsausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 73, title: "Disziplin & Selbstkontrolle", category: "Bücher", group: "Discipline Is Destiny", priority: "nice", price: 20,
+    { id: 73, title: "Disziplin & Selbstkontrolle", category: "Lesestoff", subcategory: "Bücher", group: "Discipline Is Destiny", priority: "nice", price: 20,
       link: "https://www.amazon.de/Disziplin-Selbstkontrolle-stoischen-Discipline-Self-Control/dp/3959725159/ref=tmm_hrd_swatch_0",
       note: "Ryan Holiday – Deutsche Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 74, title: "Die Weisheit des Stoizismus", category: "Bücher", group: "Wisdom Takes Work", priority: "nice", price: 20,
+    { id: 74, title: "Die Weisheit des Stoizismus", category: "Lesestoff", subcategory: "Bücher", group: "Wisdom Takes Work", priority: "nice", price: 20,
       link: "https://www.amazon.de/Weisheit-Stoizismus-Verstand-Gelassenheit-stoischen/dp/3959728328/ref=tmm_hrd_swatch_0",
       note: "Ryan Holiday – Deutsche Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 75, title: "In der Stille liegt Dein Weg", category: "Bücher", group: "Stillness Is the Key", priority: "nice", price: 20,
+    { id: 75, title: "In der Stille liegt Dein Weg", category: "Lesestoff", subcategory: "Bücher", group: "Stillness Is the Key", priority: "nice", price: 20,
       link: "https://www.amazon.de/Stille-liegt-Dein-Weg/dp/3959723296/ref=tmm_hrd_swatch_0",
       note: "Ryan Holiday – Deutsche Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 76, title: "Mut der Tapferen", category: "Bücher", group: "Courage Is Calling", priority: "nice", price: 20,
+    { id: 76, title: "Mut der Tapferen", category: "Lesestoff", subcategory: "Bücher", group: "Courage Is Calling", priority: "nice", price: 20,
       link: "https://www.amazon.de/Mut-Tapferen-stoischen-Tugenden-deutsche/dp/3959724888/ref=tmm_hrd_swatch_0",
       note: "Ryan Holiday – Deutsche Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 77, title: "Dein Ego ist dein Feind", category: "Bücher", group: "Ego Is the Enemy", priority: "nice", price: 20,
+    { id: 77, title: "Dein Ego ist dein Feind", category: "Lesestoff", subcategory: "Bücher", group: "Ego Is the Enemy", priority: "nice", price: 20,
       link: "https://www.amazon.de/Dein-Ego-ist-dein-Feind/dp/3959720327/ref=tmm_hrd_swatch_0",
       note: "Ryan Holiday – Deutsche Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 78, title: "Das Richtige tun. Genau jetzt.", category: "Bücher", priority: "nice", price: 20,
+    { id: 78, title: "Das Richtige tun. Genau jetzt.", category: "Lesestoff", subcategory: "Bücher", priority: "nice", price: 20,
       link: "https://www.amazon.de/Das-Richtige-tun-Genau-jetzt/dp/3959725167/?_encoding=UTF8",
       note: "Ryan Holiday – Deutsche Ausgabe (Stoic Virtues Series, Band zur Gerechtigkeit).",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 79, title: "On the Shortness of Life", category: "Bücher", priority: "nice", price: 7,
+    { id: 79, title: "On the Shortness of Life", category: "Lesestoff", subcategory: "Bücher", priority: "nice", price: 7,
       link: "https://www.amazon.de/Shortness-Life-Revised-2018-Translation/dp/1985208725/?_encoding=UTF8",
       note: "Seneca – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 80, title: "Wie man Freunde gewinnt im digitalen Zeitalter", category: "Bücher", group: "How to Win Friends and Influence People", priority: "nice", price: 18,
+    { id: 80, title: "Wie man Freunde gewinnt im digitalen Zeitalter", category: "Lesestoff", subcategory: "Bücher", group: "How to Win Friends and Influence People", priority: "nice", price: 18,
       link: "https://www.amazon.de/digitalen-Zeitalter-Freunde-Menschen-beeinflusst/dp/395972585X/ref=sr_1_3?sr=8-3",
       note: "Dale Carnegie & Associates – Deutsche Ausgabe, Adaption fürs digitale Zeitalter.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 81, title: "Wie man Freunde gewinnt", category: "Bücher", group: "How to Win Friends and Influence People", priority: "nice", price: 17,
+    { id: 81, title: "Wie man Freunde gewinnt", category: "Lesestoff", subcategory: "Bücher", group: "How to Win Friends and Influence People", priority: "nice", price: 17,
       link: "https://www.amazon.de/Wie-Freunde-gewinnt-einflussreich-Taschenbibliothek/dp/3596513081/ref=tmm_hrd_swatch_0?_encoding=UTF8&sr=8-1",
       note: "Dale Carnegie – Deutsche Ausgabe, Klassiker.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 82, title: "How to Win Friends and Influence People", category: "Bücher", group: "How to Win Friends and Influence People", priority: "nice", price: 16,
+    { id: 82, title: "How to Win Friends and Influence People", category: "Lesestoff", subcategory: "Bücher", group: "How to Win Friends and Influence People", priority: "nice", price: 16,
       link: "https://www.amazon.de/Friends-Influence-People-Deluxe-Hardbound/dp/9354403778/ref=tmm_hrd_swatch_0?_encoding=UTF8&sr=1-2",
       note: "Dale Carnegie – Englische Ausgabe, Deluxe Hardbound.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 83, title: "Think and Grow Rich", category: "Bücher", group: "Think and Grow Rich", priority: "nice", price: 35,
+    { id: 83, title: "Think and Grow Rich", category: "Lesestoff", subcategory: "Bücher", group: "Think and Grow Rich", priority: "nice", price: 35,
       link: "https://www.amazon.de/Think-Grow-Rich-Originalausgabe-Sonderausgabe/dp/3959725329/ref=tmm_hrd_swatch_0",
       note: "Napoleon Hill – Deutsche Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 84, title: "Think and Grow Rich", category: "Bücher", group: "Think and Grow Rich", priority: "nice", price: 16,
+    { id: 84, title: "Think and Grow Rich", category: "Lesestoff", subcategory: "Bücher", group: "Think and Grow Rich", priority: "nice", price: 16,
       link: "https://www.amazon.de/Think-Grow-Rich-Original-1937/dp/1640321098/ref=tmm_hrd_swatch_0",
       note: "Napoleon Hill – Englische Ausgabe, Original von 1937.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 85, title: "The Way of the Superior Man", category: "Bücher", priority: "nice", price: 14,
+    { id: 85, title: "The Way of the Superior Man", category: "Lesestoff", subcategory: "Bücher", priority: "nice", price: 14,
       link: "https://www.amazon.de/Way-Superior-Man-Spiritual-Challenges/dp/1622038320/ref=tmm_pap_swatch_0",
       note: "David Deida – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 86, title: "Steve Jobs", category: "Bücher", priority: "nice", price: 32,
+    { id: 86, title: "Steve Jobs", category: "Lesestoff", subcategory: "Bücher", priority: "nice", price: 32,
       link: "https://www.amazon.de/Steve-Jobs-autorisierte-Apple-Gr%C3%BCnders-Weltbestseller/dp/3570105334/ref=tmm_hrd_swatch_0",
       note: "Walter Isaacson – Deutsche Ausgabe, autorisierte Biografie.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 87, title: "The Comfort Crisis", category: "Bücher", group: "The Comfort Crisis", priority: "nice", price: 23,
+    { id: 87, title: "The Comfort Crisis", category: "Lesestoff", subcategory: "Bücher", group: "The Comfort Crisis", priority: "nice", price: 23,
       link: "https://www.amazon.de/Comfort-Crisis-Embrace-Discomfort-Reclaim/dp/0593138767/ref=tmm_hrd_swatch_0?_encoding=UTF8&sr=1-1",
       note: "Michael Easter – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 88, title: "Die Komfort-Krise", category: "Bücher", group: "The Comfort Crisis", priority: "nice", price: 18,
+    { id: 88, title: "Die Komfort-Krise", category: "Lesestoff", subcategory: "Bücher", group: "The Comfort Crisis", priority: "nice", price: 18,
       link: "https://www.amazon.de/Die-Komfort-Krise-Akzeptiere-Unbehagen-gl%C3%BCckliches/dp/B0D9RGLBCP/?_encoding=UTF8",
       note: "Michael Easter – Deutsche Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 89, title: "Crime and Punishment", category: "Bücher", priority: "nice", price: 11,
+    { id: 89, title: "Crime and Punishment", category: "Lesestoff", subcategory: "Bücher", priority: "nice", price: 11,
       link: "https://www.amazon.de/Punishment-Penguin-Classics-Fyodor-Dostoyevsky/dp/0140449132/ref=sr_1_1?__mk_de_DE=%C3%85M%C3%85%C5%BD%C3%95%C3%91&s=books&sr=1-1",
       note: "Fjodor Dostojewski – Penguin Classics, Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 90, title: "Sony WF-1000XM6", category: "Technik", priority: "nice", price: 256, priceTo: 280,
+    { id: 90, title: "Sony WF-1000XM6", category: "Technik", priority: "must", price: 256, priceTo: 280,
       link: "https://www.sony.de/electronics/truly-wireless/wf-1000xm6",
       linkLabel: "Sony", link2: "https://www.amazon.de/dp/B0GF9ZNLWM/", link2Label: "Amazon",
       note: "Kabellose In-Ear-Kopfhörer mit Noise Cancelling, Schwarz.",
@@ -1716,277 +1711,277 @@
       linkLabel: "Sony", link2: "https://www.amazon.de/gp/product/B0F2TT8Q7M", link2Label: "Amazon",
       note: "Kabellose Over-Ear-Kopfhörer mit Noise Cancelling, Schwarz.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 92, title: "Der Idiot", category: "Bücher", priority: "nice", price: 3,
+    { id: 92, title: "Der Idiot", category: "Lesestoff", subcategory: "Bücher", priority: "nice", price: 3,
       link: "https://www.amazon.de/Idiot-von-Dostojewski-optimiert-Kindle-ebook/dp/B007KNKV1S/?_encoding=UTF8",
       note: "Fjodor Dostojewski – Deutsche Kindle-Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 93, title: "Stumbling on Happiness", category: "Bücher", group: "Stumbling on Happiness", priority: "nice", price: 14,
+    { id: 93, title: "Stumbling on Happiness", category: "Lesestoff", subcategory: "Bücher", group: "Stumbling on Happiness", priority: "nice", price: 14,
       link: "https://www.amazon.de/Stumbling-Happiness-Rough-Daniel-Gilbert/dp/1400042666/ref=tmm_hrd_swatch_0",
       note: "Daniel Gilbert – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 94, title: "Ins Glück stolpern", category: "Bücher", group: "Stumbling on Happiness", priority: "nice", price: 15,
+    { id: 94, title: "Ins Glück stolpern", category: "Lesestoff", subcategory: "Bücher", group: "Stumbling on Happiness", priority: "nice", price: 15,
       link: "https://www.amazon.de/Ins-Gl%C3%BCck-stolpern-Unvorhersehbarkeit-w%C3%BCnschen/dp/3570500632/?_encoding=UTF8",
       note: "Daniel Gilbert – Deutsche Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 95, title: "Radical Acceptance", category: "Bücher", priority: "nice", price: 19,
+    { id: 95, title: "Radical Acceptance", category: "Lesestoff", subcategory: "Bücher", priority: "nice", price: 19,
       link: "https://www.amazon.de/Radical-Acceptance-Embracing-Heart-Buddha/dp/1846047684/ref=tmm_hrd_swatch_0",
       note: "Tara Brach – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 96, title: "The Courage to Be Disliked", category: "Bücher", group: "The Courage to Be Disliked", priority: "nice", price: 19,
+    { id: 96, title: "The Courage to Be Disliked", category: "Lesestoff", subcategory: "Bücher", group: "The Courage to Be Disliked", priority: "nice", price: 19,
       link: "https://www.amazon.de/Courage-Be-Disliked-multi-million-bestseller/dp/1805467034/ref=tmm_hrd_swatch_0",
       note: "Ichiro Kishimi & Fumitake Koga – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 97, title: "Du musst nicht von allen gemocht werden", category: "Bücher", group: "The Courage to Be Disliked", priority: "nice", price: 15,
+    { id: 97, title: "Du musst nicht von allen gemocht werden", category: "Lesestoff", subcategory: "Bücher", group: "The Courage to Be Disliked", priority: "nice", price: 15,
       link: "https://www.amazon.de/musst-nicht-allen-gemocht-werden/dp/3499013371/ref=tmm_hrd_swatch_0",
       note: "Ichiro Kishimi & Fumitake Koga – Deutsche Ausgabe.",
       done: false, priceUpdated: null },
-    { id: 98, title: "No Bad Parts", category: "Bücher", group: "No Bad Parts", priority: "nice", price: 20,
+    { id: 98, title: "No Bad Parts", category: "Lesestoff", subcategory: "Bücher", group: "No Bad Parts", priority: "nice", price: 20,
       link: "https://www.amazon.de/No-Bad-Parts-Restoring-Wholeness/dp/1785045113/ref=tmm_pap_swatch_0",
       note: "Richard Schwartz – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 99, title: "Kein Teil von dir ist schlecht", category: "Bücher", group: "No Bad Parts", priority: "nice", price: 34,
+    { id: 99, title: "Kein Teil von dir ist schlecht", category: "Lesestoff", subcategory: "Bücher", group: "No Bad Parts", priority: "nice", price: 34,
       link: "https://www.amazon.de/Kein-Teil-von-schlecht-Familiensystems/dp/3867813671/ref=tmm_pap_swatch_0",
       note: "Richard Schwartz – Deutsche Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 100, title: "Think Again", category: "Bücher", group: "Think Again", priority: "nice", price: 26,
+    { id: 100, title: "Think Again", category: "Lesestoff", subcategory: "Bücher", group: "Think Again", priority: "nice", price: 26,
       link: "https://www.amazon.de/Think-Again-Power-Knowing-What/dp/1984878107/ref=tmm_hrd_swatch_0",
       note: "Adam Grant – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 101, title: "Think Again (Deutsch)", category: "Bücher", group: "Think Again", priority: "nice", price: 24,
+    { id: 101, title: "Think Again (Deutsch)", category: "Lesestoff", subcategory: "Bücher", group: "Think Again", priority: "nice", price: 24,
       link: "https://www.amazon.de/Think-Again-flexiblen-umschmei%C3%9Fen-Times-Bestseller/dp/349207135X/ref=tmm_hrd_swatch_0",
       note: "Adam Grant – Deutsche Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 102, title: "The War of Art", category: "Bücher", priority: "nice", price: 14,
+    { id: 102, title: "The War of Art", category: "Lesestoff", subcategory: "Bücher", priority: "nice", price: 14,
       link: "https://www.amazon.de/War-Art-Through-Creative-Battles/dp/9395741546/ref=tmm_hrd_swatch_0",
       note: "Steven Pressfield – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 103, title: "The One Thing", category: "Bücher", group: "The One Thing", priority: "nice", price: 12,
+    { id: 103, title: "The One Thing", category: "Lesestoff", subcategory: "Bücher", group: "The One Thing", priority: "nice", price: 12,
       link: "https://www.amazon.de/One-Thing-%C3%BCberraschend-einfache-au%C3%9Fergew%C3%B6hnlichem-ebook/dp/B07117YL7L/?_encoding=UTF8",
       note: "Gary Keller & Jay Papasan – Deutsche E-Book-Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 104, title: "The One Thing", category: "Bücher", group: "The One Thing", priority: "nice", price: 23,
+    { id: 104, title: "The One Thing", category: "Lesestoff", subcategory: "Bücher", group: "The One Thing", priority: "nice", price: 23,
       link: "https://www.amazon.de/One-Thing-Suprisingly-Extraordinary-Results/dp/1848549601/ref=tmm_hrd_swatch_0",
       note: "Gary Keller & Jay Papasan – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 105, title: "Deep Work", category: "Bücher", group: "Deep Work", priority: "nice", price: 16,
+    { id: 105, title: "Deep Work", category: "Lesestoff", subcategory: "Bücher", group: "Deep Work", priority: "nice", price: 16,
       link: "https://www.amazon.de/Deep-Work-Focused-Success-Distracted/dp/1455586692/ref=tmm_hrd_swatch_0",
       note: "Cal Newport – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 106, title: "Konzentriert arbeiten", category: "Bücher", group: "Deep Work", priority: "nice", price: 20,
+    { id: 106, title: "Konzentriert arbeiten", category: "Lesestoff", subcategory: "Bücher", group: "Deep Work", priority: "nice", price: 20,
       link: "https://www.amazon.de/Konzentriert-arbeiten-Regeln-voller-Ablenkungen/dp/3868816577/ref=tmm_pap_swatch_0",
       note: "Cal Newport – Deutsche Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 107, title: "The Alchemist", category: "Bücher", group: "The Alchemist", priority: "nice", price: 12,
+    { id: 107, title: "The Alchemist", category: "Lesestoff", subcategory: "Bücher", group: "The Alchemist", priority: "nice", price: 12,
       link: "https://www.amazon.de/Alchemist-Paulo-Coelho/dp/0008856893/ref=tmm_hrd_swatch_0?_encoding=UTF8&sr=8-1",
       note: "Paulo Coelho – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 108, title: "Der Alchimist", category: "Bücher", group: "The Alchemist", priority: "nice", price: 15,
+    { id: 108, title: "Der Alchimist", category: "Lesestoff", subcategory: "Bücher", group: "The Alchemist", priority: "nice", price: 15,
       link: "https://www.amazon.de/Alchimist-Paulo-Coelho/dp/3257261160/ref=tmm_hrd_swatch_0?_encoding=UTF8&sr=1-3",
       note: "Paulo Coelho – Deutsche Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 109, title: "Money: Master the Game", category: "Bücher", group: "Money: Master the Game", priority: "nice", price: 10,
+    { id: 109, title: "Money: Master the Game", category: "Lesestoff", subcategory: "Bücher", group: "Money: Master the Game", priority: "nice", price: 10,
       link: "https://www.amazon.de/MONEY-Master-Game-Financial-Freedom/dp/1476757801/ref=tmm_hrd_swatch_0?_encoding=UTF8&sr=1-1",
       note: "Tony Robbins – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 110, title: "Money (Deutsch)", category: "Bücher", group: "Money: Master the Game", priority: "nice", price: 25,
+    { id: 110, title: "Money (Deutsch)", category: "Lesestoff", subcategory: "Bücher", group: "Money: Master the Game", priority: "nice", price: 25,
       link: "https://www.amazon.de/Money-einfachen-Schritte-finanziellen-Freiheit/dp/389879914X/ref=sr_1_2?__mk_de_DE=%C3%85M%C3%85%C5%BD%C3%95%C3%91&s=books&sr=1-2",
       note: "Tony Robbins – Deutsche Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 111, title: "Essentialism", category: "Bücher", group: "Essentialism", priority: "nice", price: 25,
+    { id: 111, title: "Essentialism", category: "Lesestoff", subcategory: "Bücher", group: "Essentialism", priority: "nice", price: 25,
       link: "https://www.amazon.de/Essentialism-Disciplined-Pursuit-Greg-McKeown/dp/0804137382/ref=tmm_hrd_swatch_0",
       note: "Greg McKeown – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 112, title: "Essentialismus", category: "Bücher", group: "Essentialism", priority: "nice", price: 20,
+    { id: 112, title: "Essentialismus", category: "Lesestoff", subcategory: "Bücher", group: "Essentialism", priority: "nice", price: 20,
       link: "https://www.amazon.de/Essentialismus-konsequente-Weniger-Minimalismus-erobert/dp/3962570373/ref=sr_1_1?__mk_de_DE=%C3%85M%C3%85%C5%BD%C3%95%C3%91&sr=8-1",
       note: "Greg McKeown – Deutsche Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 113, title: "Lying", category: "Bücher", group: "Lying", priority: "nice", price: 16,
+    { id: 113, title: "Lying", category: "Lesestoff", subcategory: "Bücher", group: "Lying", priority: "nice", price: 16,
       link: "https://www.amazon.de/Lying-Sam-Harris/dp/1940051002/ref=sr_1_1?sr=8-1",
       note: "Sam Harris – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 114, title: "Lügen", category: "Bücher", group: "Lying", priority: "nice", price: 15,
+    { id: 114, title: "Lügen", category: "Lesestoff", subcategory: "Bücher", group: "Lying", priority: "nice", price: 15,
       link: "https://www.amazon.de/L%C3%BCgen-Kurze-Beine-lange-Folgen/dp/3905752557/ref=sr_1_2?sr=8-2",
       note: "Sam Harris – Deutsche Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 115, title: "The Ape that Understood the Universe", category: "Bücher", priority: "nice", price: 45,
+    { id: 115, title: "The Ape that Understood the Universe", category: "Lesestoff", subcategory: "Bücher", priority: "nice", price: 45,
       link: "https://www.amazon.de/Ape-that-Understood-Universe-Culture/dp/1108425046/ref=tmm_hrd_swatch_0?_encoding=UTF8&sr=8-1",
       note: "Steve Stewart-Williams – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 116, title: "The Precipice", category: "Bücher", priority: "nice", price: 33,
+    { id: 116, title: "The Precipice", category: "Lesestoff", subcategory: "Bücher", priority: "nice", price: 33,
       link: "https://www.amazon.de/Precipice-Existential-Risk-Future-Humanity/dp/0316484911/ref=tmm_hrd_swatch_0",
       note: "Toby Ord – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 117, title: "Moral Uncertainty", category: "Bücher", priority: "nice", price: 14,
+    { id: 117, title: "Moral Uncertainty", category: "Lesestoff", subcategory: "Bücher", priority: "nice", price: 14,
       link: "https://www.amazon.de/Moral-Uncertainty-Hardback-William-Macaskill/dp/0198722273/ref=tmm_hrd_swatch_0",
       note: "William MacAskill u.a. – Englische Ausgabe.",
       done: false, priceUpdated: null },
-    { id: 118, title: "Lost Connections", category: "Bücher", priority: "nice", price: 22,
+    { id: 118, title: "Lost Connections", category: "Lesestoff", subcategory: "Bücher", priority: "nice", price: 22,
       link: "https://www.amazon.de/Lost-Connections-Uncovering-Depression-Unexpected/dp/163286830X/ref=tmm_hrd_swatch_0",
       note: "Johann Hari – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 119, title: "Endurance: Shackleton's Incredible Voyage", category: "Bücher", group: "Endurance", priority: "nice", price: 16,
+    { id: 119, title: "Endurance: Shackleton's Incredible Voyage", category: "Lesestoff", subcategory: "Bücher", group: "Endurance", priority: "nice", price: 16,
       link: "https://www.amazon.de/Endurance-Shackletons-Incredible-VOYAGES-PROMOTION/dp/1399642731/ref=tmm_pap_swatch_0",
       note: "Alfred Lansing – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 120, title: "635 Tage im Eis", category: "Bücher", group: "Endurance", priority: "nice", price: 14,
+    { id: 120, title: "635 Tage im Eis", category: "Lesestoff", subcategory: "Bücher", group: "Endurance", priority: "nice", price: 14,
       link: "https://www.amazon.de/635-Tage-Eis-Die-Shackleton-Expedition/dp/3442150426/ref=tmm_pap_swatch_0",
       note: "Alfred Lansing – Deutsche Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 121, title: "Why We Sleep", category: "Bücher", group: "Why We Sleep", priority: "nice", price: 23,
+    { id: 121, title: "Why We Sleep", category: "Lesestoff", subcategory: "Bücher", group: "Why We Sleep", priority: "nice", price: 23,
       link: "https://www.amazon.de/Why-We-Sleep-Unlocking-Dreams/dp/1501144316/ref=tmm_hrd_swatch_0?_encoding=UTF8&sr=1-1",
       note: "Matthew Walker – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 122, title: "Das große Buch vom Schlaf", category: "Bücher", group: "Why We Sleep", priority: "nice", price: 18,
+    { id: 122, title: "Das große Buch vom Schlaf", category: "Lesestoff", subcategory: "Bücher", group: "Why We Sleep", priority: "nice", price: 18,
       link: "https://www.amazon.de/Das-gro%C3%9Fe-Buch-vom-Schlaf/dp/344217791X/ref=tmm_pap_swatch_0",
       note: "Matthew Walker – Deutsche Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 123, title: "Models: Attract Women Through Honesty", category: "Bücher", priority: "nice", price: 10,
+    { id: 123, title: "Models: Attract Women Through Honesty", category: "Lesestoff", subcategory: "Bücher", priority: "nice", price: 10,
       link: "https://www.amazon.de/Models-Attract-Women-Through-Honesty/dp/1463750358/ref=tmm_pap_swatch_0",
       note: "Mark Manson – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 124, title: "Protocols", category: "Bücher", group: "Protocols", priority: "nice", price: 28,
+    { id: 124, title: "Protocols", category: "Lesestoff", subcategory: "Bücher", group: "Protocols", priority: "nice", price: 28,
       link: "https://www.amazon.de/Protocols-Gebrauchsanweisung-weltbekannten-Neurobiologen-Neuroplastizit%C3%A4t/dp/3426284863/ref=tmm_hrd_swatch_0?_encoding=UTF8&sr=1-3",
       note: "Andrew Huberman – Deutsche Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 125, title: "Protocols", category: "Bücher", group: "Protocols", priority: "nice", price: 33,
+    { id: 125, title: "Protocols", category: "Lesestoff", subcategory: "Bücher", group: "Protocols", priority: "nice", price: 33,
       link: "https://www.amazon.de/Protocols-Operating-Manual-Human-Body/dp/1668032147/ref=tmm_hrd_swatch_0",
       note: "Andrew Huberman – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 126, title: "Ikigai (Ken Mogi)", category: "Bücher", group: "Ikigai (Ken Mogi)", priority: "nice", price: 24,
+    { id: 126, title: "Ikigai (Ken Mogi)", category: "Lesestoff", subcategory: "Bücher", group: "Ikigai (Ken Mogi)", priority: "nice", price: 24,
       link: "https://www.amazon.de/Ikigai-japanische-Lebenskunst-Ken-Mogi/dp/3832198997/ref=tmm_hrd_swatch_0?_encoding=UTF8&sr=8-1",
       note: "Ken Mogi – Deutsche Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 127, title: "The Little Book of Ikigai", category: "Bücher", group: "Ikigai (Ken Mogi)", priority: "nice", price: 11,
+    { id: 127, title: "The Little Book of Ikigai", category: "Lesestoff", subcategory: "Bücher", group: "Ikigai (Ken Mogi)", priority: "nice", price: 11,
       link: "https://www.amazon.de/Little-Book-Ikigai-secret-Japanese/dp/1786489031/ref=tmm_hrd_swatch_0",
       note: "Ken Mogi – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 128, title: "Alles Idioten", category: "Bücher", group: "Surrounded by Idiots", priority: "nice", price: 15,
+    { id: 128, title: "Alles Idioten", category: "Lesestoff", subcategory: "Bücher", group: "Surrounded by Idiots", priority: "nice", price: 15,
       link: "https://www.amazon.de/Alles-Idioten-Neuausgabe-Sunday-Times-Bestsellers-%C2%BBSurrounded/dp/3426571692/ref=tmm_other_meta_binding_swatch_0",
       note: "Thomas Erikson – Deutsche Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 129, title: "Surrounded by Idiots", category: "Bücher", group: "Surrounded by Idiots", priority: "nice", price: 31,
+    { id: 129, title: "Surrounded by Idiots", category: "Lesestoff", subcategory: "Bücher", group: "Surrounded by Idiots", priority: "nice", price: 31,
       link: "https://www.amazon.de/Surrounded-Idiots-Behavior-Effectively-Communicate/dp/1250398940/ref=tmm_hrd_swatch_0",
       note: "Thomas Erikson – Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 130, title: "Invincible Compendium 1", category: "Comics & Manga", group: "Invincible", priority: "nice", price: 51,
+    { id: 130, title: "Invincible Compendium 1", category: "Lesestoff", subcategory: "Comics & Manga", group: "Invincible", priority: "nice", price: 51,
       link: "https://www.amazon.de/Invincible-Compendium-1-Robert-Kirkman/dp/1607064111/ref=sr_1_2?__mk_de_DE=%C3%85M%C3%85%C5%BD%C3%95%C3%91&sr=8-2",
       note: "Robert Kirkman – Englische Ausgabe, Compendium-Reihe (die ganze Reihe verfügbar).",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 131, title: "Invincible 1 (Deutsch)", category: "Comics & Manga", group: "Invincible", priority: "nice", price: 30,
+    { id: 131, title: "Invincible 1 (Deutsch)", category: "Lesestoff", subcategory: "Comics & Manga", group: "Invincible", priority: "nice", price: 30,
       link: "https://www.amazon.de/Invincible-1-Robert-Kirkman/dp/3959813805/ref=sr_1_3?__mk_de_DE=%C3%85M%C3%85%C5%BD%C3%95%C3%91&sr=8-3",
       note: "Robert Kirkman – Deutsche Ausgabe, Einzelbände (die ganze Reihe verfügbar).",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 132, title: "Invincible: The Ultimate Collection Vol. 1", category: "Comics & Manga", group: "Invincible", priority: "nice", price: 35,
+    { id: 132, title: "Invincible: The Ultimate Collection Vol. 1", category: "Lesestoff", subcategory: "Comics & Manga", group: "Invincible", priority: "nice", price: 35,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1001418991",
       note: "Robert Kirkman – Englische Ausgabe, Ultimate-Collection-Hardcover-Reihe (die ganze Reihe verfügbar).",
       done: false, priceUpdated: "2026-07-18" },
-    { id: 133, title: "Attack on Titan", category: "Comics & Manga", priority: "nice", price: null,
+    { id: 133, title: "Attack on Titan", category: "Lesestoff", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1034481409",
       note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
       done: false, priceUpdated: null },
-    { id: 134, title: "Blue Lock", category: "Comics & Manga", priority: "nice", price: null,
+    { id: 134, title: "Blue Lock", category: "Lesestoff", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1060704377",
       note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
       done: false, priceUpdated: null },
-    { id: 135, title: "Jujutsu Kaisen", category: "Comics & Manga", priority: "nice", price: null,
+    { id: 135, title: "Jujutsu Kaisen", category: "Lesestoff", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1055350720",
       note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
       done: false, priceUpdated: null },
-    { id: 136, title: "Dragon Ball", category: "Comics & Manga", priority: "nice", price: null,
+    { id: 136, title: "Dragon Ball", category: "Lesestoff", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1053559977",
       note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
       done: false, priceUpdated: null },
-    { id: 137, title: "One Piece", category: "Comics & Manga", priority: "nice", price: null,
+    { id: 137, title: "One Piece", category: "Lesestoff", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1000310387",
       note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
       done: false, priceUpdated: null },
-    { id: 138, title: "Vagabond", category: "Comics & Manga", priority: "nice", price: null,
+    { id: 138, title: "Vagabond", category: "Lesestoff", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1071409422",
       note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
       done: false, priceUpdated: null },
-    { id: 139, title: "Tokyo Ghoul", category: "Comics & Manga", priority: "nice", price: null,
+    { id: 139, title: "Tokyo Ghoul", category: "Lesestoff", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1032499154",
       note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
       done: false, priceUpdated: null },
-    { id: 140, title: "My Hero Academia", category: "Comics & Manga", priority: "nice", price: null,
+    { id: 140, title: "My Hero Academia", category: "Lesestoff", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1037752563",
       note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
       done: false, priceUpdated: null },
-    { id: 141, title: "Sword Art Online – Progressive", category: "Comics & Manga", priority: "nice", price: null,
+    { id: 141, title: "Sword Art Online – Progressive", category: "Lesestoff", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1036068597",
       note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
       done: false, priceUpdated: null },
-    { id: 142, title: "Haikyu!!", category: "Comics & Manga", priority: "nice", price: null,
+    { id: 142, title: "Haikyu!!", category: "Lesestoff", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1044968358",
       note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
       done: false, priceUpdated: null },
-    { id: 143, title: "One-Punch Man", category: "Comics & Manga", priority: "nice", price: null,
+    { id: 143, title: "One-Punch Man", category: "Lesestoff", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1039020086",
       note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
       done: false, priceUpdated: null },
-    { id: 144, title: "Re:Zero – Truth of Zero", category: "Comics & Manga", priority: "nice", price: null,
+    { id: 144, title: "Re:Zero – Truth of Zero", category: "Lesestoff", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1074289086",
       note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
       done: false, priceUpdated: null },
-    { id: 145, title: "Chainsaw Man", category: "Comics & Manga", priority: "nice", price: null,
+    { id: 145, title: "Chainsaw Man", category: "Lesestoff", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1057875188",
       note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
       done: false, priceUpdated: null },
-    { id: 146, title: "Demon Slayer", category: "Comics & Manga", priority: "nice", price: null,
+    { id: 146, title: "Demon Slayer", category: "Lesestoff", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1056442158",
       note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
       done: false, priceUpdated: null },
-    { id: 147, title: "Vinland Saga", category: "Comics & Manga", priority: "nice", price: null,
+    { id: 147, title: "Vinland Saga", category: "Lesestoff", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1028597538",
       note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
       done: false, priceUpdated: null },
-    { id: 148, title: "Berserk", category: "Comics & Manga", priority: "nice", price: null,
+    { id: 148, title: "Berserk", category: "Lesestoff", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1073541072",
       note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
       done: false, priceUpdated: null },
-    { id: 149, title: "Mob Psycho 100", category: "Comics & Manga", priority: "nice", price: null,
+    { id: 149, title: "Mob Psycho 100", category: "Lesestoff", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1050937387",
       note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
       done: false, priceUpdated: null },
-    { id: 150, title: "Solo Leveling", category: "Comics & Manga", priority: "nice", price: null,
+    { id: 150, title: "Solo Leveling", category: "Lesestoff", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1057437665",
       note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
       done: false, priceUpdated: null },
-    { id: 151, title: "Hell's Paradise", category: "Comics & Manga", priority: "nice", price: null,
+    { id: 151, title: "Hell's Paradise", category: "Lesestoff", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1056472134",
       note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
       done: false, priceUpdated: null },
-    { id: 152, title: "Black Clover", category: "Comics & Manga", priority: "nice", price: null,
+    { id: 152, title: "Black Clover", category: "Lesestoff", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1039574770",
       note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
       done: false, priceUpdated: null },
-    { id: 153, title: "Tokyo Revengers", category: "Comics & Manga", priority: "nice", price: null,
+    { id: 153, title: "Tokyo Revengers", category: "Lesestoff", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1062231902",
       note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
       done: false, priceUpdated: null },
-    { id: 154, title: "Death Note", category: "Comics & Manga", priority: "nice", price: null,
+    { id: 154, title: "Death Note", category: "Lesestoff", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1000845333",
       note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
       done: false, priceUpdated: null },
-    { id: 155, title: "Hunter x Hunter", category: "Comics & Manga", priority: "nice", price: null,
+    { id: 155, title: "Hunter x Hunter", category: "Lesestoff", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1000310396",
       note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
       done: false, priceUpdated: null },
-    { id: 156, title: "Fullmetal Alchemist", category: "Comics & Manga", priority: "nice", price: null,
+    { id: 156, title: "Fullmetal Alchemist", category: "Lesestoff", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1064143908",
       note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
       done: false, priceUpdated: null },
-    { id: 157, title: "Hellsing", category: "Comics & Manga", priority: "nice", price: null,
+    { id: 157, title: "Hellsing", category: "Lesestoff", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1001005168",
       note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
       done: false, priceUpdated: null },
-    { id: 158, title: "Bleach", category: "Comics & Manga", priority: "nice", price: null,
+    { id: 158, title: "Bleach", category: "Lesestoff", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1056047855",
       note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
       done: false, priceUpdated: null },
-    { id: 159, title: "simplehuman Cleanstation", category: "Körperliches", priority: "nice", price: 100,
+    { id: 159, title: "simplehuman Cleanstation", category: "Zuhause & Wellness", priority: "nice", price: 100,
       link: "https://www.simplehuman.com/products/cleanstation?variant=39328394150019",
-      note: "Reinigungs- und Ladestation für den Rasierer: spült den Scherkopf per Wasserdruck durch und lädt ihn dabei — gehört zur Pflege-Routine, deshalb hier einsortiert.",
+      note: "UV-Reinigungsstation fürs Handy: desinfiziert die komplette Oberfläche in rund 30 Sekunden (99,9 % der Keime) — z.B. während man sich die Hände wäscht.",
       done: false, priceUpdated: null },
     { id: 160, title: "Zahnbürstenhalter: KIEROFIRT (zirkulierendes Reinigungsgerät)", category: "Körperliches", group: "Zahnbürstenhalter", alternative: true, priority: "nice", price: 77,
       link: "https://www.amazon.de/KIEROFIRT-Zahnb%C3%BCrstenhalter-zirkulierendes-Reinigungsger%C3%A4t-Zahnb%C3%BCrstenreiniger/dp/B0DWRVQ4TK/ref=sr_1_2?__mk_de_DE=%C3%85M%C3%85%C5%BD%C3%95%C3%91&sr=8-2",
@@ -2000,7 +1995,7 @@
       link: "https://birdie.design/de-de/products/birdie-wood-edition",
       note: "Fresh Air Monitor mit CO2-Sensor aus der Schweiz, Gehäuse aus Eichenholz — zeigt an, wann gelüftet werden sollte.",
       done: false, priceUpdated: null },
-    { id: 163, title: "WalkingPad A1 Pro", category: "Setup", subcategory: "Allgemein", priority: "dream", price: 699,
+    { id: 163, title: "WalkingPad A1 Pro", category: "Setup", subcategory: "Allgemein", priority: "nice", price: 699,
       link: "https://de.walkingpad.com/products/walkingpad-a1-pro-klappbares-laufband-schreibtisch",
       note: "Klappbares Laufband fürs Homeoffice / den Schreibtisch.",
       done: false, priceUpdated: "2026-07-19" },
@@ -2016,7 +2011,7 @@
       link: "https://www.amazon.de/Eukalyptus-Stiele-Eukalyptusstiele-Eukalyptusbl%C3%A4ttern-Hochzeitsdekoration-Heimdekoration/dp/B0CLRGF6VK/ref=sr_1_2?__mk_de_DE=%C3%85M%C3%85%C5%BD%C3%95%C3%91&sr=8-2",
       note: "Deko-Eukalyptuszweige für die Wohnung.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 167, title: "Philips Hue Play HDMI Sync Box 8K", category: "Entertainment", group: "Hue Backlight-System", roomArea: "Entertainment-Ecke", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 350,
+    { id: 167, title: "Philips Hue Play HDMI Sync Box 8K", category: "Entertainment", subOf: 47, roomArea: "Entertainment-Ecke", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 350,
       link: "https://www.philips-hue.com/de-de/p/hue-philips-hue-play-hdmi-hue-sync-box-8k/8719514458666",
       note: "Synchronisiert Hue-Lichter mit dem TV-Bild (HDMI, bis 8K/60 bzw. 4K/120). Fürs komplette Backlight-System fehlen noch Bridge und Gradient Lightstrip — stehen als Zubehör mit drin.",
       done: false, priceUpdated: "2026-07-19" },
@@ -2040,7 +2035,7 @@
       link: "https://www.seasonslife.com/products/soni-sm?variant=40882430378189",
       note: "Tragbarer Ultraschall-Aroma-Diffusor, befeuchtet zugleich sanft die Luft. Farbe: Onyx (Schwarz).",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 174, title: "Dreame Matrix 10 Ultra", category: "Zuhause & Wellness", priority: "dream", price: 499,
+    { id: 174, title: "Dreame Matrix 10 Ultra", category: "Zuhause & Wellness", priority: "nice", price: 499,
       link: "https://www.amazon.de/dp/B0GSRVQB6D/ref=asc_df_B0FN8FR84Q1783591200000/?creative=22662&creativeASIN=B0FN8FR84Q",
       note: "Saugroboter, Farbe Black. Auch bei MediaMarkt verfügbar: https://www.mediamarkt.de/de/product/_dreame-matrix-10-ultra-black-saugroboter-3005574.html",
       done: false, priceUpdated: "2026-07-19" },
@@ -2048,15 +2043,15 @@
       link: "https://rog.asus.com/de/monitors/27-to-31-5-inches/rog-swift-oled-pg32ucdp/#pageContent-sec-ai/",
       note: "31,5-Zoll-4K-OLED, nativ 240 Hz, 0,03 ms Reaktionszeit, Dual-Mode mit FHD bei 480 Hz.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 218, title: "UGREEN HDMI 2.1 Kabel (48Gbps)", category: "Setup", subcategory: "Gaming", group: "Monitor", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 40,
+    { id: 218, title: "UGREEN HDMI 2.1 Kabel (48Gbps)", category: "Setup", subcategory: "Gaming", group: "Monitor", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 40,
       link: "https://www.amazon.de/dp/B0DT9KJX65",
       note: "Zubehör zum Monitor — unterstützt volle 48Gbps, damit 4K@240Hz auch wirklich ankommt. Viele Monitore legen nur ein einfaches Compliance-Kabel bei, das die Bandbreite nicht schafft.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 219, title: "UGREEN Cat 8 Netzwerkkabel", category: "Setup", subcategory: "Gaming", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "must", price: 23.99,
+    { id: 219, title: "UGREEN Cat 8 Netzwerkkabel", category: "Setup", subcategory: "Gaming", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 23.99,
       link: "https://www.amazon.de/UGREEN-Superschnell-Netzwerkkabel-Wlankabel-kompatibel/dp/B0C4KV76C8/ref=ast_sto_dp_puis",
       note: "40Gbps, für stabile LAN-Verbindung zum PC — z.B. für den Router oder als Verlängerung. UVP (aktuell oft günstiger im Angebot).",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 220, title: "UGREEN Cat 8 Netzwerkkabel (2. Länge)", category: "Setup", subcategory: "Gaming", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "must", price: 38,
+    { id: 220, title: "UGREEN Cat 8 Netzwerkkabel (2. Länge)", category: "Setup", subcategory: "Gaming", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 38,
       link: "https://www.amazon.de/UGREEN-Netzwerkkabel-Patchkabel-Ethernet-kompatibel/dp/B08R9XTFH5/ref=ast_sto_dp_puis",
       note: "40Gbps, andere Länge als das erste — z.B. für einen anderen Kabelweg im Zimmer (Router zu Wanddose, Wanddose zu PC o.ä.).",
       done: false, priceUpdated: "2026-07-19" },
@@ -2072,27 +2067,19 @@
       link: "https://www.amazon.de/dp/B0FBGM3KZ4/ref=asc_df_B0FBGM3KZ41783724400000/?creative=22662&creativeASIN=B0FBGM3KZ4",
       note: "Bis 10 kg, auf 1 g genau, per USB aufladbar, Edelstahlfläche — Option zwei.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 180, title: "Logitech PRO X2 SUPERSTRIKE", category: "Setup", subcategory: "Gaming", group: "Maus", alternative: true, roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 180,
+    { id: 180, title: "Logitech PRO X2 SUPERSTRIKE", category: "Setup", subcategory: "Gaming", group: "Maus", alternative: true, roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 180,
       link: "https://www.logitechg.com/de-de/shop/p/pro-x2-superstrike-mouse",
       note: "Kabellose E-Sport-Maus — eine der beiden Optionen, zwischen denen ich mich noch entscheide.",
       done: false, priceUpdated: "2026-07-18" },
-    { id: 181, title: "Razer Viper V4 Pro", category: "Setup", subcategory: "Gaming", group: "Maus", alternative: true, roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 180,
+    { id: 181, title: "Razer Viper V4 Pro", category: "Setup", subcategory: "Gaming", group: "Maus", alternative: true, roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 180,
       link: "https://www.razer.com/de-de/gaming-mice/razer-viper-v4-pro",
       note: "Kabellose E-Sport-Maus von Razer — die zweite der beiden Optionen.",
-      done: false, priceUpdated: "2026-07-18" },
-    { id: 186, title: "Logitech PowerPlay 2", category: "Setup", subcategory: "Gaming", group: "Wireless-Charging-Mauspad", alternative: true, roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 100,
-      link: "https://www.logitechg.com/de-de/shop/p/powerplay-2",
-      note: "Mauspad, das die Maus beim Spielen kabellos lädt — Option eins.",
-      done: false, priceUpdated: "2026-07-18" },
-    { id: 187, title: "Razer HyperFlux V2", category: "Setup", subcategory: "Gaming", group: "Wireless-Charging-Mauspad", alternative: true, roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 140,
-      link: "https://www.razer.com/de-de/gaming-mouse-mats/razer-hyperflux-v2-wireless-charging-system",
-      note: "Wireless-Charging-System für Maus und Mauspad von Razer — Option zwei.",
       done: false, priceUpdated: "2026-07-18" },
     { id: 188, title: "Anker Powerbank 20.000 mAh (integriertes USB-C-Kabel)", category: "Technik", priority: "must", price: 50,
       link: "https://www.amazon.de/Anker-Powerbank-integriertem-USB-C-Kabel-Schnelllade-Akku/dp/B0CXDXP8VR/ref=sr_1_3_pp?sr=8-3",
       note: "87 W max, 1x USB-C + 1x USB-A, integriertes USB-C-Kabel.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 189, title: "Anker 633 Magnetic Battery (MagGo)", category: "Technik", priority: "nice", price: 50,
+    { id: 189, title: "Anker 633 Magnetic Battery (MagGo)", category: "Technik", priority: "must", price: 50,
       link: "https://www.anker.com/eu-de/products/a1641?variant=42548593787043&top_filter=10.000mAh-21.000mAh&collections_powerbanks&Sort_by=Preis%20hoch%20-%20niedrig",
       note: "10.000 mAh, magnetischer Wireless-Akku mit Stand, MagSafe-kompatibel.",
       done: false, priceUpdated: "2026-07-18" },
@@ -2100,19 +2087,19 @@
       link: "https://www.anker.com/eu-de/products/a88e2-anker-prime-usb-c-kabel-90cm-240w-upcycled-geflochten",
       note: "Geflochtenes Kabel aus recyceltem Material, 240 W.",
       done: false, priceUpdated: "2026-07-18" },
-    { id: 191, title: "Anker Prime kabellose Ladestation Qi2 3-in-1", category: "Technik", priority: "nice", price: 160,
+    { id: 191, title: "Anker Prime kabellose Ladestation Qi2 3-in-1", category: "Technik", priority: "must", price: 160,
       link: "https://www.anker.com/eu-de/products/b25x7-anker-prime-kabellose-ladestation-qi2-3-in-1",
       note: "3-in-1 Ladestation für Handy, Kopfhörer und Uhr, Qi2.",
       done: false, priceUpdated: "2026-07-18" },
-    { id: 217, title: "Anker Prime Ladegerät 160W (3 Ports, GaN)", category: "Technik", priority: "nice", price: 130,
+    { id: 217, title: "Anker Prime Ladegerät 160W (3 Ports, GaN)", category: "Technik", priority: "must", price: 130,
       link: "https://www.anker.com/eu-de/products/a2687-anker-prime-ladegeraet-160w-3-ports-gan?variant=46200507007139",
       note: "Kompaktes GaN-Netzteil, 3 Ports, bis zu 140W an einem einzelnen Port (z.B. Laptop). Smart Display zeigt Ladeleistung in Echtzeit. So klein wie eine AirPods-Pro-Hülle.",
       done: false, priceUpdated: "2026-07-18" },
-    { id: 195, title: "Liquid Chalk (Flüssigkreide)", category: "Sport", subcategory: "Krafttraining", priority: "must", price: 15,
+    { id: 195, title: "Liquid Chalk (Flüssigkreide)", category: "Sport", subcategory: "Krafttraining", priority: "nice", price: 15,
       link: "https://www.amazon.de/Fl%C3%BCssiges-Magnesia-perfekten-Calisthenics-Gewichtheben/dp/B07B3TFGRP/",
       note: "Flüssiges Magnesia für sicheren Grip — praktischer als der klassische Kreidebeutel.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 196, title: "SBD Handgelenksbandagen (flexibel)", category: "Sport", subcategory: "Krafttraining", priority: "must", price: 45,
+    { id: 196, title: "SBD Handgelenksbandagen (flexibel)", category: "Sport", subcategory: "Krafttraining", priority: "nice", price: 45,
       link: "https://sbdgermany.de/products/sbd-handgelenksbandagen?variant=47272174092509",
       note: "Flexible Variante — die steifen habe ich schon. Größe noch offen (S/M/L, Preis überall gleich).",
       done: false, priceUpdated: "2026-07-19" },
@@ -2179,19 +2166,19 @@
       linkLabel: "Hersteller", link2: "https://geizhals.de/?fs=Thermal%20Grizzly%20Duronaut", link2Label: "Preisvergleich",
       note: "Hochleistungs-Wärmeleitpaste für den CPU-Kühler. Kauf über Preisvergleich: nur seriöse Händler nehmen (Alternate, Mindfactory, Notebooksbilliger & Co.).",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 221, title: "PRO LIGHTSPEED Empfänger", category: "Setup", subcategory: "Gaming", group: "Maus-Zubehör (falls Logitech)", priority: "nice", price: 29.99,
+    { id: 221, title: "PRO LIGHTSPEED Empfänger", category: "Setup", subcategory: "Gaming", subOf: 180, priority: "nice", price: 29.99,
       link: "https://www.logitechg.com/de-de/shop/p/pro-lightspeed-receiver.943-001465",
-      note: "Zubehör zur Logitech PRO X2 SUPERSTRIKE — zweiter LIGHTSPEED-Empfänger.",
+      note: "Zubehör zur PRO X2 SUPERSTRIKE — zweiter LIGHTSPEED-Empfänger.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 222, title: "Logitech G Sleeve", category: "Setup", subcategory: "Gaming", group: "Maus-Zubehör (falls Logitech)", priority: "nice", price: 24.99,
+    { id: 222, title: "Logitech G Sleeve", category: "Setup", subcategory: "Gaming", subOf: 180, priority: "nice", price: 24.99,
       link: "https://www.logitechg.com/de-de/shop/p/g-sleeve.943-001209",
-      note: "Zubehör zur Logitech-Maus — Schutzhülle; entweder das hier oder das Carry Case.",
+      note: "Zubehör zur PRO X2 SUPERSTRIKE — Schutzhülle; entweder das hier oder das Carry Case.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 223, title: "Logitech G Carry Case", category: "Setup", subcategory: "Gaming", group: "Maus-Zubehör (falls Logitech)", priority: "nice", price: 34.99,
+    { id: 223, title: "Logitech G Carry Case", category: "Setup", subcategory: "Gaming", subOf: 180, priority: "nice", price: 34.99,
       link: "https://www.logitechg.com/de-de/shop/p/g-carry-case.943-001208",
-      note: "Zubehör zur Logitech-Maus — Transportcase; entweder das hier oder das Sleeve.",
+      note: "Zubehör zur PRO X2 SUPERSTRIKE — Transportcase; entweder das hier oder das Sleeve.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 224, title: "Mauspad: Wallhack SP-005 (Black)", category: "Setup", subcategory: "Gaming", group: "Mauspad", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 129,
+    { id: 224, title: "Mauspad: Wallhack SP-005 (Black)", category: "Setup", subcategory: "Gaming", group: "Mauspad", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 129,
       link: "https://wallhack.com/en-de/products/sp-005-black",
       note: "Glas-Mauspad von Wallhack, Farbe Black.",
       done: false, priceUpdated: "2026-07-19" },
@@ -2199,11 +2186,11 @@
       link: "https://wallhack.com/en-de/products/wallhack-pro-sleeve?variant=55746754052465",
       note: "Zubehör zum Wallhack-Pad — Arm-Sleeve fürs Gleiten, Größe noch unbekannt (21,95–23,95 € je nach Variante).",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 226, title: "Hue Bridge Pro", category: "Entertainment", group: "Hue Backlight-System", priority: "nice", price: 100,
+    { id: 226, title: "Hue Bridge Pro", category: "Entertainment", subOf: 47, roomArea: "Entertainment-Ecke", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 100,
       link: "https://www.philips-hue.com/de-de/p/hue-bridge-pro/8720169155114",
       note: "Zubehör zum Hue-System — die Steuerzentrale, Voraussetzung für die Sync Box.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 227, title: "Hue Play Gradient Lightstrip (65 Zoll)", category: "Entertainment", group: "Hue Backlight-System", priority: "nice", price: 220,
+    { id: 227, title: "Hue Play Gradient Lightstrip (65 Zoll)", category: "Entertainment", subOf: 47, roomArea: "Entertainment-Ecke", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 220,
       link: "https://www.philips-hue.com/de-de/products/smart-light-strips?filters=FK_HUE_GRADIENT",
       note: "Zubehör zum Hue-System — der eigentliche Lightstrip hinter dem Fernseher (Größe passend zum 65-Zöller).",
       done: false, priceUpdated: "2026-07-19" },
@@ -2350,8 +2337,6 @@
     178: "https://images-na.ssl-images-amazon.com/images/P/B0FBGM3KZ4.01._SL500_.jpg",
     180: "https://resource.logitechg.com/c_fill,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/gaming/og-fallback.jpg",
     181: "https://assets2.razerzone.com/images/pnx.assets/16c63955eb02ec0e357921bbd2e21410/razer-viper-v4-pro-og-image-1200x630.webp",
-    186: "https://resource.logitechg.com/c_fill,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/gaming/en/homepage/logitechg-global-og-image.png",
-    187: "https://assets2.razerzone.com/images/pnx.assets/74af5290b74c647f5f0088a07ba0ab07/hyperfluxv2-charging-system-og.webp",
     189: "https://cdn.shopify.com/s/files/1/0491/8227/7795/products/A1641011-Anker_633_Magnetic_Battery_5.png?v=1749202642",
     190: "https://cdn.shopify.com/s/files/1/0491/8227/7795/files/A88E2011_Rich_image_no_copy_2000x2000px.png?v=1754376173",
     191: "https://cdn.shopify.com/s/files/1/0491/8227/7795/files/image_22_0e7a11c8-de91-47ec-9154-5c8db5ad2995.png?v=1779432435",
@@ -2374,8 +2359,10 @@
     226: "../assets/images/products/226.jpg",
     225: "../assets/images/products/225.webp",
     224: "../assets/images/products/224.png",
-    223: "../assets/images/products/223.jpg",
-    221: "../assets/images/products/221.jpg",
+    223: "../assets/images/products/223.png",
+    221: "../assets/images/products/221.png",
+    222: "../assets/images/products/222.png",
+    34: "../assets/images/products/34.jpg",
     107: "../assets/images/products/107.jpg",
     30: "../assets/images/products/30.jpg",
     33: "../assets/images/products/33.jpg",
@@ -2540,8 +2527,6 @@
     178: "../assets/images/products/178.jpg",
     180: "../assets/images/products/180.webp",
     181: "../assets/images/products/181.webp",
-    186: "../assets/images/products/183.webp",
-    187: "../assets/images/products/187.webp",
     189: "../assets/images/products/189.png",
     190: "../assets/images/products/190.png",
     191: "../assets/images/products/191.png",
@@ -2698,6 +2683,9 @@
           const d = cb.querySelector('.cb-diamond');
           d.classList.remove('pop'); void d.offsetWidth; d.classList.add('pop');
         }
+      }
+      if (nowDone && !opts.silent){
+        card.classList.remove('flash'); void card.offsetWidth; card.classList.add('flash');
       }
       const meta = card.querySelector('.price-meta');
       if (meta){
@@ -2864,25 +2852,8 @@
     }
   }
 
-  // --- Womit anfangen? Die günstigsten offenen Muss-Käufe ---
-  function renderStarter(){
-    const box = document.getElementById('starterBox');
-    if (searchQuery.trim() !== '' || dreamMode){
-      box.innerHTML = '';
-      return;
-    }
-    const cands = items
-      .filter(i => i.priority === 'must' && !purchased.has(i.id) && i.price !== null)
-      .sort((a,b) => Number(a.price) - Number(b.price))
-      .slice(0, 3);
-    if (cands.length === 0){ box.innerHTML = ''; return; }
-    box.innerHTML = `<div class="starter">
-      <div class="starter-h">◆ Womit anfangen? Die günstigsten Muss-Käufe</div>
-      <div class="starter-items">${cands.map(i =>
-        `<button class="starter-chip" onclick="jumpToItem(${i.id})">${escapeHtml(i.title)}<span class="sp">${money(i.price)}</span></button>`
-      ).join('')}</div>
-    </div>`;
-  }
+  // "Womit anfangen"-Box wurde entfernt — Funktion bleibt als No-Op, damit Aufrufe nichts brechen.
+  function renderStarter(){}
   function jumpToItem(id){
     const item = items.find(x => x.id === id);
     if (!item) return;
@@ -3219,10 +3190,32 @@
     renderStarter();
   }
 
+  // Intro-Texte, die beim Aufklappen bestimmter Gruppen über den Karten erscheinen
+  const GROUP_INTROS = {
+    "Körperliches::::Uhr": "Wichtig zu wissen: Das hier sind bewusst nur <b>Beispiele</b>. Es geht mir eigentlich darum, dass ich am liebsten eine schöne Edelstahl-Uhr mit schwarzem, cleanem Zifferblatt hätte — welche genau, ist noch offen. Insgesamt ist das eher ein größerer Traum."
+  };
+
+  // Rendert eine Karte samt optionalem, aufklappbarem Zubehör (Items mit subOf === i.id)
+  function renderWithSubs(i, hidePriority){
+    const subs = items.filter(s => s.subOf === i.id);
+    if (subs.length === 0) return renderCard(i, null, hidePriority);
+    const skey = 'sub::' + i.id;
+    const sOpen = expandedGroups.has(skey);
+    let h = renderCard(i, { count: subs.length, isOpen: sOpen, key: skey }, hidePriority);
+    if (sOpen){
+      h += `<div class="group-items">`;
+      subs.forEach(s => { h += renderCard(s, null, hidePriority); });
+      h += `</div>`;
+    }
+    return h;
+  }
+
   function renderItemsAndGroups(list, hidePriority){
     hidePriority = hidePriority || false;
     let html = '';
     const PRIO_ORDER = { must: 0, nice: 1, dream: 2 };
+    // Zubehör mit subOf hängt an seinem Hauptprodukt, nicht als eigene Karte in der Liste
+    list = list.filter(i => !i.subOf);
     let ungrouped = list.filter(i => !i.group);
     if (sortMode === 'prio'){
       ungrouped = ungrouped.slice().sort((a,b) =>
@@ -3231,7 +3224,7 @@
       ungrouped = ungrouped.slice().sort((a,b) => (Number(a.price)||0) - (Number(b.price)||0));
       if (sortMode === 'desc') ungrouped.reverse();
     }
-    ungrouped.forEach(i => { html += renderCard(i, null, hidePriority); });
+    ungrouped.forEach(i => { html += renderWithSubs(i, hidePriority); });
 
     let groupNames = [...new Set(list.map(i => i.group).filter(Boolean))];
     if (sortMode === 'prio'){
@@ -3260,7 +3253,7 @@
         html += renderCard(kind.main, { count: kind.accessories.length, isOpen, key }, hidePriority);
         if (isOpen){
           html += `<div class="group-items">`;
-          kind.accessories.forEach(i => { html += renderCard(i, null, hidePriority); });
+          kind.accessories.forEach(i => { html += renderWithSubs(i, hidePriority); });
           html += `</div>`;
         }
       } else if (kind.type === 'alternatives'){
@@ -3276,7 +3269,8 @@
           </div>`;
         if (isOpen){
           html += `<div class="group-items">`;
-          groupItems.forEach(i => { html += renderCard(i, null, hidePriority); });
+          if (GROUP_INTROS[key]) html += `<div class="group-intro">${GROUP_INTROS[key]}</div>`;
+          groupItems.forEach(i => { html += renderWithSubs(i, hidePriority); });
           html += `</div>`;
         }
         html += `</div>`;
@@ -3292,7 +3286,8 @@
           </div>`;
         if (isOpen){
           html += `<div class="group-items">`;
-          groupItems.forEach(i => { html += renderCard(i, null, hidePriority); });
+          if (GROUP_INTROS[key]) html += `<div class="group-intro">${GROUP_INTROS[key]}</div>`;
+          groupItems.forEach(i => { html += renderWithSubs(i, hidePriority); });
           html += `</div>`;
         }
         html += `</div>`;
@@ -3394,7 +3389,33 @@
     if (body.style.display === 'none') toggleStats();
     document.querySelector('.stats').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
-  requestAnimationFrame(() => requestAnimationFrame(updateHero));
+  // --- Sanfte Zähl-Animation beim Laden (Ledger-Zahlen + Ring) ---
+  function countUp(el, to, isMoney){
+    if (!el) return;
+    const dur = 900, t0 = performance.now();
+    const fmt = v => isMoney ? money(Math.round(v)) : String(Math.round(v));
+    function step(now){
+      const p = Math.min(1, (now - t0) / dur);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = fmt(to * eased);
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = fmt(to);
+    }
+    requestAnimationFrame(step);
+  }
+  function introCounts(){
+    const restSum = items.filter(i => !purchased.has(i.id)).reduce((s,i) => s + (Number(i.price)||0), 0);
+    const vals = document.querySelectorAll('#ledger .ledger-item .value');
+    countUp(vals[0], items.length, false);
+    countUp(vals[1], items.length - purchased.size, false);
+    countUp(vals[2], purchased.size, false);
+    countUp(vals[3], restSum, true);
+    countUp(document.getElementById('ringNum'), purchased.size, false);
+  }
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    updateHero();
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) introCounts();
+  }));
 
   // --- Produktbild-Lightbox ---
   function thumbFallback(img){
@@ -3500,6 +3521,9 @@
       if (el.classList.contains('reveal')) return;
       el.classList.add('reveal');
       revealObserver.observe(el);
+      // Sicherheitsnetz: falls der Observer nicht feuert (Headless/Randfälle),
+      // wird die Karte nach kurzer Zeit trotzdem sichtbar gemacht.
+      setTimeout(function(){ if (!el.classList.contains('in')) el.classList.add('in'); }, 1400);
     });
   }
   document.addEventListener('animationend', function(e){
