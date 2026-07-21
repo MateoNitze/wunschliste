@@ -2938,7 +2938,7 @@
       const ci = items.filter(i => i.category === cat);
       if (ci.length === 0) return;
       const done = ci.filter(i => purchased.has(i.id)).length;
-      const rest = ci.filter(i => !purchased.has(i.id)).reduce((s,i) => s + (Number(i.price)||0), 0);
+      const rest = estimateSum(ci, true);
       const pct = Math.round(done / ci.length * 100);
       catHtml += `<div class="stat-row">
         <span class="sname">${cat}</span>
@@ -2950,7 +2950,7 @@
     let prioHtml = '<div><div class="stats-h">Offen nach Priorität</div><div class="stat-prio">';
     [['must','Muss bald her'],['nice','Nice to have'],['dream','Großer Traum']].forEach(([p, label]) => {
       const pi = items.filter(i => i.priority === p && !purchased.has(i.id));
-      const sum = pi.reduce((s,i) => s + (Number(i.price)||0), 0);
+      const sum = estimateSum(items.filter(i => i.priority === p), true);
       prioHtml += `<div class="stat-prio-row"><span>${label}</span><span class="sval">${pi.length} offen · ${money(sum)}</span></div>`;
     });
     const noPrice = items.filter(i => i.price === null && !purchased.has(i.id)).length;
@@ -2983,14 +2983,14 @@
     CATEGORIES.forEach(cat => {
       const ci = open.filter(i => i.category === cat);
       if (ci.length === 0) return;
-      const sum = ci.reduce((s,i) => s + (Number(i.price)||0), 0);
+      const sum = estimateSum(items.filter(i => i.category === cat), true);
       out += '\n' + cat.toUpperCase() + ' (' + ci.length + ' offen · ' + money(sum) + ')\n';
       ci.forEach(i => {
         out += '- ' + i.title + (i.price !== null ? ' — ' + money(i.price) : ' — Preis offen') + '\n';
       });
     });
-    const restSum = open.reduce((s,i) => s + (Number(i.price)||0), 0);
-    out += '\nGesamt: ' + open.length + ' offene Einträge · ' + money(restSum) + '\n';
+    const restSum = estimateSum(items, true);
+    out += '\nGesamt: ' + open.length + ' offene Einträge · ' + money(restSum) + ' (Optionsgruppen zählen je einmal)\n';
     const done = () => showToast('Liste kopiert — ' + open.length + ' offene Einträge', null);
     if (navigator.clipboard && navigator.clipboard.writeText){
       navigator.clipboard.writeText(out).then(done, () => fallbackCopy(out, done));
@@ -3043,7 +3043,7 @@
   function updateHero(){
     const total = items.length;
     const done = purchased.size;
-    const restSum = items.filter(i => !purchased.has(i.id)).reduce((s,i) => s + (Number(i.price)||0), 0);
+    const restSum = estimateSum(items, true);
     const doneSum = items.filter(i => purchased.has(i.id)).reduce((s,i) => s + (Number(i.price)||0), 0);
     const C = 2 * Math.PI * 76;
     const bar = document.getElementById('ringBar');
@@ -3062,7 +3062,7 @@
     const el = document.getElementById('ledger');
     const done = purchased.size;
     const open = items.length - done;
-    const restSum = items.filter(i => !purchased.has(i.id)).reduce((s,i) => s + (Number(i.price)||0), 0);
+    const restSum = estimateSum(items, true);
     el.innerHTML = `
       <div class="ledger-item">
         <div class="label">Einträge gesamt</div>
@@ -3128,7 +3128,7 @@
         return;
       }
       if (catItems.length === 0) return;
-      const sum = catItems.reduce((s,i) => s + (Number(i.price)||0), 0);
+      const sum = estimateSum(catItems, false);
       const doneCat = allCatItems.filter(i => purchased.has(i.id)).length;
       const isFull = allCatItems.length > 0 && doneCat === allCatItems.length;
       html += `<div class="category-block">
@@ -3148,7 +3148,7 @@
 
       subcats.forEach(sub => {
         const subItems = catItems.filter(i => i.subcategory === sub);
-        const subSum = subItems.reduce((s,i) => s + (Number(i.price)||0), 0);
+        const subSum = estimateSum(subItems, false);
         html += `<div class="subcategory-head">
           <h3>${sub}</h3>
           <span class="sub-sum mono">${money(subSum)}</span>
@@ -3199,7 +3199,7 @@
     projects.forEach(project => {
       const projectItems = dreamPool.filter(i => i.dreamProject === project);
       const areas = [...new Set(projectItems.map(i => i.roomArea).filter(Boolean))];
-      const knownPrice = projectItems.reduce((s,i) => s + (Number(i.price)||0), 0);
+      const knownPrice = estimateSum(projectItems, false);
       const openCount = projectItems.filter(i => i.price === null).length;
       const pDone = projectItems.filter(i => purchased.has(i.id)).length;
       const pPct = projectItems.length ? Math.round(pDone / projectItems.length * 100) : 0;
@@ -3214,7 +3214,7 @@
         </div>`;
       areas.forEach(area => {
         const areaItems = projectItems.filter(i => i.roomArea === area);
-        const areaSum = areaItems.reduce((s,i) => s + (Number(i.price)||0), 0);
+        const areaSum = estimateSum(areaItems, false);
         html += `<div class="subcategory-head">
           <h3>${escapeHtml(area)}</h3>
           <span class="sub-sum mono">${money(areaSum)}</span>
@@ -3290,6 +3290,11 @@
       const key = groupKey(groupItems[0]);
       const isOpen = expandedGroups.has(key);
       const groupSum = groupItems.reduce((s,i) => s + (Number(i.price)||0), 0);
+      // Für Alternativen-Gruppen: Preis-Spanne statt Summe (man kauft nur eine Option)
+      const altPrices = groupItems.filter(i => i.price !== null && i.price !== undefined && i.price !== '').map(i => Number(i.price));
+      const altRange = altPrices.length === 0 ? '—'
+        : (Math.min(...altPrices) === Math.max(...altPrices) ? money(Math.min(...altPrices))
+        : money(Math.min(...altPrices)) + '–' + money(Math.max(...altPrices)));
       const gDone = groupItems.every(i => purchased.has(i.id));
       const gCheck = `<button class="group-check ${gDone ? 'done' : ''}" onclick="toggleGroupDone('${key}', event)" aria-label="${gDone ? 'Gruppe wieder als offen markieren' : 'Ganze Gruppe abhaken'}" title="${gDone ? 'Gruppe wieder öffnen' : 'Ganze Gruppe abhaken'}"><span class="cb-diamond"><span>✓</span></span></button>`;
       const kind = classifyGroup(groupItems);
@@ -3310,7 +3315,7 @@
               <span class="group-name">${escapeHtml(g)}</span>
               <span class="group-count alt-count">${groupItems.length} Optionen · alle okay, noch nicht entschieden</span>
             </div>
-            <span style="display:flex;align-items:center;gap:12px;">${gCheck}<span class="group-sum mono">${money(groupSum)}</span></span>
+            <span style="display:flex;align-items:center;gap:12px;">${gCheck}<span class="group-sum mono" title="Preis-Spanne der Optionen — zählt nur einmal zur Summe">${altRange}</span></span>
           </div>`;
         if (isOpen){
           html += `<div class="group-items">`;
@@ -3356,6 +3361,42 @@
 
   function groupKey(item){
     return `${item.category}::${item.subcategory||''}::${item.group||''}`;
+  }
+
+  // Repräsentativer Preis einer Alternativen-Gruppe: Durchschnitt der Optionen mit Preis.
+  function altGroupPrice(groupItems){
+    const priced = groupItems.filter(i => i.price !== null && i.price !== undefined && i.price !== '');
+    if (!priced.length) return 0;
+    return priced.reduce((s,i) => s + Number(i.price), 0) / priced.length;
+  }
+
+  // Geschätzte Summe einer Item-Menge. Alternativen-Gruppen ("noch nicht entschieden")
+  // zählen nur EINMAL (Durchschnitt der Optionen) — man kauft am Ende nur eine davon.
+  // remaining=true: nur offene Posten; eine Alternativen-Gruppe gilt als erledigt,
+  // sobald irgendeine ihrer Optionen abgehakt ist.
+  function estimateSum(list, remaining){
+    const groups = {};
+    list.forEach(i => {
+      if (!i.group) return;
+      const k = groupKey(i);
+      (groups[k] = groups[k] || []).push(i);
+    });
+    const altKeys = new Set();
+    Object.keys(groups).forEach(k => {
+      if (classifyGroup(groups[k]).type === 'alternatives') altKeys.add(k);
+    });
+    let total = 0;
+    list.forEach(i => {
+      if (i.group && altKeys.has(groupKey(i))) return; // Alternativen separat behandelt
+      if (remaining && purchased.has(i.id)) return;
+      total += Number(i.price) || 0;
+    });
+    altKeys.forEach(k => {
+      const gi = groups[k];
+      if (remaining && gi.some(i => purchased.has(i.id))) return; // Entscheidung getroffen
+      total += altGroupPrice(gi);
+    });
+    return total;
   }
 
   function toggleGroup(key){
@@ -3449,7 +3490,7 @@
     requestAnimationFrame(step);
   }
   function introCounts(){
-    const restSum = items.filter(i => !purchased.has(i.id)).reduce((s,i) => s + (Number(i.price)||0), 0);
+    const restSum = estimateSum(items, true);
     const vals = document.querySelectorAll('#ledger .ledger-item .value');
     countUp(vals[0], items.length, false);
     countUp(vals[1], items.length - purchased.size, false);
