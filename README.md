@@ -1,6 +1,6 @@
 # ◆ Noch zu holen
 
-Meine komplette Kaufliste als Website — 194 Wünsche über sieben Kategorien,
+Meine komplette Kaufliste als Website — 222 Wünsche über sieben Kategorien,
 sortiert, priorisiert, abhakbar. Gebaut mit [Claude Code](https://claude.com/claude-code).
 
 ![Screenshot der Website](assets/images/site-preview.png)
