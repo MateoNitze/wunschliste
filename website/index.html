@@ -1377,7 +1377,7 @@
 </footer>
 
 <script>
-  const CATEGORIES = ["Setup", "Sport", "Körperliches", "Entertainment", "Medien", "Technik", "Zuhause & Wellness", "Kleidung & Mode"];
+  const CATEGORIES = ["Setup", "Sport", "Körperliches", "Entertainment", "Medien", "Technik", "Software", "Zuhause & Wellness", "Kleidung & Mode"];
   const PRIO_LABEL = { must: "Muss bald her", nice: "Nice to have", dream: "Großer Traum" };
   const PRIO_CLASS = { must: "prio-must", nice: "prio-nice", dream: "prio-dream" };
 
@@ -2195,7 +2195,7 @@
       note: "Zubehör zum Hue-System — der eigentliche Lightstrip hinter dem Fernseher (Größe passend zum 65-Zöller).",
       done: false, priceUpdated: "2026-07-19" },
     { id: 228, title: "Parfüm-Sammlung", category: "Körperliches", priority: "nice", price: null, link: "", note: "Eine kleine Sammlung an Parfüms aufbauen — konkrete Düfte stehen noch offen, wird nach und nach gefüllt.", done: false, priceUpdated: null },
-    { id: 229, title: "WHOOP MG (Upgrade von Peak)", category: "Körperliches", priority: "nice", price: 359, link: "https://www.whoop.com/us/en/membership/", note: "Wechsel von meiner Peak- auf die MG-Variante (medizinisch, mehr Sensoren). Läuft als Jahres-Mitgliedschaft (~359 €/Jahr inkl. Gerät). Erst ab 18 möglich.", done: false, priceUpdated: null },
+    { id: 229, title: "WHOOP Life (Upgrade von Peak)", category: "Körperliches", priority: "nice", price: 359, link: "https://www.whoop.com/us/en/membership/", note: "Upgrade von meiner aktuellen Peak- auf die Life-Mitgliedschaft. Hätte sich vorher nicht gelohnt — die Upgrade-Features werden erst ab 18 freigeschaltet. Läuft als Jahres-Mitgliedschaft (inkl. Gerät).", done: false, priceUpdated: null },
     { id: 230, title: "Intake Nasal Dilator (Starter Kit)", category: "Körperliches", priority: "nice", price: 30, link: "https://www.intakebreathing.com/products/starter-kit-10", note: "Magnetischer Nasenspreizer für freiere Nasenatmung (Schlaf & Sport). US-Produkt (~$25), Import nötig.", done: false, priceUpdated: null },
     { id: 231, title: "REP x PÉPIN FAST Series Adjustable Dumbbell", category: "Sport", subcategory: "Krafttraining", priority: "nice", price: 830, priceTo: 1200, link: "https://repfitness.com/products/rep-x-pepin-fast-series-adjustable-dumbbell", note: "Verstellbare Kurzhanteln (Paar). US-Produkt: 65-lb-Paar $899.99 bis 105-lb-Paar $1299.99, Import nötig. „Fast Series“ (nicht Ferries).", done: false, priceUpdated: null },
     { id: 232, title: "Bearfoot Ursus", category: "Sport", subcategory: "Krafttraining", group: "Deadlift-Schuhe", alternative: true, priority: "nice", price: 100, link: "https://bearfoot.store/products/ursus", note: "Barfuß-/Zero-Drop-Schuh mit breiter Zehenbox — beliebt fürs Kreuzheben. US-Produkt ($109), Import nötig. Mein aktueller Favorit.", done: false, priceUpdated: "2026-07-20" },
@@ -2222,6 +2222,23 @@
     { id: 253, title: "Manta Sleep Mask", category: "Zuhause & Wellness", priority: "nice", price: 40, link: "https://mantasleep.com/products/manta-sleep-mask", note: "100%-Blackout-Schlafmaske mit verstellbaren Augenschalen (kein Druck auf die Augen). US-Produkt ($39), Import nötig.", done: false, priceUpdated: "2026-07-20" },
     { id: 254, title: "Smart Bed (Modell offen)", category: "Zuhause & Wellness", roomArea: "Schlafbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: null, link: "", note: "Smartes Bett fürs Zimmer — Modell muss ich noch raussuchen.", done: false, priceUpdated: null },
     { id: 255, title: "Serien & Filme (Auswahl offen)", category: "Medien", subcategory: "Serien & Filme", priority: "nice", price: null, link: "", note: "Neben Büchern & Manga fehlen noch Serien und Filme — konkrete Titel kommen später dazu.", done: false, priceUpdated: null },
+    { id: 256, title: "Retro Flip Clock (Vintage Klappuhr)", category: "Setup", roomArea: "Arbeitsbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 47, link: "https://www.amazon.de/dp/B0D63BCCM3", note: "Mechanische Klappuhr (zahnradgetrieben) für den Arbeitsbereich. Solide Wahl: 781 Bewertungen, ~47 €. Wer's ikonischer/hochwertiger will, nimmt eine Twemco-Flip-Clock (~150 €).", done: false, priceUpdated: "2026-07-20" },
+    { id: 257, title: "Laptop: Lenovo ThinkPad P1 Gen 8", category: "Setup", roomArea: "Arbeitsbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 3200, priceTo: 4000, link: "https://www.lenovo.com/de/de/p/laptops/thinkpad/thinkpad-p/thinkpad-p1-gen-8", note: "16\"-Mobile-Workstation für Content-Creation & Informatik: Core Ultra 9, NVIDIA RTX PRO (Blackwell), bis 64 GB RAM, 3,2K-OLED, Thunderbolt 5. ThinkPad = langlebig, wartbar, wenig Bloatware. Preis stark konfigurationsabhängig.", done: false, priceUpdated: null },
+    { id: 258, title: "Elgato Wave Mic Arm Pro", category: "Setup", subcategory: "Gaming", group: "Mikrofon-Arm", alternative: true, roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 150, link: "https://www.elgato.com/de/de/p/wave-mic-arm-pro-black", note: "Kräftiger Arm mit Kabelführung — trägt auch das schwere SM7dB gut. Preis grob geschätzt.", done: false, priceUpdated: null },
+    { id: 259, title: "Rode PSA1+", category: "Setup", subcategory: "Gaming", group: "Mikrofon-Arm", alternative: true, roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 150, link: "https://rode.com/en-us/products/psa1-plus", note: "Sehr robust, ausgelegt für schwere Mikrofone wie das SM7dB. Preis grob geschätzt.", done: false, priceUpdated: null },
+    { id: 260, title: "Elgato Wave Mic Arm MK2", category: "Setup", subcategory: "Gaming", group: "Mikrofon-Arm", alternative: true, roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 100, link: "https://www.elgato.com/de/de/p/wave-mic-arm-mk2", note: "Günstiger — fürs schwere SM7dB eher grenzwertig. Preis grob geschätzt.", done: false, priceUpdated: null },
+    { id: 261, title: "Elgato Wave Mic Arm", category: "Setup", subcategory: "Gaming", group: "Mikrofon-Arm", alternative: true, roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 100, link: "https://www.elgato.com/de/de/p/wave-mic-arm", note: "Basis-Variante — fürs schwere SM7dB eher grenzwertig. Preis grob geschätzt.", done: false, priceUpdated: null },
+    { id: 262, title: "Avancus Apex Power V3 (Stealth Black)", category: "Sport", subcategory: "Krafttraining", group: "Deadlift-Schuhe", alternative: true, priority: "nice", price: 110, link: "https://avancus.eu/products/avancus-apex-power-v3-midnight-black", note: "Flacher Powerlifting-/Deadlift-Schuh, Größe 45. €109,95.", done: false, priceUpdated: "2026-07-20" },
+    { id: 263, title: "Vivobarefoot Gobi III (Leder)", category: "Kleidung & Mode", subcategory: "Schuhe", priority: "nice", price: 180, link: "https://www.vivobarefoot.com/de/gobi-iii-sneaker-leather-mens", note: "Barfuß-Alltagssneaker aus Leder — am liebsten in Schwarz (Link zeigt Standardfarbe, gibt's auch schwarz). Größe 45. €180.", done: false, priceUpdated: "2026-07-20" },
+    { id: 264, title: "DaVinci Resolve Studio", category: "Software", priority: "nice", price: 359, link: "https://www.blackmagicdesign.com/products/davinciresolve/studio", note: "Profi-Videoschnitt als Einmalkauf (kein Abo, gehört mir dauerhaft). ~359 €.", done: false, priceUpdated: null },
+    { id: 265, title: "KeePassXC", category: "Software", priority: "nice", price: null, link: "https://keepassxc.org/download/#windows", note: "Kostenlos, Open-Source-Passwortmanager (lokal, kein Cloud-Zwang).", done: false, priceUpdated: null },
+    { id: 266, title: "PDF24", category: "Software", priority: "nice", price: null, link: "https://www.pdf24.org/de/", note: "Kostenloser PDF-Werkzeugkasten — will ich künftig nutzen.", done: false, priceUpdated: null },
+    { id: 267, title: "Obsidian", category: "Software", priority: "nice", price: null, link: "https://obsidian.md/pricing", note: "Notiz-App, für privat kostenlos. Sync/Publish optional als Abo.", done: false, priceUpdated: null },
+    { id: 268, title: "Proton (Unlimited)", category: "Software", priority: "nice", price: 120, link: "https://proton.me/pricing", note: "Privacy-Suite (Mail/VPN/Drive). Läuft als Abo (~10 €/Monat).", done: false, priceUpdated: null },
+    { id: 269, title: "Bitwarden", category: "Software", priority: "nice", price: null, link: "https://bitwarden.com/pricing/", note: "Passwortmanager, Basis kostenlos; Premium optional (~10 €/Jahr).", done: false, priceUpdated: null },
+    { id: 270, title: "VirtualBox", category: "Software", priority: "nice", price: null, link: "https://www.virtualbox.org/", note: "Kostenlose Virtualisierung (VMs).", done: false, priceUpdated: null },
+    { id: 271, title: "WinRAR", category: "Software", priority: "nice", price: 30, link: "https://www.rarlab.com/shop2rarlab.php?prod=winrar", note: "Archiv-Tool als Einmal-Lizenz (~30 €).", done: false, priceUpdated: null },
+    { id: 272, title: "Discord Nitro", category: "Software", priority: "nice", price: 100, link: "https://discord.com/nitro", note: "Abo (~10 €/Monat bzw. ~100 €/Jahr).", done: false, priceUpdated: null },
   ];
 
   // Produktbilder: lokal gespeicherte Kopien (assets/images/products/),
@@ -2383,6 +2400,14 @@
     217: "https://cdn.shopify.com/s/files/1/0491/8227/7795/files/2687_11_2.png?v=1772244342"
   };
   const LOCAL_IMAGES = {
+    256: "../assets/images/products/256.jpg",
+    257: "../assets/images/products/257.jpg",
+    258: "../assets/images/products/258.jpg",
+    259: "../assets/images/products/259.jpg",
+    260: "../assets/images/products/260.jpg",
+    261: "../assets/images/products/261.jpg",
+    262: "../assets/images/products/262.jpg",
+    263: "../assets/images/products/263.jpg",
     229: "../assets/images/products/229.jpg",
     231: "../assets/images/products/231.jpg",
     232: "../assets/images/products/232.webp",
@@ -3237,6 +3262,7 @@
 
   // Intro-Texte, die beim Aufklappen bestimmter Gruppen über den Karten erscheinen
   const GROUP_INTROS = {
+    "Setup::Gaming::Mikrofon-Arm": "Fürs schwere Shure SM7dB passen der <b>Wave Mic Arm Pro</b> oder die <b>Rode PSA1+</b> am besten (tragen das Gewicht sicher); die günstigeren Wave-Arme sind grenzwertig. Was dann noch fehlt: ein XLR-Kabel (suchst du noch). Ein Cloudlifter ist beim SM7dB unnötig (Vorverstärker eingebaut), ein Popfilter optional.",
     "Körperliches::::Uhr": "Wichtig zu wissen: Das hier sind bewusst nur <b>Beispiele</b>. Es geht mir eigentlich darum, dass ich am liebsten eine schöne Edelstahl-Uhr mit schwarzem, cleanem Zifferblatt hätte — welche genau, ist noch offen. Insgesamt ist das eher ein größerer Traum."
   };
 
