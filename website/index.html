@@ -153,6 +153,49 @@
     pointer-events:none;
   }
 
+  /* ---------- Cursor-Lichtkegel (die Lampe folgt dir) ---------- */
+  .cursor-glow{
+    position:fixed; inset:0;
+    z-index:2400;
+    pointer-events:none;
+    mix-blend-mode:screen;
+    opacity:0;
+    transition:opacity 0.5s ease;
+    background:radial-gradient(480px circle at var(--cx,50%) var(--cy,50%), rgba(255,178,88,0.07), transparent 58%);
+  }
+  .cursor-glow.on{ opacity:1; }
+
+  /* ---------- Magnetische Buttons ---------- */
+  .magnetic{ transition:transform 0.35s var(--ease), color 0.2s var(--ease), border-color 0.2s var(--ease), background 0.2s var(--ease), box-shadow 0.2s var(--ease); will-change:transform; }
+
+  /* ---------- Headline-Glanz (einmaliger Sweep) ---------- */
+  .h1-line em{ position:relative; }
+  .h1-line em::after{
+    content:'';
+    position:absolute; inset:0;
+    background:linear-gradient(105deg, transparent 32%, rgba(255,241,214,0.6) 50%, transparent 68%);
+    background-size:240% 100%;
+    background-position:200% 0;
+    mix-blend-mode:screen;
+    pointer-events:none;
+    animation:sheen 1.2s var(--ease) 1.5s 1 both;
+  }
+  @keyframes sheen{ from{ background-position:200% 0; } to{ background-position:-80% 0; } }
+
+  /* ---------- Sektions-Choreografie ---------- */
+  .category-head h2{ position:relative; padding-bottom:3px; }
+  .category-head h2::after{
+    content:'';
+    position:absolute; left:0; bottom:-1px;
+    height:2px; width:40px;
+    background:var(--amber);
+    box-shadow:0 0 8px rgba(232,163,61,0.55);
+  }
+  .category-head.reveal{ opacity:0; }
+  .category-head.reveal.in{ animation:cardIn 0.6s var(--ease-out) both; }
+  .category-head.in h2::after{ width:0; animation:drawLine 0.7s var(--ease-out) 0.2s forwards; }
+  @keyframes drawLine{ from{ width:0; } to{ width:40px; } }
+
   /* ---------- Hero ---------- */
   header{
     position:relative;
@@ -1374,11 +1417,14 @@
     .h1-line > span{ transform:none !important; }
     .hero-bg{ transform:scale(1.02) !important; opacity:1 !important; }
     .wordmark, .hero-eyebrow, .hero-sub, .ring-wrap, .ledger, .wordmark .gem{ opacity:1 !important; transform:none !important; }
+    .category-head.reveal{ opacity:1 !important; }
+    .cursor-glow{ display:none !important; }
   }
 </style>
 </head>
 <body>
 
+<div class="cursor-glow" id="cursorGlow"></div>
 <div class="scroll-progress" id="scrollProgress"></div>
 
 <header>
@@ -1422,8 +1468,8 @@
   <div class="controls-bar sans">
     <div class="mini-progress" id="miniProgress" aria-hidden="true"></div>
     <input type="text" id="searchBox" placeholder="Suchen (Titel, Notiz, Marke …)" oninput="onSearch()">
-    <button class="ctrl-btn" id="expandAllBtn" onclick="toggleExpandAll()">Alle Gruppen aufklappen</button>
-    <button class="ctrl-btn dream-toggle" id="dreamModeBtn" onclick="toggleDreamMode()">◆ Große Träume</button>
+    <button class="ctrl-btn magnetic" id="expandAllBtn" onclick="toggleExpandAll()">Alle Gruppen aufklappen</button>
+    <button class="ctrl-btn dream-toggle magnetic" id="dreamModeBtn" onclick="toggleDreamMode()">◆ Große Träume</button>
   </div>
 
   <div class="filter-bar sans">
@@ -3628,16 +3674,47 @@
   }, { passive: true });
   onScroll();
 
-  // --- Spotlight: amberner Schein folgt dem Cursor über Karten & Gruppen-Headern ---
-  if (!_reduced){
+  // --- Cursor-Lichtkegel + Karten-Spotlight + magnetische Buttons ---
+  const _cursorGlow = document.getElementById('cursorGlow');
+  const _hasFinePointer = window.matchMedia('(pointer: fine)').matches;
+  if (!_reduced && _hasFinePointer){
+    let _cgRaf = false, _cgx = 0, _cgy = 0;
     document.addEventListener('pointermove', function(e){
+      // globaler Lichtkegel
+      _cgx = e.clientX; _cgy = e.clientY;
+      if (!_cgRaf){
+        _cgRaf = true;
+        requestAnimationFrame(function(){
+          _cursorGlow.style.setProperty('--cx', _cgx + 'px');
+          _cursorGlow.style.setProperty('--cy', _cgy + 'px');
+          _cursorGlow.classList.add('on');
+          _cgRaf = false;
+        });
+      }
+      // Karten-Spotlight
       const el = e.target.closest && e.target.closest('.card');
-      if (!el) return;
-      const r = el.getBoundingClientRect();
-      el.style.setProperty('--mx', (e.clientX - r.left) + 'px');
-      el.style.setProperty('--my', (e.clientY - r.top) + 'px');
+      if (el){
+        const r = el.getBoundingClientRect();
+        el.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+        el.style.setProperty('--my', (e.clientY - r.top) + 'px');
+      }
+      // magnetische Buttons (nur in Cursor-Nähe)
+      const mag = e.target.closest && e.target.closest('.magnetic');
+      if (mag){
+        const r = mag.getBoundingClientRect();
+        const dx = (e.clientX - (r.left + r.width / 2)) * 0.28;
+        const dy = (e.clientY - (r.top + r.height / 2)) * 0.4;
+        mag.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+      }
     }, { passive: true });
+    document.addEventListener('pointerout', function(e){
+      if (e.target.closest && e.target.closest('.magnetic') && (!e.relatedTarget || !e.relatedTarget.closest || !e.relatedTarget.closest('.magnetic'))){
+        e.target.closest('.magnetic').style.transform = '';
+      }
+    }, { passive: true });
+    document.addEventListener('mouseleave', function(){ _cursorGlow.classList.remove('on'); });
   }
+
 
   function jumpToStats(){
     const body = document.getElementById('statsBody');
@@ -3772,7 +3849,7 @@
     }, { rootMargin: '0px 0px -6% 0px', threshold: 0.05 });
   function armReveal(){
     if (!revealObserver) return;
-    document.getElementById('lists').querySelectorAll('.card, .group-header, .dream-project').forEach(function(el){
+    document.getElementById('lists').querySelectorAll('.card, .group-header, .dream-project, .category-head').forEach(function(el){
       if (el.classList.contains('reveal')) return;
       el.classList.add('reveal');
       revealObserver.observe(el);
