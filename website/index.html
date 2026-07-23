@@ -153,34 +153,61 @@
     pointer-events:none;
   }
 
+  /* ---------- Intro-Ladesequenz ---------- */
+  .intro{
+    position:fixed; inset:0;
+    z-index:5000;
+    background-color:#0c0b09;
+    background-image:radial-gradient(130% 130% at 50% 42%, #16120b 0%, #0c0b09 58%);
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    gap:22px;
+  }
+  .intro.done{ animation:introOut 0.7s var(--ease) forwards; }
+  @keyframes introOut{ to{ opacity:0; visibility:hidden; } }
+  .intro-gem{
+    width:26px; height:26px;
+    background:var(--amber);
+    transform:rotate(45deg) scale(0);
+    box-shadow:0 0 32px rgba(232,163,61,0.75);
+    animation:introGem 0.6s var(--ease-out) 0.05s forwards;
+  }
+  @keyframes introGem{ to{ transform:rotate(45deg) scale(1); } }
+  .intro-word{
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:600;
+    font-size:15px;
+    letter-spacing:0.28em;
+    color:var(--text);
+    opacity:0;
+    animation:introWord 0.55s var(--ease-out) 0.3s forwards;
+  }
+  @keyframes introWord{ from{ opacity:0; letter-spacing:0.55em; } to{ opacity:1; letter-spacing:0.28em; } }
+  .intro-bar{
+    width:120px; height:2px;
+    background:rgba(255,255,255,0.1);
+    overflow:hidden; border-radius:2px;
+  }
+  .intro-bar > span{
+    display:block; height:100%; width:0;
+    background:linear-gradient(90deg, var(--amber-dark), var(--amber));
+    animation:introBar 0.8s var(--ease) 0.15s forwards;
+  }
+  @keyframes introBar{ to{ width:100%; } }
+
   /* ---------- Cursor-Lichtkegel (die Lampe folgt dir) ---------- */
   .cursor-glow{
     position:fixed; inset:0;
     z-index:2400;
     pointer-events:none;
-    mix-blend-mode:screen;
     opacity:0;
     transition:opacity 0.5s ease;
-    background:radial-gradient(480px circle at var(--cx,50%) var(--cy,50%), rgba(255,178,88,0.07), transparent 58%);
+    background:radial-gradient(460px circle at var(--cx,50%) var(--cy,50%), rgba(255,180,90,0.09), transparent 56%);
   }
   .cursor-glow.on{ opacity:1; }
 
   /* ---------- Magnetische Buttons ---------- */
   .magnetic{ transition:transform 0.35s var(--ease), color 0.2s var(--ease), border-color 0.2s var(--ease), background 0.2s var(--ease), box-shadow 0.2s var(--ease); will-change:transform; }
-
-  /* ---------- Headline-Glanz (einmaliger Sweep) ---------- */
-  .h1-line em{ position:relative; }
-  .h1-line em::after{
-    content:'';
-    position:absolute; inset:0;
-    background:linear-gradient(105deg, transparent 32%, rgba(255,241,214,0.6) 50%, transparent 68%);
-    background-size:240% 100%;
-    background-position:200% 0;
-    mix-blend-mode:screen;
-    pointer-events:none;
-    animation:sheen 1.2s var(--ease) 1.5s 1 both;
-  }
-  @keyframes sheen{ from{ background-position:200% 0; } to{ background-position:-80% 0; } }
 
   /* ---------- Sektions-Choreografie ---------- */
   .category-head h2{ position:relative; padding-bottom:3px; }
@@ -1419,10 +1446,17 @@
     .wordmark, .hero-eyebrow, .hero-sub, .ring-wrap, .ledger, .wordmark .gem{ opacity:1 !important; transform:none !important; }
     .category-head.reveal{ opacity:1 !important; }
     .cursor-glow{ display:none !important; }
+    .intro{ display:none !important; }
   }
 </style>
 </head>
 <body>
+
+<div class="intro" id="intro">
+  <div class="intro-gem"></div>
+  <div class="intro-word">NOCH ZU HOLEN</div>
+  <div class="intro-bar"><span></span></div>
+</div>
 
 <div class="cursor-glow" id="cursorGlow"></div>
 <div class="scroll-progress" id="scrollProgress"></div>
@@ -1544,6 +1578,9 @@
   //   subcategory: "Gaming",        // optional, sonst Zeile löschen
   //   group: "Tastatur",            // optional: bündelt zusammengehörige Einträge
   //   priority: "nice",             // "must" | "nice" | "dream"
+  //   order: 50,                    // Reihenfolge in der Kategorie: kleiner = weiter oben.
+  //                                 // Fundament klein (Tisch 10, PC 20 …), Kleinkram groß.
+  //                                 // Ohne Angabe landet der Eintrag hinten.
   //   price: 100,                   // Zahl oder null (= Preis noch offen)
   //   link: "https://…",            // Produktlink, "" wenn keiner
   //   note: "Farbe, Größe, Kontext …",
@@ -1556,7 +1593,7 @@
   // (id: "../assets/images/products/DATEINAME.jpg").
   // ============================================================
   let items = [
-    { id: 4, title: "Tastatur: Wooting 60HE v2", category: "Setup", subcategory: "Gaming", group: "Tastatur", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 244.99,
+    { id: 4, title: "Tastatur: Wooting 60HE v2", category: "Setup", subcategory: "Gaming", group: "Tastatur", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", order: 50, price: 244.99,
       link: "https://wooting.io/wooting-60he-v2",
       note: "Layout: ISO · Sprache: Deutsch · Style: Aluminium, Colour Black · Keycaps: Wooting Double Shot Backlit PBT Keycap Set (Split Spacebar Included)",
       done: false, priceUpdated: "2026-07-19" },
@@ -1568,7 +1605,7 @@
       link: "https://wooting.io/product/wooting-60he-v2-wrist-rest",
       note: "Zubehör zur Wooting 60HE v2.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 7, title: "Schreibtisch: Secretlab Magnus Pro (2 Stück)", category: "Setup", subcategory: "Gaming", group: "Schreibtisch", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 2000,
+    { id: 7, title: "Schreibtisch: Secretlab Magnus Pro (2 Stück)", category: "Setup", subcategory: "Gaming", group: "Schreibtisch", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", order: 10, price: 2000,
       link: "https://secretlab.eu/de/pages/magnus-pro",
       note: "Größe: XL · Farbe: Black · Schreibtischunterlage: Signature Black. Wird 2× gebraucht — einmal Zockbereich, einmal Arbeitsbereich.",
       done: false, priceUpdated: null },
@@ -1584,36 +1621,36 @@
       link: "https://secretlab.eu/de/pages/magnus-pro",
       note: "Idee, noch nicht final entschieden — Zubehör (Dual-Monitorarm) für den Secretlab Magnus Pro.",
       done: false, priceUpdated: null },
-    { id: 21, title: "Gaming-Stuhl: Herman Miller Embody", category: "Setup", subcategory: "Gaming", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 2037,
+    { id: 21, title: "Gaming-Stuhl: Herman Miller Embody", category: "Setup", subcategory: "Gaming", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", order: 40, price: 2037,
       link: "https://destore.hermanmiller.com/products/embody-gaming-chair?variant=43930847805590",
       note: "Herman Miller Embody Gaming Chair.",
       done: false, priceUpdated: "2026-07-18" },
-    { id: 15, title: "Gewichtheberschuhe: TYR Mens L-2 Lifter", category: "Sport", subcategory: "Krafttraining", priority: "dream", price: 220,
+    { id: 15, title: "Gewichtheberschuhe: TYR Mens L-2 Lifter", category: "Sport", subcategory: "Krafttraining", priority: "dream", order: 20, price: 220,
       link: "https://tyr.eu/de/products/tyr-mens-l-2-lifter-1",
       linkLabel: "TYR EU", link2: "https://tyr.com/products/tyr-mens-l-2-lifter", link2Label: "TYR US",
       note: "Farbe: am liebsten 008 Blk/Gold, zur Not 544 Black/Gum · Größe: US 12 — die Schuhe fallen eine Nummer kleiner aus, US 12 entspricht damit meiner EU 46.",
       done: false, priceUpdated: "2026-07-18" },
-    { id: 16, title: "SBD Lifting Straps", category: "Sport", subcategory: "Krafttraining", priority: "nice", price: 32,
+    { id: 16, title: "SBD Lifting Straps", category: "Sport", subcategory: "Krafttraining", priority: "nice", order: 40, price: 32,
       link: "https://sbdgermany.de/products/sbd-lifting-straps",
       note: "Klassische Zughilfen fürs schwere Ziehen — Kreuzheben, Rudern, Shrugs.",
       done: false, priceUpdated: "2026-07-18" },
-    { id: 17, title: "SBD Figure 8 Lifting Straps", category: "Sport", subcategory: "Krafttraining", priority: "nice", price: 40,
+    { id: 17, title: "SBD Figure 8 Lifting Straps", category: "Sport", subcategory: "Krafttraining", priority: "nice", order: 45, price: 40,
       link: "https://sbdgermany.de/products/sbd-figure-8-lifting-straps",
       note: "Figure-8-Zughilfen: geschlossene Schlaufen für maximalen Halt bei schweren Zügen.",
       done: false, priceUpdated: "2026-07-18" },
-    { id: 18, title: "Smelling Salts – Strong", category: "Sport", subcategory: "Krafttraining", priority: "nice", price: 16,
+    { id: 18, title: "Smelling Salts – Strong", category: "Sport", subcategory: "Krafttraining", priority: "nice", order: 70, price: 16,
       link: "https://beast.co.uk/collections/smelling-salts/products/beast-smelling-salts?variant=54207086723457",
       note: "Beast Smelling Salts, Variante Strong.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 19, title: "Smelling Salts – Stronger", category: "Sport", subcategory: "Krafttraining", priority: "nice", price: 19,
+    { id: 19, title: "Smelling Salts – Stronger", category: "Sport", subcategory: "Krafttraining", priority: "nice", order: 71, price: 19,
       link: "https://beast.co.uk/collections/smelling-salts/products/beast-smelling-salts?variant=54207086756225",
       note: "Beast Smelling Salts, Variante Stronger.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 20, title: "Smelling Salts – Worlds Strongest", category: "Sport", subcategory: "Krafttraining", priority: "nice", price: 22,
+    { id: 20, title: "Smelling Salts – Worlds Strongest", category: "Sport", subcategory: "Krafttraining", priority: "nice", order: 72, price: 22,
       link: "https://beast.co.uk/collections/smelling-salts/products/beast-smelling-salts?variant=54207086788993",
       note: "Beast Smelling Salts, Variante Worlds Strongest.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 30, title: "Mikasa V200W", category: "Sport", subcategory: "Ballsport", group: "Volleyball", alternative: true, priority: "nice", price: 110,
+    { id: 30, title: "Mikasa V200W", category: "Sport", subcategory: "Ballsport", group: "Volleyball", alternative: true, priority: "nice", order: 10, price: 110,
       link: "https://mikasasports.eu/product/v200w/",
       note: "Klassischer Hallen-Volleyball von Mikasa (FIVB-Spielball-Klasse).",
       done: false, priceUpdated: "2026-07-18" },
@@ -1621,7 +1658,7 @@
       link: "https://www.molten.de/products/v5m5000-de?_pos=1&_sid=db6cfbdee&_ss=r",
       note: "Wettspielball von Molten für die Halle.",
       done: false, priceUpdated: "2026-07-18" },
-    { id: 32, title: "Molten V5B5000", category: "Sport", subcategory: "Ballsport", group: "Beachvolleyball", alternative: true, priority: "nice", price: 75,
+    { id: 32, title: "Molten V5B5000", category: "Sport", subcategory: "Ballsport", group: "Beachvolleyball", alternative: true, priority: "nice", order: 20, price: 75,
       link: "https://www.molten.de/products/v5b5000-de?_pos=4&_sid=42ec2639b&_ss=r",
       note: "Beachvolleyball von Molten (Wettspiel-Klasse).",
       done: false, priceUpdated: "2026-07-18" },
@@ -1629,16 +1666,16 @@
       link: "https://mikasasports.eu/product/bv550c-wybr/",
       note: "Mikasa Beach Pro — der offizielle FIVB-Beachvolleyball.",
       done: false, priceUpdated: "2026-07-18" },
-    { id: 34, title: "Tattoo (Unterarm, klein bis mittelgroß)", category: "Körperliches", priority: "dream", price: 150, priceTo: 350,
+    { id: 34, title: "Tattoo (Unterarm, klein bis mittelgroß)", category: "Körperliches", priority: "dream", order: 10, price: 150, priceTo: 350,
       link: "https://de.pinterest.com/pin/725642558747371105/",
       linkLabel: "Referenz 1", link2: "https://de.pinterest.com/pin/4855512094155271/", link2Label: "Referenz 2",
       note: "Kreuz mit Bibelvers auf dem äußeren Unterarm — die Kernidee steht, das genaue Design noch nicht. Preis grob geschätzt für ein fein gestochenes Motiv dieser Größe.",
       done: false, priceUpdated: null },
-    { id: 35, title: "Cap: Thorns Cap (Saint Kaizen)", category: "Körperliches", priority: "nice", price: 35,
+    { id: 35, title: "Cap: Thorns Cap (Saint Kaizen)", category: "Körperliches", priority: "nice", order: 30, price: 35,
       link: "https://saintkaizen.com/products/thorns-cap",
       note: "Schwarze Cap mit gesticktem Kreuz, Dornen-Stickerei auf dem Schild und dezentem Rundum-Print — von Saint Kaizen.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 36, title: "Citizen BM8550-81EC", category: "Körperliches", group: "Uhr", alternative: true, priority: "nice", price: 159,
+    { id: 36, title: "Citizen BM8550-81EC", category: "Körperliches", group: "Uhr", alternative: true, priority: "nice", order: 20, price: 159,
       link: "https://de.citizenwatch.eu/de/p/bm8550-81ec/",
       note: "Citizen mit Eco-Drive (Solar) — Edelstahl, schwarzes, cleanes Zifferblatt.",
       done: false, priceUpdated: "2026-07-18" },
@@ -1678,11 +1715,11 @@
       link: "https://seikousa.com/products/sur311?_pos=53&_sid=8f7c24e56&_ss=r",
       note: "Seiko Quarz — Edelstahl, schwarzes, cleanes Zifferblatt.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 46, title: "Soundsystem: Sonos Ultimate Immersive Set", category: "Entertainment", roomArea: "Entertainment-Ecke", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 3096,
+    { id: 46, title: "Soundsystem: Sonos Ultimate Immersive Set", category: "Entertainment", roomArea: "Entertainment-Ecke", dreamProject: "Zimmer-Umgestaltung", priority: "dream", order: 20, price: 3096,
       link: "https://www.sonos.com/de-de/shop/ultimate-immersive-set-arc-ultra-sub-era-300-pair-black",
       note: "Set aus Arc Ultra + Sub (4. Gen) + 2× Era 300 als Surround — Farbe Black.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 47, title: "LG OLED65G57LW", category: "Entertainment", roomArea: "Entertainment-Ecke", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 1499, priceTo: 3999,
+    { id: 47, title: "LG OLED65G57LW", category: "Entertainment", roomArea: "Entertainment-Ecke", dreamProject: "Zimmer-Umgestaltung", priority: "dream", order: 10, price: 1499, priceTo: 3999,
       link: "https://www.lg.com/de/tvs-und-soundbars/oled-evo/oled65g57lw/",
       linkLabel: "LG", link2: "https://www.amazon.de/dp/B0F2JBN3QH/", link2Label: "Amazon",
       note: "65-Zoll-OLED-evo (G5-Serie), 4K mit bis zu 165 Hz — Galerie-Design für die Wand. Preis je nach Angebot, UVP 3.999 €.",
@@ -1856,12 +1893,12 @@
       link: "https://www.amazon.de/Punishment-Penguin-Classics-Fyodor-Dostoyevsky/dp/0140449132/ref=sr_1_1?__mk_de_DE=%C3%85M%C3%85%C5%BD%C3%95%C3%91&s=books&sr=1-1",
       note: "Fjodor Dostojewski – Penguin Classics, Englische Ausgabe.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 90, title: "Sony WF-1000XM6", category: "Technik", priority: "must", price: 256, priceTo: 280,
+    { id: 90, title: "Sony WF-1000XM6", category: "Technik", priority: "must", order: 10, price: 256, priceTo: 280,
       link: "https://www.sony.de/electronics/truly-wireless/wf-1000xm6",
       linkLabel: "Sony", link2: "https://www.amazon.de/dp/B0GF9ZNLWM/", link2Label: "Amazon",
       note: "Kabellose In-Ear-Kopfhörer mit Noise Cancelling, Schwarz.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 91, title: "Sony WH-1000XM6", category: "Technik", priority: "nice", price: 369, priceTo: 449,
+    { id: 91, title: "Sony WH-1000XM6", category: "Technik", priority: "nice", order: 20, price: 369, priceTo: 449,
       link: "https://www.sony.de/electronics/kopfbuegel-kopfhoerer/wh-1000xm6",
       linkLabel: "Sony", link2: "https://www.amazon.de/gp/product/B0F2TT8Q7M", link2Label: "Amazon",
       note: "Kabellose Over-Ear-Kopfhörer mit Noise Cancelling, Schwarz.",
@@ -2134,11 +2171,11 @@
       link: "https://www.thalia.de/shop/home/artikeldetails/A1056047855",
       note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
       done: false, priceUpdated: null },
-    { id: 159, title: "simplehuman Cleanstation", category: "Zuhause & Wellness", priority: "nice", price: 100,
+    { id: 159, title: "simplehuman Cleanstation", category: "Zuhause & Wellness", priority: "nice", order: 100, price: 100,
       link: "https://www.simplehuman.com/products/cleanstation?variant=39328394150019",
       note: "UV-Reinigungsstation fürs Handy: desinfiziert die komplette Oberfläche in rund 30 Sekunden (99,9 % der Keime) — z.B. während man sich die Hände wäscht.",
       done: false, priceUpdated: null },
-    { id: 160, title: "Zahnbürstenhalter: KIEROFIRT (zirkulierendes Reinigungsgerät)", category: "Körperliches", group: "Zahnbürstenhalter", alternative: true, priority: "nice", price: 77,
+    { id: 160, title: "Zahnbürstenhalter: KIEROFIRT (zirkulierendes Reinigungsgerät)", category: "Körperliches", group: "Zahnbürstenhalter", alternative: true, priority: "nice", order: 60, price: 77,
       link: "https://www.amazon.de/KIEROFIRT-Zahnb%C3%BCrstenhalter-zirkulierendes-Reinigungsger%C3%A4t-Zahnb%C3%BCrstenreiniger/dp/B0DWRVQ4TK/ref=sr_1_2?__mk_de_DE=%C3%85M%C3%85%C5%BD%C3%95%C3%91&sr=8-2",
       note: "Zahnbürstenhalter mit zirkulierender Wasser-Reinigung — Option eins.",
       done: false, priceUpdated: "2026-07-19" },
@@ -2146,23 +2183,23 @@
       link: "https://www.amazon.de/Ankilo-Zahnb%C3%BCrstenhalter-LED-Bildschirm-Wiederaufladbare-Zahnb%C3%BCrstenschlitzen/dp/B0FKFQKBDG/ref=sr_1_6?sr=8-6",
       note: "Zahnbürstenhalter mit LED-Display, wiederaufladbar — Option zwei.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 162, title: "Birdie Wood Edition", category: "Zuhause & Wellness", priority: "nice", price: 200,
+    { id: 162, title: "Birdie Wood Edition", category: "Zuhause & Wellness", priority: "nice", order: 80, price: 200,
       link: "https://birdie.design/de-de/products/birdie-wood-edition",
       note: "Fresh Air Monitor mit CO2-Sensor aus der Schweiz, Gehäuse aus Eichenholz — zeigt an, wann gelüftet werden sollte.",
       done: false, priceUpdated: null },
-    { id: 163, title: "WalkingPad A1 Pro", category: "Setup", subcategory: "Allgemein", priority: "nice", price: 699,
+    { id: 163, title: "WalkingPad A1 Pro", category: "Setup", subcategory: "Allgemein", priority: "nice", order: 300, price: 699,
       link: "https://de.walkingpad.com/products/walkingpad-a1-pro-klappbares-laufband-schreibtisch",
       note: "Klappbares Laufband fürs Homeoffice / den Schreibtisch.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 164, title: "Hatch Restore", category: "Zuhause & Wellness", priority: "nice", price: 160,
+    { id: 164, title: "Hatch Restore", category: "Zuhause & Wellness", priority: "nice", order: 30, price: 160,
       link: "https://www.hatch.co/restore",
       note: "Sonnenaufgangswecker mit Schlaf- und Meditations-Sounds (Restore 3). US-Produkt: $169.99 auf hatch.co, Import nötig.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 165, title: "Touch-Lampe fürs Bad (aufladbar, dimmbar)", category: "Zuhause & Wellness", priority: "nice", price: 40,
+    { id: 165, title: "Touch-Lampe fürs Bad (aufladbar, dimmbar)", category: "Zuhause & Wellness", priority: "nice", order: 90, price: 40,
       link: "https://www.amazon.de/Touch-Nachttischlampe-wiederaufladbare-Schreibtisch-Nachttischlampe-augenschonende-LED-Ambientelampe/dp/B0G4MDTR2K?ref_=ast_bl_cpl_dp",
       note: "Fürs Badezimmer am Abend: warmes, dimmbares Licht statt greller Deckenlampe — so bleibt die Helligkeit vorm Schlafen niedrig (gut für die Melatonin-Produktion).",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 166, title: "Eukalyptus-Stiele (Deko)", category: "Zuhause & Wellness", priority: "nice", price: 14,
+    { id: 166, title: "Eukalyptus-Stiele (Deko)", category: "Zuhause & Wellness", priority: "nice", order: 110, price: 14,
       link: "https://www.amazon.de/Eukalyptus-Stiele-Eukalyptusstiele-Eukalyptusbl%C3%A4ttern-Hochzeitsdekoration-Heimdekoration/dp/B0CLRGF6VK/ref=sr_1_2?__mk_de_DE=%C3%85M%C3%85%C5%BD%C3%95%C3%91&sr=8-2",
       note: "Deko-Eukalyptuszweige für die Wohnung.",
       done: false, priceUpdated: "2026-07-19" },
@@ -2170,7 +2207,7 @@
       link: "https://www.philips-hue.com/de-de/p/hue-philips-hue-play-hdmi-hue-sync-box-8k/8719514458666",
       note: "Synchronisiert Hue-Lichter mit dem TV-Bild (HDMI, bis 8K/60 bzw. 4K/120). Fürs komplette Backlight-System fehlen noch Bridge und Gradient Lightstrip — stehen als Zubehör mit drin.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 168, title: "Amazon Echo Studio (neueste Generation)", category: "Entertainment", group: "Smart Speaker", alternative: true, priority: "nice", price: 240,
+    { id: 168, title: "Amazon Echo Studio (neueste Generation)", category: "Entertainment", group: "Smart Speaker", alternative: true, priority: "nice", order: 70, price: 240,
       link: "https://www.amazon.de/dp/B0DXN1YWZZ",
       note: "Kompakter Smart Speaker mit räumlichem Klang — die größere der beiden Optionen.",
       done: false, priceUpdated: "2026-07-19" },
@@ -2178,7 +2215,7 @@
       link: "https://www.amazon.de/dp/B0DKLFHZDH",
       note: "Kleiner Smart Speaker mit erstaunlich vollem Klang — die kompakte Option.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 171, title: "Ember Mug² (Akku-Variante)", category: "Zuhause & Wellness", group: "Ember Mug", alternative: true, priority: "nice", price: 150,
+    { id: 171, title: "Ember Mug² (Akku-Variante)", category: "Zuhause & Wellness", group: "Ember Mug", alternative: true, priority: "nice", order: 70, price: 150,
       link: "https://www.amazon.de/Ember-Smart-Temperatureinstellung-wiederaufladbarer-80-Minuten-Akku/dp/B07Z5H4TF5?ref_=ast_sto_dp",
       note: "Smarte Tasse mit Temperaturregelung und eigenem Akku (ca. 80 min) — aktuell oft ausverkauft.",
       done: false, priceUpdated: "2026-07-19" },
@@ -2186,15 +2223,15 @@
       link: "https://www.amazon.de/Ember-Temperature-Control-Charging-Coaster/dp/B085LTLTT9?ref_=ast_sto_dp",
       note: "Variante mit Ladeuntersetzer statt großem Akku — aktuell oft ausverkauft.",
       done: false, priceUpdated: null },
-    { id: 173, title: "Soni SM (SEASONS)", category: "Zuhause & Wellness", priority: "nice", price: 135,
+    { id: 173, title: "Soni SM (SEASONS)", category: "Zuhause & Wellness", priority: "nice", order: 60, price: 135,
       link: "https://www.seasonslife.com/products/soni-sm?variant=40882430378189",
       note: "Tragbarer Ultraschall-Aroma-Diffusor, befeuchtet zugleich sanft die Luft. Farbe: Onyx (Schwarz).",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 174, title: "Dreame Matrix 10 Ultra", category: "Zuhause & Wellness", priority: "nice", price: 499,
+    { id: 174, title: "Dreame Matrix 10 Ultra", category: "Zuhause & Wellness", priority: "nice", order: 20, price: 499,
       link: "https://www.amazon.de/dp/B0GSRVQB6D/ref=asc_df_B0FN8FR84Q1783591200000/?creative=22662&creativeASIN=B0FN8FR84Q",
       note: "Saugroboter, Farbe Black. Auch bei MediaMarkt verfügbar: https://www.mediamarkt.de/de/product/_dreame-matrix-10-ultra-black-saugroboter-3005574.html",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 175, title: "ASUS ROG Swift OLED PG32UCDP", category: "Setup", subcategory: "Gaming", group: "Monitor", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 800, priceTo: 1000,
+    { id: 175, title: "ASUS ROG Swift OLED PG32UCDP", category: "Setup", subcategory: "Gaming", group: "Monitor", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", order: 30, price: 800, priceTo: 1000,
       link: "https://rog.asus.com/de/monitors/27-to-31-5-inches/rog-swift-oled-pg32ucdp/#pageContent-sec-ai/",
       note: "31,5-Zoll-4K-OLED, nativ 240 Hz, 0,03 ms Reaktionszeit, Dual-Mode mit FHD bei 480 Hz.",
       done: false, priceUpdated: "2026-07-19" },
@@ -2202,11 +2239,11 @@
       link: "https://www.amazon.de/dp/B0DT9KJX65",
       note: "Zubehör zum Monitor — unterstützt volle 48Gbps, damit 4K@240Hz auch wirklich ankommt. Viele Monitore legen nur ein einfaches Compliance-Kabel bei, das die Bandbreite nicht schafft.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 219, title: "UGREEN Cat 8 Netzwerkkabel", category: "Setup", subcategory: "Gaming", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 23.99,
+    { id: 219, title: "UGREEN Cat 8 Netzwerkkabel", category: "Setup", subcategory: "Gaming", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", order: 120, price: 23.99,
       link: "https://www.amazon.de/UGREEN-Superschnell-Netzwerkkabel-Wlankabel-kompatibel/dp/B0C4KV76C8/ref=ast_sto_dp_puis",
       note: "40Gbps, für stabile LAN-Verbindung zum PC — z.B. für den Router oder als Verlängerung. UVP (aktuell oft günstiger im Angebot).",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 220, title: "UGREEN Cat 8 Netzwerkkabel (2. Länge)", category: "Setup", subcategory: "Gaming", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 38,
+    { id: 220, title: "UGREEN Cat 8 Netzwerkkabel (2. Länge)", category: "Setup", subcategory: "Gaming", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", order: 121, price: 38,
       link: "https://www.amazon.de/UGREEN-Netzwerkkabel-Patchkabel-Ethernet-kompatibel/dp/B08R9XTFH5/ref=ast_sto_dp_puis",
       note: "40Gbps, andere Länge als das erste — z.B. für einen anderen Kabelweg im Zimmer (Router zu Wanddose, Wanddose zu PC o.ä.).",
       done: false, priceUpdated: "2026-07-19" },
@@ -2214,7 +2251,7 @@
       link: "https://www.sharkninja.de/ninja-creami-deluxe-10-in-1-eismaschine/NC502EU.html?dwvar_NC502EU_color=99a6b0",
       note: "Eismaschine, 10-in-1-Funktionen.",
       done: false, priceUpdated: "2026-07-18" },
-    { id: 177, title: "Küchenwaage: Beurer KS 34", category: "Zuhause & Wellness", subcategory: "Küche", group: "Küchenwaage", alternative: true, priority: "must", price: 23,
+    { id: 177, title: "Küchenwaage: Beurer KS 34", category: "Zuhause & Wellness", subcategory: "Küche", group: "Küchenwaage", alternative: true, priority: "must", order: 200, price: 23,
       link: "https://www.amazon.de/dp/B07HM6TB3S/ref=asc_df_B07HM6TB3S1783751400000/?creative=22662&creativeASIN=B07HM6TB3S",
       note: "Bis 15 kg, Tara-Funktion, Magic-LED-Display — Option eins.",
       done: false, priceUpdated: "2026-07-19" },
@@ -2222,7 +2259,7 @@
       link: "https://www.amazon.de/dp/B0FBGM3KZ4/ref=asc_df_B0FBGM3KZ41783724400000/?creative=22662&creativeASIN=B0FBGM3KZ4",
       note: "Bis 10 kg, auf 1 g genau, per USB aufladbar, Edelstahlfläche — Option zwei.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 180, title: "Logitech PRO X2 SUPERSTRIKE", category: "Setup", subcategory: "Gaming", group: "Maus", alternative: true, roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 180,
+    { id: 180, title: "Logitech PRO X2 SUPERSTRIKE", category: "Setup", subcategory: "Gaming", group: "Maus", alternative: true, roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", order: 60, price: 180,
       link: "https://www.logitechg.com/de-de/shop/p/pro-x2-superstrike-mouse",
       note: "Kabellose E-Sport-Maus — eine der beiden Optionen, zwischen denen ich mich noch entscheide.",
       done: false, priceUpdated: "2026-07-18" },
@@ -2230,35 +2267,35 @@
       link: "https://www.razer.com/de-de/gaming-mice/razer-viper-v4-pro",
       note: "Kabellose E-Sport-Maus von Razer — die zweite der beiden Optionen.",
       done: false, priceUpdated: "2026-07-18" },
-    { id: 188, title: "Anker Powerbank 20.000 mAh (integriertes USB-C-Kabel)", category: "Technik", priority: "must", price: 50,
+    { id: 188, title: "Anker Powerbank 20.000 mAh (integriertes USB-C-Kabel)", category: "Technik", priority: "must", order: 70, price: 50,
       link: "https://www.amazon.de/Anker-Powerbank-integriertem-USB-C-Kabel-Schnelllade-Akku/dp/B0CXDXP8VR/ref=sr_1_3_pp?sr=8-3",
       note: "87 W max, 1x USB-C + 1x USB-A, integriertes USB-C-Kabel.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 189, title: "Anker 633 Magnetic Battery (MagGo)", category: "Technik", priority: "must", price: 50,
+    { id: 189, title: "Anker 633 Magnetic Battery (MagGo)", category: "Technik", priority: "must", order: 80, price: 50,
       link: "https://www.anker.com/eu-de/products/a1641?variant=42548593787043&top_filter=10.000mAh-21.000mAh&collections_powerbanks&Sort_by=Preis%20hoch%20-%20niedrig",
       note: "10.000 mAh, magnetischer Wireless-Akku mit Stand, MagSafe-kompatibel.",
       done: false, priceUpdated: "2026-07-18" },
-    { id: 190, title: "Anker Prime USB-C Kabel 90 cm 240 W", category: "Technik", priority: "must", price: 25,
+    { id: 190, title: "Anker Prime USB-C Kabel 90 cm 240 W", category: "Technik", priority: "must", order: 90, price: 25,
       link: "https://www.anker.com/eu-de/products/a88e2-anker-prime-usb-c-kabel-90cm-240w-upcycled-geflochten",
       note: "Geflochtenes Kabel aus recyceltem Material, 240 W.",
       done: false, priceUpdated: "2026-07-18" },
-    { id: 191, title: "Anker Prime kabellose Ladestation Qi2 3-in-1", category: "Technik", priority: "must", price: 160,
+    { id: 191, title: "Anker Prime kabellose Ladestation Qi2 3-in-1", category: "Technik", priority: "must", order: 50, price: 160,
       link: "https://www.anker.com/eu-de/products/b25x7-anker-prime-kabellose-ladestation-qi2-3-in-1",
       note: "3-in-1 Ladestation für Handy, Kopfhörer und Uhr, Qi2.",
       done: false, priceUpdated: "2026-07-18" },
-    { id: 217, title: "Anker Prime Ladegerät 160W (3 Ports, GaN)", category: "Technik", priority: "must", price: 130,
+    { id: 217, title: "Anker Prime Ladegerät 160W (3 Ports, GaN)", category: "Technik", priority: "must", order: 60, price: 130,
       link: "https://www.anker.com/eu-de/products/a2687-anker-prime-ladegeraet-160w-3-ports-gan?variant=46200507007139",
       note: "Kompaktes GaN-Netzteil, 3 Ports, bis zu 140W an einem einzelnen Port (z.B. Laptop). Smart Display zeigt Ladeleistung in Echtzeit. So klein wie eine AirPods-Pro-Hülle.",
       done: false, priceUpdated: "2026-07-18" },
-    { id: 195, title: "Liquid Chalk (Flüssigkreide)", category: "Sport", subcategory: "Krafttraining", priority: "nice", price: 15,
+    { id: 195, title: "Liquid Chalk (Flüssigkreide)", category: "Sport", subcategory: "Krafttraining", priority: "nice", order: 60, price: 15,
       link: "https://www.amazon.de/Fl%C3%BCssiges-Magnesia-perfekten-Calisthenics-Gewichtheben/dp/B07B3TFGRP/",
       note: "Flüssiges Magnesia für sicheren Grip — praktischer als der klassische Kreidebeutel.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 196, title: "SBD Handgelenksbandagen (flexibel)", category: "Sport", subcategory: "Krafttraining", priority: "nice", price: 45,
+    { id: 196, title: "SBD Handgelenksbandagen (flexibel)", category: "Sport", subcategory: "Krafttraining", priority: "nice", order: 50, price: 45,
       link: "https://sbdgermany.de/products/sbd-handgelenksbandagen?variant=47272174092509",
       note: "Flexible Variante — die steifen habe ich schon. Größe noch offen (S/M/L, Preis überall gleich).",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 200, title: "Mikrofon: Shure SM7dB", category: "Setup", subcategory: "Gaming", group: "Mikrofon", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 629,
+    { id: 200, title: "Mikrofon: Shure SM7dB", category: "Setup", subcategory: "Gaming", group: "Mikrofon", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", order: 80, price: 629,
       link: "https://www.shure.com/de-DE/produkte/mikrofone/sm7db?variant=SM7dB",
       note: "XLR-Mikrofon mit eingebautem Vorverstärker (+18/+28 dB, per Schalter wählbar oder umgehbar). Braucht 48V-Phantomspeisung von einem Interface — Interface und Kabel hängen direkt darunter.",
       done: false, priceUpdated: "2026-07-19" },
@@ -2266,7 +2303,7 @@
       link: "https://www.uaudio.com/products/apollo-twin-x",
       note: "Zubehör zum Mikrofon — Thunderbolt-Audio-Interface mit 48V-Phantomspeisung und Unison-Preamps (Apollo Twin X DUO Gen 2, Preis je nach Software-Paket).",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 201, title: "AMD Ryzen 9 9950X3D", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 585, priceTo: 650,
+    { id: 201, title: "AMD Ryzen 9 9950X3D", category: "Setup", subcategory: "Gaming", group: "PC", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", order: 20, price: 585, priceTo: 650,
       link: "https://www.alternate.de/AMD/Ryzen-9-9950X3D-Prozessor/html/product/100114727",
       linkLabel: "Hersteller", link2: "https://geizhals.de/?fs=Ryzen%209%209950X3D", link2Label: "Preisvergleich",
       note: "16 Kerne / 32 Threads mit 3D V-Cache, Sockel AM5. Kauf über Preisvergleich: nur seriöse Händler nehmen (Alternate, Mindfactory, Notebooksbilliger & Co.).",
@@ -2333,7 +2370,7 @@
       link: "https://www.logitechg.com/de-de/shop/p/g-carry-case.943-001208",
       note: "Zubehör zur PRO X2 SUPERSTRIKE — Transportcase; entweder das hier oder das Sleeve.",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 224, title: "Mauspad: Wallhack SP-005 (Black)", category: "Setup", subcategory: "Gaming", group: "Mauspad", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 129,
+    { id: 224, title: "Mauspad: Wallhack SP-005 (Black)", category: "Setup", subcategory: "Gaming", group: "Mauspad", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", order: 70, price: 129,
       link: "https://wallhack.com/en-de/products/sp-005-black",
       note: "Glas-Mauspad von Wallhack, Farbe Black.",
       done: false, priceUpdated: "2026-07-19" },
@@ -2349,50 +2386,50 @@
       link: "https://www.philips-hue.com/de-de/products/smart-light-strips?filters=FK_HUE_GRADIENT",
       note: "Zubehör zum Hue-System — der eigentliche Lightstrip hinter dem Fernseher (Größe passend zum 65-Zöller).",
       done: false, priceUpdated: "2026-07-19" },
-    { id: 228, title: "Parfüm-Sammlung", category: "Körperliches", priority: "nice", price: null, link: "", note: "Eine kleine Sammlung an Parfüms aufbauen — konkrete Düfte stehen noch offen, wird nach und nach gefüllt.", done: false, priceUpdated: null },
-    { id: 229, title: "WHOOP Life (Upgrade von Peak)", category: "Körperliches", priority: "nice", price: 359, link: "https://www.whoop.com/us/en/membership/", note: "Upgrade von meiner aktuellen Peak- auf die Life-Mitgliedschaft. Hätte sich vorher nicht gelohnt — die Upgrade-Features werden erst ab 18 freigeschaltet. Läuft als Jahres-Mitgliedschaft (inkl. Gerät).", done: false, priceUpdated: null },
-    { id: 230, title: "Intake Nasal Dilator (Starter Kit)", category: "Körperliches", priority: "nice", price: 30, link: "https://www.intakebreathing.com/products/starter-kit-10", note: "Magnetischer Nasenspreizer für freiere Nasenatmung (Schlaf & Sport). US-Produkt (~$25), Import nötig.", done: false, priceUpdated: null },
-    { id: 231, title: "REP x PÉPIN FAST Series Adjustable Dumbbell", category: "Sport", subcategory: "Krafttraining", priority: "nice", price: 830, priceTo: 1200, link: "https://repfitness.com/products/rep-x-pepin-fast-series-adjustable-dumbbell", note: "Verstellbare Kurzhanteln (Paar). US-Produkt: 65-lb-Paar $899.99 bis 105-lb-Paar $1299.99, Import nötig. „Fast Series“ (nicht Ferries).", done: false, priceUpdated: null },
-    { id: 232, title: "Bearfoot Ursus", category: "Sport", subcategory: "Krafttraining", group: "Deadlift-Schuhe", alternative: true, priority: "nice", price: 100, link: "https://bearfoot.store/products/ursus", note: "Barfuß-/Zero-Drop-Schuh mit breiter Zehenbox — beliebt fürs Kreuzheben. US-Produkt ($109), Import nötig. Mein aktueller Favorit.", done: false, priceUpdated: "2026-07-20" },
+    { id: 228, title: "Parfüm-Sammlung", category: "Körperliches", priority: "nice", order: 70, price: null, link: "", note: "Eine kleine Sammlung an Parfüms aufbauen — konkrete Düfte stehen noch offen, wird nach und nach gefüllt.", done: false, priceUpdated: null },
+    { id: 229, title: "WHOOP Life (Upgrade von Peak)", category: "Körperliches", priority: "nice", order: 40, price: 359, link: "https://www.whoop.com/us/en/membership/", note: "Upgrade von meiner aktuellen Peak- auf die Life-Mitgliedschaft. Hätte sich vorher nicht gelohnt — die Upgrade-Features werden erst ab 18 freigeschaltet. Läuft als Jahres-Mitgliedschaft (inkl. Gerät).", done: false, priceUpdated: null },
+    { id: 230, title: "Intake Nasal Dilator (Starter Kit)", category: "Körperliches", priority: "nice", order: 50, price: 30, link: "https://www.intakebreathing.com/products/starter-kit-10", note: "Magnetischer Nasenspreizer für freiere Nasenatmung (Schlaf & Sport). US-Produkt (~$25), Import nötig.", done: false, priceUpdated: null },
+    { id: 231, title: "REP x PÉPIN FAST Series Adjustable Dumbbell", category: "Sport", subcategory: "Krafttraining", priority: "nice", order: 30, price: 830, priceTo: 1200, link: "https://repfitness.com/products/rep-x-pepin-fast-series-adjustable-dumbbell", note: "Verstellbare Kurzhanteln (Paar). US-Produkt: 65-lb-Paar $899.99 bis 105-lb-Paar $1299.99, Import nötig. „Fast Series“ (nicht Ferries).", done: false, priceUpdated: null },
+    { id: 232, title: "Bearfoot Ursus", category: "Sport", subcategory: "Krafttraining", group: "Deadlift-Schuhe", alternative: true, priority: "nice", order: 10, price: 100, link: "https://bearfoot.store/products/ursus", note: "Barfuß-/Zero-Drop-Schuh mit breiter Zehenbox — beliebt fürs Kreuzheben. US-Produkt ($109), Import nötig. Mein aktueller Favorit.", done: false, priceUpdated: "2026-07-20" },
     { id: 233, title: "Vivobarefoot Motus Strength", category: "Sport", subcategory: "Krafttraining", group: "Deadlift-Schuhe", alternative: true, priority: "nice", price: 150, link: "https://www.vivobarefoot.com/", note: "Barfuß-Trainingsschuh, speziell fürs Gym/Krafttraining — als Vergleichsoption zum Bearfoot Ursus.", done: false, priceUpdated: null },
-    { id: 234, title: "reMarkable Paper Pro", category: "Technik", group: "E-Ink-Tablet", alternative: true, priority: "nice", price: 579, priceTo: 629, link: "https://remarkable.com/products/remarkable-paper/pro", note: "11,8\" Farb-E-Ink mit Frontlicht. Preis mit Marker $579, mit Marker Plus $629.", done: false, priceUpdated: "2026-07-20" },
+    { id: 234, title: "reMarkable Paper Pro", category: "Technik", group: "E-Ink-Tablet", alternative: true, priority: "nice", order: 30, price: 579, priceTo: 629, link: "https://remarkable.com/products/remarkable-paper/pro", note: "11,8\" Farb-E-Ink mit Frontlicht. Preis mit Marker $579, mit Marker Plus $629.", done: false, priceUpdated: "2026-07-20" },
     { id: 235, title: "Boox Note Air 5C", category: "Technik", group: "E-Ink-Tablet", alternative: true, priority: "nice", price: 530, link: "https://euroshop.boox.com/products/noteair5c", note: "10,3\" Farb-E-Ink, Android 15 — Bundle mit Stift & Case ($530).", done: false, priceUpdated: "2026-07-20" },
     { id: 236, title: "Supernote A5 X2 (Manta)", category: "Technik", group: "E-Ink-Tablet", alternative: true, priority: "nice", price: 459, link: "https://supernote.eu/product/supernote-set-a5x2-manta/", note: "10,7\" S/W-E-Ink, modular/aufrüstbar — bestes Schreibgefühl laut Tests. Ab $459, Stift separat.", done: false, priceUpdated: "2026-07-20" },
     { id: 237, title: "Boox Go 10.3 (Gen 2)", category: "Technik", group: "E-Ink-Tablet", alternative: true, priority: "nice", price: 420, link: "https://shop.boox.com/products/go103gen2", note: "10,3\" S/W-E-Ink, sehr dünn & leicht (~$420). (Deine Notiz „Go 13“ — auf der Boox-Seite gibt es die Go 10.3; bitte prüfen.)", done: false, priceUpdated: null },
     { id: 238, title: "Boox Tab X C", category: "Technik", group: "E-Ink-Tablet", alternative: true, priority: "nice", price: 560, link: "https://shop.boox.com/collections/all", note: "Farb-E-Ink-Tablet von Boox, leistungsstärkere Klasse. Preis grob geschätzt, bitte auf der Boox-Seite prüfen.", done: false, priceUpdated: null },
     { id: 239, title: "Boox Note Max", category: "Technik", group: "E-Ink-Tablet", alternative: true, priority: "nice", price: 720, link: "https://shop.boox.com/products/notemax", note: "13,3\" S/W-E-Ink, 300 PPI, großes Format (~$719.98).", done: false, priceUpdated: "2026-07-20" },
     { id: 240, title: "iFlytek AINOTE 2", category: "Technik", group: "E-Ink-Tablet", alternative: true, priority: "nice", price: 400, link: "https://www.iflytek.com/en/", note: "E-Ink-Notiztablet mit KI-Transkription. Preis grob geschätzt, Modell/Preis bitte prüfen.", done: false, priceUpdated: null },
-    { id: 241, title: "UGREEN NASync DXP2800 (NAS)", category: "Technik", priority: "nice", price: 440, link: "https://nas-eu.ugreen.com/products/ugreen-nasync-dxp2800-nas-storage", note: "2-Bay-NAS (diskless), Intel N100, 8 GB DDR5, 2,5 GbE, 2× M.2. UVP €439,99 (aktuell oft im Angebot).", done: false, priceUpdated: "2026-07-20" },
-    { id: 242, title: "BenQ ScreenBar Halo 2 (Monitor-Lightbar)", category: "Setup", subcategory: "Gaming", priority: "nice", price: 170, link: "https://www.benq.eu/en-eu/lighting/monitor-light/screenbar-halo-2.html", note: "Monitor-Lichtleiste mit Wireless-Controller & Hintergrundlicht — das aktuelle Top-Modell (Halo 2). Preis grob geschätzt.", done: false, priceUpdated: null },
-    { id: 243, title: "Gaming-Headset: Audeze Maxwell 2", category: "Setup", subcategory: "Gaming", group: "Gaming-Headset", alternative: true, priority: "nice", price: 329, link: "https://www.audeze.com/products/maxwell-2", note: "Bestes Audio unter den Wireless-Gaming-Headsets: 90-mm-Planar-Treiber, ~80 h Akku, sehr gutes Mikro mit KI-Rauschfilter. Meine Wahl, wenn Klang zählt.", done: false, priceUpdated: "2026-07-20" },
+    { id: 241, title: "UGREEN NASync DXP2800 (NAS)", category: "Technik", priority: "nice", order: 40, price: 440, link: "https://nas-eu.ugreen.com/products/ugreen-nasync-dxp2800-nas-storage", note: "2-Bay-NAS (diskless), Intel N100, 8 GB DDR5, 2,5 GbE, 2× M.2. UVP €439,99 (aktuell oft im Angebot).", done: false, priceUpdated: "2026-07-20" },
+    { id: 242, title: "BenQ ScreenBar Halo 2 (Monitor-Lightbar)", category: "Setup", subcategory: "Gaming", priority: "nice", order: 100, price: 170, link: "https://www.benq.eu/en-eu/lighting/monitor-light/screenbar-halo-2.html", note: "Monitor-Lichtleiste mit Wireless-Controller & Hintergrundlicht — das aktuelle Top-Modell (Halo 2). Preis grob geschätzt.", done: false, priceUpdated: null },
+    { id: 243, title: "Gaming-Headset: Audeze Maxwell 2", category: "Setup", subcategory: "Gaming", group: "Gaming-Headset", alternative: true, priority: "nice", order: 90, price: 329, link: "https://www.audeze.com/products/maxwell-2", note: "Bestes Audio unter den Wireless-Gaming-Headsets: 90-mm-Planar-Treiber, ~80 h Akku, sehr gutes Mikro mit KI-Rauschfilter. Meine Wahl, wenn Klang zählt.", done: false, priceUpdated: "2026-07-20" },
     { id: 274, title: "Gaming-Headset: Logitech G ASTRO A50 X", category: "Setup", subcategory: "Gaming", group: "Gaming-Headset", alternative: true, priority: "nice", price: 379, link: "https://www.logitechg.com/de-de/products/gaming-audio/a50-x-wireless-headset.html", note: "Beste All-in-One-Lösung: Basisstation lädt & schaltet per HDMI zwischen PS5/Xbox/PC um. Bequem, aber kürzerer Akku (~24 h). Meine Wahl, wenn Komfort/Konsolen-Switching zählt.", done: false, priceUpdated: "2026-07-20" },
-    { id: 244, title: "Headset für Alltag/Calls (Modell offen)", category: "Setup", subcategory: "Gaming", priority: "nice", price: null, link: "", note: "Normales Headset (nicht Gaming) für Calls/Alltag — Modell noch offen.", done: false, priceUpdated: null },
-    { id: 245, title: "Controller (Modell offen)", category: "Setup", subcategory: "Gaming", priority: "nice", price: null, link: "", note: "Controller fürs Gaming — Modell noch offen.", done: false, priceUpdated: null },
-    { id: 246, title: "Audio-Technica AT-LP120XBT-USB", category: "Entertainment", group: "Plattenspieler", alternative: true, roomArea: "Musik-Ecke", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 349, link: "https://www.audio-technica.com/de-de/at-lp120xbt-usb", note: "Direktantrieb-Plattenspieler mit Bluetooth, USB & eingebautem Vorverstärker — anfängerfreundlich. Preis grob geschätzt.", done: false, priceUpdated: null },
+    { id: 244, title: "Headset für Alltag/Calls (Modell offen)", category: "Setup", subcategory: "Gaming", priority: "nice", order: 115, price: null, link: "", note: "Normales Headset (nicht Gaming) für Calls/Alltag — Modell noch offen.", done: false, priceUpdated: null },
+    { id: 245, title: "Controller (Modell offen)", category: "Setup", subcategory: "Gaming", priority: "nice", order: 110, price: null, link: "", note: "Controller fürs Gaming — Modell noch offen.", done: false, priceUpdated: null },
+    { id: 246, title: "Audio-Technica AT-LP120XBT-USB", category: "Entertainment", group: "Plattenspieler", alternative: true, roomArea: "Musik-Ecke", dreamProject: "Zimmer-Umgestaltung", priority: "dream", order: 30, price: 349, link: "https://www.audio-technica.com/de-de/at-lp120xbt-usb", note: "Direktantrieb-Plattenspieler mit Bluetooth, USB & eingebautem Vorverstärker — anfängerfreundlich. Preis grob geschätzt.", done: false, priceUpdated: null },
     { id: 247, title: "Audio-Technica AT-LP79XBT", category: "Entertainment", group: "Plattenspieler", alternative: true, roomArea: "Musik-Ecke", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: null, link: "https://www.audio-technica.com/de-de/turntables", note: "Als zweite Option genannt — dieses Modell finde ich auf audio-technica.com nicht (evtl. AT-LP70XBT gemeint). Bitte Modell/Preis prüfen.", done: false, priceUpdated: null },
-    { id: 248, title: "Aktivlautsprecher fürs Platten-Setup (Modell offen)", category: "Entertainment", roomArea: "Musik-Ecke", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: null, link: "", note: "Was noch fehlt: Der Plattenspieler hat Vorverstärker + Bluetooth, aber es braucht noch Boxen. Aktiv-/Regallautsprecher (z.B. Edifier R1280DB günstig oder KEF LSX II hochwertig) — Modell noch offen.", done: false, priceUpdated: null },
-    { id: 249, title: "Schallplatten-Aufbewahrung / Regal", category: "Entertainment", roomArea: "Musik-Ecke", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: null, link: "", note: "Was noch fehlt: Regal oder Box für die Platten — Modell noch offen.", done: false, priceUpdated: null },
-    { id: 250, title: "Plattenpflege-Set (Reinigung)", category: "Entertainment", roomArea: "Musik-Ecke", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 25, link: "", note: "Was noch fehlt: Reinigungsbürste/-set, damit die Platten sauber bleiben. Preis grob geschätzt.", done: false, priceUpdated: null },
-    { id: 251, title: "Philips PureProtect 3200 (AC3220/10)", category: "Zuhause & Wellness", group: "Luftreiniger", alternative: true, priority: "nice", price: 280, link: "https://www.home-appliances.philips/de/de/p/AC3220_10", note: "Mein Testsieger-Fund. Intelligenter Luftreiniger mit HEPA. Preis grob geschätzt.", done: false, priceUpdated: null },
+    { id: 248, title: "Aktivlautsprecher fürs Platten-Setup (Modell offen)", category: "Entertainment", roomArea: "Musik-Ecke", dreamProject: "Zimmer-Umgestaltung", priority: "dream", order: 40, price: null, link: "", note: "Was noch fehlt: Der Plattenspieler hat Vorverstärker + Bluetooth, aber es braucht noch Boxen. Aktiv-/Regallautsprecher (z.B. Edifier R1280DB günstig oder KEF LSX II hochwertig) — Modell noch offen.", done: false, priceUpdated: null },
+    { id: 249, title: "Schallplatten-Aufbewahrung / Regal", category: "Entertainment", roomArea: "Musik-Ecke", dreamProject: "Zimmer-Umgestaltung", priority: "dream", order: 50, price: null, link: "", note: "Was noch fehlt: Regal oder Box für die Platten — Modell noch offen.", done: false, priceUpdated: null },
+    { id: 250, title: "Plattenpflege-Set (Reinigung)", category: "Entertainment", roomArea: "Musik-Ecke", dreamProject: "Zimmer-Umgestaltung", priority: "dream", order: 60, price: 25, link: "", note: "Was noch fehlt: Reinigungsbürste/-set, damit die Platten sauber bleiben. Preis grob geschätzt.", done: false, priceUpdated: null },
+    { id: 251, title: "Philips PureProtect 3200 (AC3220/10)", category: "Zuhause & Wellness", group: "Luftreiniger", alternative: true, priority: "nice", order: 10, price: 280, link: "https://www.home-appliances.philips/de/de/p/AC3220_10", note: "Mein Testsieger-Fund. Intelligenter Luftreiniger mit HEPA. Preis grob geschätzt.", done: false, priceUpdated: null },
     { id: 252, title: "Levoit Core 400S", category: "Zuhause & Wellness", group: "Luftreiniger", alternative: true, priority: "nice", price: 220, link: "https://levoit.com/", note: "Beliebte, oft top-bewertete Alternative zum Vergleich — HEPA, smart, leise. Preis grob geschätzt.", done: false, priceUpdated: null },
-    { id: 253, title: "Manta Sleep Mask", category: "Zuhause & Wellness", priority: "nice", price: 40, link: "https://mantasleep.com/products/manta-sleep-mask", note: "100%-Blackout-Schlafmaske mit verstellbaren Augenschalen (kein Druck auf die Augen). US-Produkt ($39), Import nötig.", done: false, priceUpdated: "2026-07-20" },
-    { id: 254, title: "Smart Bed (Modell offen)", category: "Zuhause & Wellness", roomArea: "Schlafbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: null, link: "", note: "Smartes Bett fürs Zimmer — Modell muss ich noch raussuchen.", done: false, priceUpdated: null },
+    { id: 253, title: "Manta Sleep Mask", category: "Zuhause & Wellness", priority: "nice", order: 40, price: 40, link: "https://mantasleep.com/products/manta-sleep-mask", note: "100%-Blackout-Schlafmaske mit verstellbaren Augenschalen (kein Druck auf die Augen). US-Produkt ($39), Import nötig.", done: false, priceUpdated: "2026-07-20" },
+    { id: 254, title: "Smart Bed (Modell offen)", category: "Zuhause & Wellness", roomArea: "Schlafbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", order: 50, price: null, link: "", note: "Smartes Bett fürs Zimmer — Modell muss ich noch raussuchen.", done: false, priceUpdated: null },
     { id: 255, title: "Serien & Filme (Auswahl offen)", category: "Medien", subcategory: "Serien & Filme", priority: "nice", price: null, link: "", note: "Neben Büchern & Manga fehlen noch Serien und Filme — konkrete Titel kommen später dazu.", done: false, priceUpdated: null },
-    { id: 256, title: "Retro Flip Clock (Vintage Klappuhr)", category: "Setup", roomArea: "Arbeitsbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", price: 47, link: "https://www.amazon.de/dp/B0D63BCCM3", note: "Mechanische Klappuhr (zahnradgetrieben) für den Arbeitsbereich. Solide Wahl: 781 Bewertungen, ~47 €. Wer's ikonischer/hochwertiger will, nimmt eine Twemco-Flip-Clock (~150 €).", done: false, priceUpdated: "2026-07-20" },
-    { id: 257, title: "Laptop: Lenovo ThinkPad P16 Gen 3", category: "Setup", roomArea: "Arbeitsbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 3500, priceTo: 6000, link: "https://www.lenovo.com/de/de/p/laptops/thinkpad/thinkpad-p/thinkpad-p16-gen-3", note: "Leistungsstärkste Mobile-Workstation aktuell: Intel Core Ultra HX, bis NVIDIA RTX PRO 5000 (Blackwell), großes 16-Zoll-Display, massig RAM/Storage. Für Content-Creation & Informatik gebaut — ThinkPad-typisch langlebig, wartbar, wenig Bloatware. Preis stark konfigurationsabhängig (maximal ausgebaut deutlich höher).", done: false, priceUpdated: null },
-    { id: 258, title: "Elgato Wave Mic Arm Pro", category: "Setup", subcategory: "Gaming", group: "Mikrofon-Arm", alternative: true, roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 150, link: "https://www.elgato.com/de/de/p/wave-mic-arm-pro-black", note: "Kräftiger Arm mit Kabelführung — trägt auch das schwere SM7dB gut. Preis grob geschätzt.", done: false, priceUpdated: null },
+    { id: 256, title: "Retro Flip Clock (Vintage Klappuhr)", category: "Setup", subcategory: "Arbeitsbereich", roomArea: "Arbeitsbereich", dreamProject: "Zimmer-Umgestaltung", priority: "nice", order: 210, price: 47, link: "https://www.amazon.de/dp/B0D63BCCM3", note: "Mechanische Klappuhr (zahnradgetrieben) für den Arbeitsbereich. Solide Wahl: 781 Bewertungen, ~47 €. Wer's ikonischer/hochwertiger will, nimmt eine Twemco-Flip-Clock (~150 €).", done: false, priceUpdated: "2026-07-20" },
+    { id: 257, title: "Laptop: Lenovo ThinkPad P16 Gen 3", category: "Setup", subcategory: "Arbeitsbereich", roomArea: "Arbeitsbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", order: 200, price: 3500, priceTo: 6000, link: "https://www.lenovo.com/de/de/p/laptops/thinkpad/thinkpad-p/thinkpad-p16-gen-3", note: "Leistungsstärkste Mobile-Workstation aktuell: Intel Core Ultra HX, bis NVIDIA RTX PRO 5000 (Blackwell), großes 16-Zoll-Display, massig RAM/Storage. Für Content-Creation & Informatik gebaut — ThinkPad-typisch langlebig, wartbar, wenig Bloatware. Preis stark konfigurationsabhängig (maximal ausgebaut deutlich höher).", done: false, priceUpdated: null },
+    { id: 258, title: "Elgato Wave Mic Arm Pro", category: "Setup", subcategory: "Gaming", group: "Mikrofon-Arm", alternative: true, roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", order: 85, price: 150, link: "https://www.elgato.com/de/de/p/wave-mic-arm-pro-black", note: "Kräftiger Arm mit Kabelführung — trägt auch das schwere SM7dB gut. Preis grob geschätzt.", done: false, priceUpdated: null },
     { id: 259, title: "Rode PSA1+", category: "Setup", subcategory: "Gaming", group: "Mikrofon-Arm", alternative: true, roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 150, link: "https://rode.com/en-us/products/psa1-plus", note: "Sehr robust, ausgelegt für schwere Mikrofone wie das SM7dB. Preis grob geschätzt.", done: false, priceUpdated: null },
     { id: 262, title: "Avancus Apex Power V3 (Stealth Black)", category: "Sport", subcategory: "Krafttraining", group: "Deadlift-Schuhe", alternative: true, priority: "nice", price: 110, link: "https://avancus.eu/products/avancus-apex-power-v3-midnight-black", note: "Flacher Powerlifting-/Deadlift-Schuh, Größe 45. €109,95.", done: false, priceUpdated: "2026-07-20" },
     { id: 263, title: "Vivobarefoot Gobi III (Leder)", category: "Kleidung & Mode", subcategory: "Schuhe", priority: "nice", price: 180, link: "https://www.vivobarefoot.com/de/gobi-iii-sneaker-leather-mens", note: "Barfuß-Alltagssneaker aus Leder — am liebsten in Schwarz (Link zeigt Standardfarbe, gibt's auch schwarz). Größe 45. €180.", done: false, priceUpdated: "2026-07-20" },
-    { id: 264, title: "DaVinci Resolve Studio", category: "Software", priority: "nice", price: 359, link: "https://www.blackmagicdesign.com/products/davinciresolve/studio", note: "Profi-Videoschnitt als Einmalkauf (kein Abo, gehört mir dauerhaft). ~359 €.", done: false, priceUpdated: null },
-    { id: 265, title: "KeePassXC", category: "Software", priority: "nice", price: null, link: "https://keepassxc.org/download/#windows", note: "Kostenlos, Open-Source-Passwortmanager (lokal, kein Cloud-Zwang).", done: false, priceUpdated: null },
-    { id: 266, title: "PDF24", category: "Software", priority: "nice", price: null, link: "https://www.pdf24.org/de/", note: "Kostenloser PDF-Werkzeugkasten — will ich künftig nutzen.", done: false, priceUpdated: null },
-    { id: 267, title: "Obsidian", category: "Software", priority: "nice", price: null, link: "https://obsidian.md/pricing", note: "Notiz-App, für privat kostenlos. Sync/Publish optional als Abo.", done: false, priceUpdated: null },
-    { id: 268, title: "Proton (Unlimited)", category: "Software", priority: "nice", price: 120, link: "https://proton.me/pricing", note: "Privacy-Suite (Mail/VPN/Drive). Läuft als Abo (~10 €/Monat).", done: false, priceUpdated: null },
-    { id: 269, title: "Bitwarden", category: "Software", priority: "nice", price: null, link: "https://bitwarden.com/pricing/", note: "Passwortmanager, Basis kostenlos; Premium optional (~10 €/Jahr).", done: false, priceUpdated: null },
-    { id: 270, title: "VirtualBox", category: "Software", priority: "nice", price: null, link: "https://www.virtualbox.org/", note: "Kostenlose Virtualisierung (VMs).", done: false, priceUpdated: null },
-    { id: 271, title: "WinRAR", category: "Software", priority: "nice", price: 30, link: "https://www.rarlab.com/shop2rarlab.php?prod=winrar", note: "Archiv-Tool als Einmal-Lizenz (~30 €).", done: false, priceUpdated: null },
-    { id: 272, title: "Discord Nitro", category: "Software", priority: "nice", price: 100, link: "https://discord.com/nitro", note: "Abo (~10 €/Monat bzw. ~100 €/Jahr).", done: false, priceUpdated: null },
+    { id: 264, title: "DaVinci Resolve Studio", category: "Software", priority: "nice", order: 10, price: 359, link: "https://www.blackmagicdesign.com/products/davinciresolve/studio", note: "Profi-Videoschnitt als Einmalkauf (kein Abo, gehört mir dauerhaft). ~359 €.", done: false, priceUpdated: null },
+    { id: 265, title: "KeePassXC", category: "Software", priority: "nice", order: 50, price: null, link: "https://keepassxc.org/download/#windows", note: "Kostenlos, Open-Source-Passwortmanager (lokal, kein Cloud-Zwang).", done: false, priceUpdated: null },
+    { id: 266, title: "PDF24", category: "Software", priority: "nice", order: 80, price: null, link: "https://www.pdf24.org/de/", note: "Kostenloser PDF-Werkzeugkasten — will ich künftig nutzen.", done: false, priceUpdated: null },
+    { id: 267, title: "Obsidian", category: "Software", priority: "nice", order: 70, price: null, link: "https://obsidian.md/pricing", note: "Notiz-App, für privat kostenlos. Sync/Publish optional als Abo.", done: false, priceUpdated: null },
+    { id: 268, title: "Proton (Unlimited)", category: "Software", priority: "nice", order: 30, price: 120, link: "https://proton.me/pricing", note: "Privacy-Suite (Mail/VPN/Drive). Läuft als Abo (~10 €/Monat).", done: false, priceUpdated: null },
+    { id: 269, title: "Bitwarden", category: "Software", priority: "nice", order: 60, price: null, link: "https://bitwarden.com/pricing/", note: "Passwortmanager, Basis kostenlos; Premium optional (~10 €/Jahr).", done: false, priceUpdated: null },
+    { id: 270, title: "VirtualBox", category: "Software", priority: "nice", order: 90, price: null, link: "https://www.virtualbox.org/", note: "Kostenlose Virtualisierung (VMs).", done: false, priceUpdated: null },
+    { id: 271, title: "WinRAR", category: "Software", priority: "nice", order: 20, price: 30, link: "https://www.rarlab.com/shop2rarlab.php?prod=winrar", note: "Archiv-Tool als Einmal-Lizenz (~30 €).", done: false, priceUpdated: null },
+    { id: 272, title: "Discord Nitro", category: "Software", priority: "nice", order: 40, price: 100, link: "https://discord.com/nitro", note: "Abo (~10 €/Monat bzw. ~100 €/Jahr).", done: false, priceUpdated: null },
     { id: 273, title: "XLR-Kabel: Mogami 2534 Quad (3 m)", category: "Setup", subcategory: "Gaming", group: "Mikrofon", roomArea: "Zockbereich", dreamProject: "Zimmer-Umgestaltung", priority: "dream", price: 55, link: "https://www.amazon.de/dp/B0CTYN4YX5", note: "Zubehör zum Mikrofon — hochwertiges symmetrisches XLR-Kabel (Mogami-2534-Quad, rauscharm) für die Verbindung SM7dB → Audio-Interface. Referenzklasse.", done: false, priceUpdated: "2026-07-20" },
   ];
 
@@ -3322,7 +3359,10 @@
         </div>
         <div class="cat-bar" data-cat="${cat}"><span style="width:${allCatItems.length ? (doneCat/allCatItems.length)*100 : 0}%"></span></div>`;
 
-      const subcats = [...new Set(catItems.map(i => i.subcategory).filter(Boolean))];
+      // Unterkategorien nach ihrem wichtigsten (kleinsten) Ordnungswert sortieren
+      const subcats = [...new Set(catItems.map(i => i.subcategory).filter(Boolean))]
+        .sort((a,b) => Math.min(...catItems.filter(i => i.subcategory === a).map(itemOrder))
+                     - Math.min(...catItems.filter(i => i.subcategory === b).map(itemOrder)));
       const noSub = catItems.filter(i => !i.subcategory);
 
       html += renderItemsAndGroups(noSub);
@@ -3443,32 +3483,34 @@
     const PRIO_ORDER = { must: 0, nice: 1, dream: 2 };
     // Zubehör mit subOf hängt an seinem Hauptprodukt, nicht als eigene Karte in der Liste
     list = list.filter(i => !i.subOf);
-    let ungrouped = list.filter(i => !i.group);
-    if (sortMode === 'prio'){
-      ungrouped = ungrouped.slice().sort((a,b) =>
-        (PRIO_ORDER[a.priority] - PRIO_ORDER[b.priority]) || ((Number(a.price)||0) - (Number(b.price)||0)));
-    } else if (sortMode !== 'default'){
-      ungrouped = ungrouped.slice().sort((a,b) => (Number(a.price)||0) - (Number(b.price)||0));
-      if (sortMode === 'desc') ungrouped.reverse();
-    }
-    ungrouped.forEach(i => { html += renderWithSubs(i, hidePriority); });
+    // Einzelprodukte UND Gruppen werden als gemeinsame "Einheiten" sortiert — nur so
+    // kann z.B. der Plattenspieler zwischen Fernseher und Aktivlautsprechern stehen.
+    const seenG = {};
+    const units = [];
+    list.forEach(i => {
+      if (i.group){
+        if (!seenG[i.group]){ seenG[i.group] = { group: i.group, items: [] }; units.push(seenG[i.group]); }
+        seenG[i.group].items.push(i);
+      } else {
+        units.push({ item: i });
+      }
+    });
+    const uItems = u => u.item ? [u.item] : u.items;
+    const uOrder = u => Math.min(...uItems(u).map(itemOrder));
+    const uPrio  = u => Math.min(...uItems(u).map(i => PRIO_ORDER[i.priority]));
+    const uPrice = u => uItems(u).reduce((s,i) => s + (Number(i.price)||0), 0);
+    const uId    = u => Math.min(...uItems(u).map(i => i.id));
+    units.sort((a,b) => {
+      if (sortMode === 'prio') return (uPrio(a)-uPrio(b)) || (uOrder(a)-uOrder(b)) || (uId(a)-uId(b));
+      if (sortMode === 'asc')  return (uPrice(a)-uPrice(b)) || (uId(a)-uId(b));
+      if (sortMode === 'desc') return (uPrice(b)-uPrice(a)) || (uId(a)-uId(b));
+      return (uOrder(a)-uOrder(b)) || (uId(a)-uId(b));   // Standard: logische Reihenfolge
+    });
 
-    let groupNames = [...new Set(list.map(i => i.group).filter(Boolean))];
-    if (sortMode === 'prio'){
-      const best = {};
-      groupNames.forEach(g => {
-        best[g] = Math.min(...list.filter(i => i.group === g).map(i => PRIO_ORDER[i.priority]));
-      });
-      groupNames.sort((a,b) => best[a] - best[b]);
-    } else if (sortMode !== 'default'){
-      const sums = {};
-      groupNames.forEach(g => {
-        sums[g] = list.filter(i => i.group === g).reduce((s,i) => s + (Number(i.price)||0), 0);
-      });
-      groupNames.sort((a,b) => sortMode === 'asc' ? sums[a]-sums[b] : sums[b]-sums[a]);
-    }
-    groupNames.forEach(g => {
-      const groupItems = list.filter(i => i.group === g);
+    units.forEach(u => {
+      if (u.item){ html += renderWithSubs(u.item, hidePriority); return; }
+      const g = u.group;
+      const groupItems = u.items;
       const key = groupKey(groupItems[0]);
       const isOpen = expandedGroups.has(key);
       const groupSum = groupItems.reduce((s,i) => s + (Number(i.price)||0), 0);
@@ -3544,6 +3586,10 @@
   function groupKey(item){
     return `${item.category}::${item.subcategory||''}::${item.group||''}`;
   }
+
+  // Logische Reihenfolge: kleinere Zahl = weiter oben (Fundament zuerst).
+  // Ohne Angabe landet ein Eintrag hinten und behält dort seine bisherige Reihenfolge.
+  function itemOrder(i){ return (i.order !== null && i.order !== undefined) ? i.order : 900; }
 
   // Repräsentativer Preis einer Alternativen-Gruppe: Durchschnitt der Optionen mit Preis.
   function altGroupPrice(groupItems){
@@ -3714,6 +3760,19 @@
     }, { passive: true });
     document.addEventListener('mouseleave', function(){ _cursorGlow.classList.remove('on'); });
   }
+
+  // --- Intro-Ladesequenz ausblenden (übergibt an den Hero) ---
+  (function(){
+    const intro = document.getElementById('intro');
+    if (!intro) return;
+    if (_reduced){ intro.remove(); return; }
+    let seen = false;
+    try { seen = sessionStorage.getItem('nzh-intro') === '1'; } catch (e) {}
+    if (seen){ intro.remove(); return; }
+    try { sessionStorage.setItem('nzh-intro', '1'); } catch (e) {}
+    setTimeout(function(){ intro.classList.add('done'); }, 1150);
+    setTimeout(function(){ intro.remove(); }, 1950);
+  })();
 
 
   function jumpToStats(){
