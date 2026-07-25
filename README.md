@@ -1,6 +1,6 @@
 # ◆ Noch zu holen
 
-Meine komplette Kaufliste als Website — rund 500 Wünsche über neun Kategorien,
+Meine komplette Kaufliste als Website — über 500 Wünsche in acht Kategorien,
 sortiert, priorisiert, abhakbar. Gebaut mit [Claude Code](https://claude.com/claude-code).
 
 ![Screenshot der Website](assets/images/site-preview.png)
@@ -23,6 +23,9 @@ lokalen Produktbilder aus `assets/` laden.
   (`assets/images/products/`); Fallback-Kette lokal → remote → Monogramm.
 - **Geprüfte Preise** — der Großteil der Preise gegen die Produktseiten abgeglichen
   (Shops direkt, Amazon per Browser; 117 korrigiert), erkennbar am „Preis geprüft"-Badge.
+- **Direkte Kauflinks** — Platten, Filme und Serien verlinken auf die konkrete
+  Produktseite im richtigen Format (Vinyl bzw. 4K-UHD/Blu-ray), nicht auf eine Suche;
+  PC-Bauteile auf die exakte Geizhals-Seite.
 - **Gruppen-Abhaken, Statistik-Panel, „Womit anfangen?"-Empfehlung, Abhak-Datum,
   Such-Highlighting, Tab-Link in der URL, Scroll-to-top** — Details siehe Website.
 - **Lightbox** mit Blättern (`←`/`→`), Abhaken direkt im Bild.
