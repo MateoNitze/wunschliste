@@ -21,8 +21,9 @@ lokalen Produktbilder aus `assets/` laden.
 - **Suche** über Titel, Notizen, Marken und Gruppen (`/` fokussiert die Suche).
 - **Produktbilder** — fast alle Einträge bebildert, fast alle lokal gespeichert
   (`assets/images/products/`); Fallback-Kette lokal → remote → Monogramm.
-- **Geprüfte Preise** — der Großteil der Preise gegen die Produktseiten abgeglichen
-  (Shops direkt, Amazon per Browser; 117 korrigiert), erkennbar am „Preis geprüft"-Badge.
+- **Geprüfte Preise** — 446 der 518 Einträge gegen die jeweilige Produktseite abgeglichen
+  (Amazon, Herstellershops, Thalia, Geizhals), erkennbar am „Preis geprüft"-Badge.
+  Wo kein Preis steht, war auf der Quellseite keiner auslesbar — lieber leer als geraten.
 - **Direkte Kauflinks** — Platten, Filme und Serien verlinken auf die konkrete
   Produktseite im richtigen Format (Vinyl bzw. 4K-UHD/Blu-ray), nicht auf eine Suche;
   PC-Bauteile auf die exakte Geizhals-Seite.
