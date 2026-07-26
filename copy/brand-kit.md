@@ -40,7 +40,7 @@ Demo-Publikum (Eltern): „Das hier hat ein Werkzeug gebaut, mit dem ich einfach
 Ruhig, präzise, hochwertig, leise selbstbewusst. Cineastisch-dunkel, aber warm genug,
 um persönlich zu bleiben (es ist eine private Liste, kein Konzernauftritt).
 Keine Verspieltheit, keine Emojis im Interface — die einzige Prise Persönlichkeit
-kommt aus den Ich-Texten („Das hab ich mir vorgenommen", „Schon 12 von 209 erledigt").
+kommt aus den Ich-Texten („Das hab ich mir vorgenommen", „Schon 12 von 518 erledigt").
 
 ## 6. Farbpalette
 
@@ -85,12 +85,13 @@ als Favicon, als Bullet vor Sektions-Labels, als Abhak-Animation.
 
 Eine One-Page-Webanwendung (eine einzige HTML-Datei, kein Backend):
 
-- **Datenbasis:** die bestehende Wunschliste — 209 Einträge in 9 Kategorien
-  (Quelle: `Downloads/wunschliste.html`, `items`-Array bleibt die einzige Datenquelle).
+- **Datenbasis:** die Wunschliste selbst — inzwischen 518 Einträge in 8 Kategorien
+  (das `items`-Array in `website/index.html` ist und bleibt die einzige Datenquelle;
+  die alte `Downloads/wunschliste.html` ist nur noch Archiv).
 - **Kernfunktion Checkliste:** Jeder Eintrag ist abhakbar. Der Haken wird in
   `localStorage` gespeichert und überlebt Neuladen — das ist hier erstmals sinnvoll,
   weil die Seite als echte lokale Datei lebt, nicht als flüchtiges Artefakt.
-- **Fortschritt:** Kopfbereich mit Fortschrittsring/-balken („12 von 209 · 480 € von 31.685 €"),
+- **Fortschritt:** Kopfbereich mit Fortschrittsring/-balken („0 von 518 · noch 52.573 € vor mir"),
   Fortschritt je Kategorie in den Sektionsköpfen.
 - **Erhalten bleibt:** Suche, Kategorie-Tabs, Gruppen (Hauptprodukt + Zubehör,
   Alternativen, generisch), „Große Träume"-Projektansicht, Produktbilder mit Lightbox
@@ -100,7 +101,7 @@ Eine One-Page-Webanwendung (eine einzige HTML-Datei, kein Backend):
 
 ## 10. Kern-Nutzen (für Sektionen / Feature-Momente)
 
-1. Alles an einem Ort — 209 Wünsche, 9 Kategorien, eine Seite.
+1. Alles an einem Ort — über 500 Wünsche, 8 Kategorien, eine Seite.
 2. Abhaken mit Gedächtnis — der Fortschritt bleibt gespeichert.
 3. Prioritäten auf einen Blick — Muss / Nice-to-have / Großer Traum.
 4. Echte Produktbilder — ansehen statt nur lesen.

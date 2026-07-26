@@ -428,8 +428,11 @@
   .ledger-item .value{
     font-family:'Fraunces',Georgia,serif;
     font-weight:600;
-    font-size:27px;
-    line-height:1;
+    /* Skaliert mit der Kachelbreite, damit die Restsumme auf dem Handy
+       nicht umbricht und das € in die nächste Zeile rutscht. */
+    font-size:clamp(20px, 6.4vw, 27px);
+    line-height:1.05;
+    white-space:nowrap;
   }
   .ledger-item .value.amber{ color:var(--amber); }
   .ledger-item .value.green{ color:var(--green); }
@@ -1436,6 +1439,9 @@
     .thumb-mono{ font-size:19px; }
     .checkbox{ margin-top:18px; }
     .lb-meta{ flex-wrap:wrap; }
+    /* Fingerfreundliche Schaltflächen: 31 px sind zum Tippen zu wenig */
+    .fchip{ padding:11px 15px; font-size:13px; }
+    .fselect, .fbudget{ min-height:42px; }
   }
   @media (prefers-reduced-motion:reduce){
     *, *::before, *::after{ transition:none !important; animation:none !important; }
@@ -1574,21 +1580,32 @@
   // NEUEN WUNSCH EINTRAGEN — Vorlage (kopieren, anpassen, oben oder
   // irgendwo zwischen die anderen Einträge setzen, Komma nicht vergessen):
   //
-  // { id: 300, title: "Produktname", category: "Setup",
+  // { id: 600, title: "Produktname", category: "Setup",
   //   subcategory: "Gaming",        // optional, sonst Zeile löschen
   //   group: "Tastatur",            // optional: bündelt zusammengehörige Einträge
+  //   alternative: true,            // optional: alle Einträge der Gruppe sind Alternativen
+  //                                 // ("noch nicht entschieden", zählt nur einmal zur Summe)
+  //   subOf: 4,                     // optional: hängt als Zubehör unter Eintrag 4
   //   priority: "nice",             // "must" | "nice" | "dream"
   //   order: 50,                    // Reihenfolge in der Kategorie: kleiner = weiter oben.
   //                                 // Fundament klein (Tisch 10, PC 20 …), Kleinkram groß.
   //                                 // Ohne Angabe landet der Eintrag hinten.
-  //   price: 100,                   // Zahl oder null (= Preis noch offen)
+  //   price: 100,                   // Zahl oder null (= Preis noch offen, sortiert dann ans Ende)
+  //   priceTo: 150,                 // optional: obere Grenze, wenn der Preis schwankt
   //   link: "https://…",            // Produktlink, "" wenn keiner
+  //   linkLabel: "Kaufen",          // optional: Beschriftung des Buttons
+  //   link2: "https://…",           // optional: zweiter Link, z.B. Preisvergleich
+  //   link2Label: "Preisvergleich",
+  //   roomArea: "Zockbereich",      // optional: Bereich in der "Große Träume"-Ansicht
+  //   dreamProject: "Zimmer-Umgestaltung",   // optional: dazugehöriges Projekt
   //   note: "Farbe, Größe, Kontext …",
-  //   done: false, priceUpdated: null },
+  //   done: false, priceUpdated: null },   // priceUpdated: Datum, an dem der Preis
+  //                                        // gegen die Produktseite geprüft wurde
   //
   // Wichtig: id muss einmalig sein (einfach die höchste +1 nehmen).
-  // Kategorien: Setup, Sport, Körperliches, Entertainment, Bücher,
-  // Technik, Comics & Manga, Zuhause & Wellness.
+  // Kategorien sind genau die acht aus CATEGORIES oben — steht dort etwas anderes,
+  // fehlt der Reiter und der Eintrag taucht nur unter "Alle" auf.
+  // "Bücher", "Comics & Manga" und "Serien & Filme" sind Unterkategorien von "Medien".
   // Ein Bild bekommst du über die LOCAL_IMAGES-Map weiter unten
   // (id: "../assets/images/products/DATEINAME.jpg").
   // ============================================================
@@ -2077,110 +2094,110 @@
       link: "https://www.thalia.de/shop/home/artikeldetails/A1001418991",
       note: "Robert Kirkman – Englische Ausgabe, Ultimate-Collection-Hardcover-Reihe (die ganze Reihe verfügbar).",
       done: false, priceUpdated: "2026-07-26", priceUpdated: "2026-07-18" },
-    { id: 133, title: "Attack on Titan", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: 36,
+    { id: 133, title: "Attack on Titan", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1034481409",
-      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
-      done: false, priceUpdated: "2026-07-26", priceUpdated: null },
-    { id: 134, title: "Blue Lock", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: 8.5,
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Preis pro Band heute bei Thalia geprüft: 36 €. Bewusst kein Gesamtpreis am Eintrag — die Reihe läuft weiter, und wie viele Bände es am Ende in welcher Ausgabe werden, steht nicht fest.",
+      done: false, priceUpdated: null, priceUpdated: null },
+    { id: 134, title: "Blue Lock", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1060704377",
-      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
-      done: false, priceUpdated: "2026-07-26", priceUpdated: null },
-    { id: 135, title: "Jujutsu Kaisen", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: 8.5,
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Preis pro Band heute bei Thalia geprüft: 8,5 €. Bewusst kein Gesamtpreis am Eintrag — die Reihe läuft weiter, und wie viele Bände es am Ende in welcher Ausgabe werden, steht nicht fest.",
+      done: false, priceUpdated: null, priceUpdated: null },
+    { id: 135, title: "Jujutsu Kaisen", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1055350720",
-      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
-      done: false, priceUpdated: "2026-07-26", priceUpdated: null },
-    { id: 136, title: "Dragon Ball", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: 6,
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Preis pro Band heute bei Thalia geprüft: 8,5 €. Bewusst kein Gesamtpreis am Eintrag — die Reihe läuft weiter, und wie viele Bände es am Ende in welcher Ausgabe werden, steht nicht fest.",
+      done: false, priceUpdated: null, priceUpdated: null },
+    { id: 136, title: "Dragon Ball", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1053559977",
-      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
-      done: false, priceUpdated: "2026-07-26", priceUpdated: null },
-    { id: 137, title: "One Piece", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: 7.5,
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Preis pro Band heute bei Thalia geprüft: 6 €. Bewusst kein Gesamtpreis am Eintrag — die Reihe läuft weiter, und wie viele Bände es am Ende in welcher Ausgabe werden, steht nicht fest.",
+      done: false, priceUpdated: null, priceUpdated: null },
+    { id: 137, title: "One Piece", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1000310387",
-      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
-      done: false, priceUpdated: "2026-07-26", priceUpdated: null },
-    { id: 138, title: "Vagabond", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: 24,
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Preis pro Band heute bei Thalia geprüft: 7,5 €. Bewusst kein Gesamtpreis am Eintrag — die Reihe läuft weiter, und wie viele Bände es am Ende in welcher Ausgabe werden, steht nicht fest.",
+      done: false, priceUpdated: null, priceUpdated: null },
+    { id: 138, title: "Vagabond", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1071409422",
-      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
-      done: false, priceUpdated: "2026-07-26", priceUpdated: null },
-    { id: 139, title: "Tokyo Ghoul", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: 8,
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Preis pro Band heute bei Thalia geprüft: 24 €. Bewusst kein Gesamtpreis am Eintrag — die Reihe läuft weiter, und wie viele Bände es am Ende in welcher Ausgabe werden, steht nicht fest.",
+      done: false, priceUpdated: null, priceUpdated: null },
+    { id: 139, title: "Tokyo Ghoul", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1032499154",
-      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
-      done: false, priceUpdated: "2026-07-26", priceUpdated: null },
-    { id: 140, title: "My Hero Academia", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: 6.99,
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Preis pro Band heute bei Thalia geprüft: 8 €. Bewusst kein Gesamtpreis am Eintrag — die Reihe läuft weiter, und wie viele Bände es am Ende in welcher Ausgabe werden, steht nicht fest.",
+      done: false, priceUpdated: null, priceUpdated: null },
+    { id: 140, title: "My Hero Academia", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1037752563",
-      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
-      done: false, priceUpdated: "2026-07-26", priceUpdated: null },
-    { id: 141, title: "Sword Art Online – Progressive", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: 6.95,
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Preis pro Band heute bei Thalia geprüft: 6,99 €. Bewusst kein Gesamtpreis am Eintrag — die Reihe läuft weiter, und wie viele Bände es am Ende in welcher Ausgabe werden, steht nicht fest.",
+      done: false, priceUpdated: null, priceUpdated: null },
+    { id: 141, title: "Sword Art Online – Progressive", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1036068597",
-      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
-      done: false, priceUpdated: "2026-07-26", priceUpdated: null },
-    { id: 142, title: "Haikyu!!", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: 8,
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Preis pro Band heute bei Thalia geprüft: 6,95 €. Bewusst kein Gesamtpreis am Eintrag — die Reihe läuft weiter, und wie viele Bände es am Ende in welcher Ausgabe werden, steht nicht fest.",
+      done: false, priceUpdated: null, priceUpdated: null },
+    { id: 142, title: "Haikyu!!", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1044968358",
-      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
-      done: false, priceUpdated: "2026-07-26", priceUpdated: null },
-    { id: 143, title: "One-Punch Man", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: 10,
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Preis pro Band heute bei Thalia geprüft: 8 €. Bewusst kein Gesamtpreis am Eintrag — die Reihe läuft weiter, und wie viele Bände es am Ende in welcher Ausgabe werden, steht nicht fest.",
+      done: false, priceUpdated: null, priceUpdated: null },
+    { id: 143, title: "One-Punch Man", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1039020086",
-      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
-      done: false, priceUpdated: "2026-07-26", priceUpdated: null },
-    { id: 144, title: "Re:Zero – Truth of Zero", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: 8,
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Preis pro Band heute bei Thalia geprüft: 10 €. Bewusst kein Gesamtpreis am Eintrag — die Reihe läuft weiter, und wie viele Bände es am Ende in welcher Ausgabe werden, steht nicht fest.",
+      done: false, priceUpdated: null, priceUpdated: null },
+    { id: 144, title: "Re:Zero – Truth of Zero", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1074289086",
-      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
-      done: false, priceUpdated: "2026-07-26", priceUpdated: null },
-    { id: 145, title: "Chainsaw Man", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: 8.5,
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Preis pro Band heute bei Thalia geprüft: 8 €. Bewusst kein Gesamtpreis am Eintrag — die Reihe läuft weiter, und wie viele Bände es am Ende in welcher Ausgabe werden, steht nicht fest.",
+      done: false, priceUpdated: null, priceUpdated: null },
+    { id: 145, title: "Chainsaw Man", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1057875188",
-      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
-      done: false, priceUpdated: "2026-07-26", priceUpdated: null },
-    { id: 146, title: "Demon Slayer", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: 10,
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Preis pro Band heute bei Thalia geprüft: 8,5 €. Bewusst kein Gesamtpreis am Eintrag — die Reihe läuft weiter, und wie viele Bände es am Ende in welcher Ausgabe werden, steht nicht fest.",
+      done: false, priceUpdated: null, priceUpdated: null },
+    { id: 146, title: "Demon Slayer", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1056442158",
-      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
-      done: false, priceUpdated: "2026-07-26", priceUpdated: null },
-    { id: 147, title: "Vinland Saga", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: 19.49,
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Preis pro Band heute bei Thalia geprüft: 10 €. Bewusst kein Gesamtpreis am Eintrag — die Reihe läuft weiter, und wie viele Bände es am Ende in welcher Ausgabe werden, steht nicht fest.",
+      done: false, priceUpdated: null, priceUpdated: null },
+    { id: 147, title: "Vinland Saga", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1028597538",
-      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
-      done: false, priceUpdated: "2026-07-26", priceUpdated: null },
-    { id: 148, title: "Berserk", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: 49,
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Preis pro Band heute bei Thalia geprüft: 19,49 €. Bewusst kein Gesamtpreis am Eintrag — die Reihe läuft weiter, und wie viele Bände es am Ende in welcher Ausgabe werden, steht nicht fest.",
+      done: false, priceUpdated: null, priceUpdated: null },
+    { id: 148, title: "Berserk", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1073541072",
-      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
-      done: false, priceUpdated: "2026-07-26", priceUpdated: null },
-    { id: 149, title: "Mob Psycho 100", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: 13.99,
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Preis pro Band heute bei Thalia geprüft: 49 €. Bewusst kein Gesamtpreis am Eintrag — die Reihe läuft weiter, und wie viele Bände es am Ende in welcher Ausgabe werden, steht nicht fest.",
+      done: false, priceUpdated: null, priceUpdated: null },
+    { id: 149, title: "Mob Psycho 100", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1050937387",
-      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
-      done: false, priceUpdated: "2026-07-26", priceUpdated: null },
-    { id: 150, title: "Solo Leveling", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: 16,
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Preis pro Band heute bei Thalia geprüft: 13,99 €. Bewusst kein Gesamtpreis am Eintrag — die Reihe läuft weiter, und wie viele Bände es am Ende in welcher Ausgabe werden, steht nicht fest.",
+      done: false, priceUpdated: null, priceUpdated: null },
+    { id: 150, title: "Solo Leveling", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1057437665",
-      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
-      done: false, priceUpdated: "2026-07-26", priceUpdated: null },
-    { id: 151, title: "Hell's Paradise", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: 8.5,
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Preis pro Band heute bei Thalia geprüft: 16 €. Bewusst kein Gesamtpreis am Eintrag — die Reihe läuft weiter, und wie viele Bände es am Ende in welcher Ausgabe werden, steht nicht fest.",
+      done: false, priceUpdated: null, priceUpdated: null },
+    { id: 151, title: "Hell's Paradise", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1056472134",
-      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
-      done: false, priceUpdated: "2026-07-26", priceUpdated: null },
-    { id: 152, title: "Black Clover", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: 7.5,
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Preis pro Band heute bei Thalia geprüft: 8,5 €. Bewusst kein Gesamtpreis am Eintrag — die Reihe läuft weiter, und wie viele Bände es am Ende in welcher Ausgabe werden, steht nicht fest.",
+      done: false, priceUpdated: null, priceUpdated: null },
+    { id: 152, title: "Black Clover", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1039574770",
-      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
-      done: false, priceUpdated: "2026-07-26", priceUpdated: null },
-    { id: 153, title: "Tokyo Revengers", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: 12,
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Preis pro Band heute bei Thalia geprüft: 7,5 €. Bewusst kein Gesamtpreis am Eintrag — die Reihe läuft weiter, und wie viele Bände es am Ende in welcher Ausgabe werden, steht nicht fest.",
+      done: false, priceUpdated: null, priceUpdated: null },
+    { id: 153, title: "Tokyo Revengers", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1062231902",
-      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
-      done: false, priceUpdated: "2026-07-26", priceUpdated: null },
-    { id: 154, title: "Death Note", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: 7.5,
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Preis pro Band heute bei Thalia geprüft: 12 €. Bewusst kein Gesamtpreis am Eintrag — die Reihe läuft weiter, und wie viele Bände es am Ende in welcher Ausgabe werden, steht nicht fest.",
+      done: false, priceUpdated: null, priceUpdated: null },
+    { id: 154, title: "Death Note", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1000845333",
-      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
-      done: false, priceUpdated: "2026-07-26", priceUpdated: null },
-    { id: 155, title: "Hunter x Hunter", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: 6.95,
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Preis pro Band heute bei Thalia geprüft: 7,5 €. Bewusst kein Gesamtpreis am Eintrag — die Reihe läuft weiter, und wie viele Bände es am Ende in welcher Ausgabe werden, steht nicht fest.",
+      done: false, priceUpdated: null, priceUpdated: null },
+    { id: 155, title: "Hunter x Hunter", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1000310396",
-      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
-      done: false, priceUpdated: "2026-07-26", priceUpdated: null },
-    { id: 156, title: "Fullmetal Alchemist", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: 5,
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Preis pro Band heute bei Thalia geprüft: 6,95 €. Bewusst kein Gesamtpreis am Eintrag — die Reihe läuft weiter, und wie viele Bände es am Ende in welcher Ausgabe werden, steht nicht fest.",
+      done: false, priceUpdated: null, priceUpdated: null },
+    { id: 156, title: "Fullmetal Alchemist", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1064143908",
-      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
-      done: false, priceUpdated: "2026-07-26", priceUpdated: null },
-    { id: 157, title: "Hellsing", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: 8.99,
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Preis pro Band heute bei Thalia geprüft: 5 €. Bewusst kein Gesamtpreis am Eintrag — die Reihe läuft weiter, und wie viele Bände es am Ende in welcher Ausgabe werden, steht nicht fest.",
+      done: false, priceUpdated: null, priceUpdated: null },
+    { id: 157, title: "Hellsing", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1001005168",
-      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
-      done: false, priceUpdated: "2026-07-26", priceUpdated: null },
-    { id: 158, title: "Bleach", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: 12,
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Preis pro Band heute bei Thalia geprüft: 8,99 €. Bewusst kein Gesamtpreis am Eintrag — die Reihe läuft weiter, und wie viele Bände es am Ende in welcher Ausgabe werden, steht nicht fest.",
+      done: false, priceUpdated: null, priceUpdated: null },
+    { id: 158, title: "Bleach", category: "Medien", subcategory: "Comics & Manga", priority: "nice", price: null,
       link: "https://www.thalia.de/shop/home/artikeldetails/A1056047855",
-      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Ca. 7–10 € pro Taschenbuch-Band, Hardcover-Bände teils deutlich teurer (variiert je Reihe) — Gesamtsumme daher nicht sinnvoll bezifferbar.",
-      done: false, priceUpdated: "2026-07-26", priceUpdated: null },
+      note: "Alle aktuell erschienenen Bände gewünscht, jeweils Deutsch & Englisch sowie Taschenbuch & Hardcover/Gebunden, soweit verfügbar. Es erscheinen vermutlich noch weitere Bände. Preis pro Band heute bei Thalia geprüft: 12 €. Bewusst kein Gesamtpreis am Eintrag — die Reihe läuft weiter, und wie viele Bände es am Ende in welcher Ausgabe werden, steht nicht fest.",
+      done: false, priceUpdated: null, priceUpdated: null },
     { id: 159, title: "simplehuman Cleanstation", category: "Zuhause & Wellness", priority: "nice", order: 100, price: 200,
       link: "https://www.simplehuman.com/products/cleanstation?variant=39328394150019",
       note: "UV-Reinigungsstation fürs Handy: desinfiziert die komplette Oberfläche in rund 30 Sekunden (99,9 % der Keime) — z.B. während man sich die Hände wäscht.",
@@ -2398,9 +2415,9 @@
     { id: 237, title: "Boox Go 10.3 (Gen 2)", category: "Technik", group: "E-Ink-Tablet", alternative: true, priority: "nice", price: 399.99, link: "https://shop.boox.com/products/go103gen2", note: "10,3\" S/W-E-Ink, sehr dünn & leicht. Hinweis: Du hattest „Go 13\" notiert — im Boox-Shop gibt es dieses Modell nicht, das passende ist die Go 10.3 (Gen 2). Preis heute direkt bei Boox geprüft.", done: false, priceUpdated: "2026-07-26", priceUpdated: null },
     { id: 238, title: "Boox Tab X C", category: "Technik", group: "E-Ink-Tablet", alternative: true, priority: "nice", price: 759.99, link: "https://shop.boox.com/products/tabxc", note: "Farb-E-Ink-Tablet von Boox, leistungsstärkere Klasse.", done: false, priceUpdated: "2026-07-26", priceUpdated: null },
     { id: 239, title: "Boox Note Max", category: "Technik", group: "E-Ink-Tablet", alternative: true, priority: "nice", price: 599.99, link: "https://shop.boox.com/products/notemax", note: "13,3\" S/W-E-Ink, 300 PPI, großes Format (~$719.98).", done: false, priceUpdated: "2026-07-26", priceUpdated: "2026-07-20" },
-    { id: 240, title: "iFlytek AINOTE 2", category: "Technik", group: "E-Ink-Tablet", alternative: true, priority: "nice", price: 619, link: "https://www.iflytek.com/en/products/air/ainote-2.html", link2: "https://geizhals.de/iflytek-ainote-2-e-ink-tablet-digitales-notizbuch-mit-sprach-zu-text-funktion-a3791954.html", link2Label: "Preisvergleich", note: "E-Ink-Notiztablet mit KI-Transkription. Preis grob geschätzt, Modell/Preis bitte prüfen.", done: false, priceUpdated: "2026-07-26" },
+    { id: 240, title: "iFlytek AINOTE 2", category: "Technik", group: "E-Ink-Tablet", alternative: true, priority: "nice", price: 619, link: "https://www.iflytek.com/en/products/air/ainote-2.html", link2: "https://geizhals.de/iflytek-ainote-2-e-ink-tablet-digitales-notizbuch-mit-sprach-zu-text-funktion-a3791954.html", link2Label: "Preisvergleich", note: "E-Ink-Notiztablet mit KI-Transkription.", done: false, priceUpdated: "2026-07-26" },
     { id: 241, title: "UGREEN NASync DXP4800 Pro (NAS, 4 Slots)", category: "Technik", priority: "nice", order: 40, price: 698.99, link: "https://nas-eu.ugreen.com/products/ugreen-nasync-dxp4800-pro-136tb-4-bay-nas", note: "4-Bay-NAS (diskless, Platten separat). Geprüft — ja, das ist UGREENs stärkstes 4-Bay-Modell: Intel Core i3-1315U (6C/8T) gegenüber dem Pentium Gold 8505 im DXP4800 Plus und der schwächeren Ausstattung der GT-Variante, dazu max. 96 statt 64 GB RAM und AV1-Hardware-Decoding. Sonst identisch zum Plus: 4 SATA-Schächte, 1× 10 GbE + 1× 2,5 GbE, 2× M.2 PCIe 4.0 (einziges 4-Bay-Modell mit Gen4), 128 GB System-SSD, max. 144 TB. Stärkste iGPU der Reihe (64 EU) → mit Abstand bestes 4K-Transcoding für Plex/Jellyfin. Android Central: „bestes 4-Bay-NAS 2026\", KitGuru 8/10. Das DXP480T Plus ist zwar neuer, aber All-Flash (nur M.2, keine 3,5-Zoll-Platten) — andere Klasse und pro Terabyte deutlich teurer. Gerade €101 unter UVP (statt €799,99).", done: false, priceUpdated: "2026-07-26", priceUpdated: "2026-07-24" },
-    { id: 242, title: "BenQ ScreenBar Halo 2 (Monitor-Lightbar)", category: "Setup", subcategory: "Arbeitsbereich", priority: "nice", order: 50, price: 172.99, link: "https://www.benq.eu/en-eu/lighting/monitor-light/screenbar-halo-2.html", link2: "https://geizhals.de/benq-screenbar-halo-2-9h-w4pwt-es1-9h-w4pwt-ws1-a3510416.html", link2Label: "Preisvergleich", note: "Monitor-Lichtleiste mit Wireless-Controller & Hintergrundlicht — das aktuelle Top-Modell (Halo 2). Preis grob geschätzt.", done: false, priceUpdated: "2026-07-26" },
+    { id: 242, title: "BenQ ScreenBar Halo 2 (Monitor-Lightbar)", category: "Setup", subcategory: "Arbeitsbereich", priority: "nice", order: 50, price: 172.99, link: "https://www.benq.eu/en-eu/lighting/monitor-light/screenbar-halo-2.html", link2: "https://geizhals.de/benq-screenbar-halo-2-9h-w4pwt-es1-9h-w4pwt-ws1-a3510416.html", link2Label: "Preisvergleich", note: "Monitor-Lichtleiste mit Wireless-Controller & Hintergrundlicht — das aktuelle Top-Modell (Halo 2).", done: false, priceUpdated: "2026-07-26" },
     { id: 243, title: "Gaming-Headset: Audeze Maxwell 2", category: "Setup", subcategory: "Gaming", group: "Gaming-Headset", alternative: true, priority: "nice", order: 90, price: 429, link: "https://www.audeze.com/products/maxwell-2-anc-wireless-gaming-headset?variant=43222579085390", note: "Bestes Audio unter den Wireless-Gaming-Headsets: 90-mm-Planar-Treiber, ~80 h Akku, sehr gutes Mikro mit KI-Rauschfilter. Meine Wahl, wenn Klang zählt.", done: false, priceUpdated: "2026-07-26", priceUpdated: "2026-07-20" },
     { id: 274, title: "Gaming-Headset: Logitech G ASTRO A50 X", category: "Setup", subcategory: "Gaming", group: "Gaming-Headset", alternative: true, priority: "nice", price: 299.99, link: "https://www.logitechg.com/de-de/products/gaming-audio/a50-x-wireless-headset.html", link2: "https://geizhals.de/astro-gaming-a50-x-schwarz-939-002128-a3078681.html", link2Label: "Preisvergleich", note: "Beste All-in-One-Lösung: Basisstation lädt & schaltet per HDMI zwischen PS5/Xbox/PC um. Bequem, aber kürzerer Akku (~24 h). Meine Wahl, wenn Komfort/Konsolen-Switching zählt.", done: false, priceUpdated: "2026-07-26" },
     { id: 290, title: "Gaming-IEMs: SIMGOT EA500LM", category: "Setup", subcategory: "Gaming", priority: "nice", order: 95, price: 91.06, link: "https://www.linsoul.com/products/simgot-ea500-lm", linkLabel: "Linsoul", note: "In-Ears von Linsoul — 2. Generation Lithium-Magnesium-Treiber (dual-magnet, dual-cavity), austauschbare Nozzles für 3 Tuning-Varianten. Präzises, weites Stereobild mit sauberer Ortung — für den Preis „wallhack certified\" bei Fußschritten/Gegner-Ortung, auch wenn Spitzenmodelle wie der Sony INZONE E9 (€149) oder Simgot EM6L/Supermix 4 bei reiner Trennschärfe noch etwas vorne liegen. €91,07 direkt bei Linsoul.", done: false, priceUpdated: "2026-07-26", priceUpdated: "2026-07-25" },
@@ -2410,15 +2427,15 @@
     { id: 247, title: "Audio-Technica AT-LP70XBT", category: "Entertainment", subcategory: "Musik & Vinyl", group: "Plattenspieler", alternative: true, roomArea: "Musik-Ecke", dreamProject: "Zimmer-Umgestaltung", priority: "dream", order: 31, price: 249, link: "https://www.audio-technica.com/de-de/at-lp70xbt", note: "Günstigere Alternative zum LP120XBT-USB — vollautomatischer Riemenantrieb, Bluetooth, eingebauter Vorverstärker. Upgrade-Stylus der VM95-Serie (gegenüber dem LP60XBT), schlankeres Gehäuse. Weniger Ausstattung als der LP120 (kein USB-Rec, kein manueller Direktantrieb), dafür günstiger und für den Einstieg genauso empfehlenswert.", done: false, priceUpdated: "2026-07-26", priceUpdated: "2026-07-25" },
     { id: 248, title: "KEF LSX II LT (Aktivlautsprecher)", category: "Entertainment", subcategory: "Musik & Vinyl", group: "Aktivlautsprecher", alternative: true, roomArea: "Musik-Ecke", dreamProject: "Zimmer-Umgestaltung", priority: "dream", order: 40, price: 999,
       link: "https://de.kef.com/products/lsx-ii-lt", link2: "https://geizhals.de/kef-lsx-ii-lt-sage-green-a3105822.html", link2Label: "Preisvergleich", linkLabel: "KEF",
-      note: "Die beste Wahl fürs Platten-Setup: What Hi-Fi führt die LSX II LT als besten Lifestyle-Aktivlautsprecher. Uni-Q-Koaxialtreiber (Hoch- sitzt im Tieftöner) → sehr präzise Bühne auch außerhalb des Sweetspots, echte Aktivtechnik mit eigenem Verstärker pro Weg. Anschluss an den AT-LP120XBT-USB per Cinch→AUX oder direkt per Bluetooth. Preis grob geschätzt.",
+      note: "Die beste Wahl fürs Platten-Setup: What Hi-Fi führt die LSX II LT als besten Lifestyle-Aktivlautsprecher. Uni-Q-Koaxialtreiber (Hoch- sitzt im Tieftöner) → sehr präzise Bühne auch außerhalb des Sweetspots, echte Aktivtechnik mit eigenem Verstärker pro Weg. Anschluss an den AT-LP120XBT-USB per Cinch→AUX oder direkt per Bluetooth.",
       done: false, priceUpdated: "2026-07-26" },
     { id: 569, title: "Q Acoustics M20 HD (Aktivlautsprecher)", category: "Entertainment", subcategory: "Musik & Vinyl", group: "Aktivlautsprecher", alternative: true, roomArea: "Musik-Ecke", dreamProject: "Zimmer-Umgestaltung", priority: "dream", order: 41, price: 376.56,
       link: "https://www.qacoustics.co.uk/products/m20-hd-wireless-music-system", link2: "https://geizhals.de/q-acoustics-m20-weiss-a2711836.html", link2Label: "Preisvergleich", linkLabel: "Q Acoustics",
-      note: "Preis-Leistungs-Tipp: größere Gehäuse und mehr Bass als die KEF, aber ohne Koaxialtreiber. Cinch-Eingang für den Plattenspieler, dazu HDMI ARC falls die Boxen später mal an einen Fernseher sollen. Preis grob geschätzt.",
+      note: "Preis-Leistungs-Tipp: größere Gehäuse und mehr Bass als die KEF, aber ohne Koaxialtreiber. Cinch-Eingang für den Plattenspieler, dazu HDMI ARC falls die Boxen später mal an einen Fernseher sollen.",
       done: false, priceUpdated: "2026-07-26" },
     { id: 570, title: "Edifier R1280DB (Aktivlautsprecher)", category: "Entertainment", subcategory: "Musik & Vinyl", group: "Aktivlautsprecher", alternative: true, roomArea: "Musik-Ecke", dreamProject: "Zimmer-Umgestaltung", priority: "dream", order: 42, price: 92.65,
       link: "https://www.edifier.com/de/de/lautsprecher/r1280db-bluetooth-buecherregal-lautsprecher", link2: "https://geizhals.de/edifier-r1280db-schwarz-42026-a1575175.html", link2Label: "Preisvergleich", linkLabel: "Edifier",
-      note: "Günstiger Einstieg, falls das Budget woanders hin soll — zwei Cinch-Eingänge, Bluetooth, Fernbedienung. Klanglich klar unter den beiden anderen, für den Anfang aber völlig in Ordnung. Preis grob geschätzt.",
+      note: "Günstiger Einstieg, falls das Budget woanders hin soll — zwei Cinch-Eingänge, Bluetooth, Fernbedienung. Klanglich klar unter den beiden anderen, für den Anfang aber völlig in Ordnung.",
       done: false, priceUpdated: "2026-07-26" },
     { id: 249, title: "Schallplatten-Aufbewahrung / Regal", category: "Entertainment", subcategory: "Musik & Vinyl", roomArea: "Musik-Ecke", dreamProject: "Zimmer-Umgestaltung", priority: "dream", order: 50, price: null, link: "", note: "Bleibt bewusst offen: Regal oder Box für die Platten sucht Mama aus — Hauptsache es passt zur Einrichtung und trägt das Gewicht (Vinyl ist schwer, ca. 1 kg pro 5 Platten; immer stehend lagern, nie stapeln).", done: false, priceUpdated: null },
     { id: 250, title: "HumminGuru HG01 (Ultraschall-Waschmaschine)", category: "Entertainment", subcategory: "Musik & Vinyl", group: "Plattenreinigung", alternative: true, roomArea: "Musik-Ecke", dreamProject: "Zimmer-Umgestaltung", priority: "dream", order: 60, price: 599, link: "https://www.humminguru.com/", linkLabel: "Hersteller", link2: "https://geizhals.de/humminguru-ultrasonic-vinyl-record-cleaner-a3091268.html", link2Label: "Preisvergleich", note: "Die beste Reinigung, die man unter €1000 bekommt. Vollautomatischer 40-kHz-Ultraschall plus Trocknung — Platte rein, Knopf drücken, nach ~5 Minuten fertig und trocken. Kommt an Ergebnisse von €3000-Maschinen (Degritter) erstaunlich nah; LowBeats nennt den Preis „sensationell günstig\". Adapter für 7\" und 10\" dabei.", done: false, priceUpdated: "2026-07-26", priceUpdated: "2026-07-24" },
@@ -2550,12 +2567,12 @@
     { id: 543, title: "Twenty One Pilots — Blurryface (2LP)", category: "Entertainment", subcategory: "Musik & Vinyl", priority: "dream", order: 215, price: 270.25, link: "https://www.amazon.de/dp/B0FRTPG4Y7", linkLabel: "Kaufen (Vinyl)", note: "Top-Songs: Stressed Out, Ride, Heavydirtysoul, Tear in My Heart, Lane Boy. · Enthält vier der Wunsch-Songs. „Heathens\" ist eine Standalone-Single (Suicide-Squad-OST).", done: false, priceUpdated: "2026-07-26", priceUpdated: "2026-07-25" },
     { id: 544, title: "Vance Joy — Dream Your Life Away (LP)", category: "Entertainment", subcategory: "Musik & Vinyl", priority: "dream", order: 216, price: 91.48, link: "https://www.amazon.de/dp/B0GD8DZ9L4", linkLabel: "Kaufen (Vinyl)", note: "Top-Songs: Riptide, Mess Is Mine, Georgia. · Enthält „Riptide\". „Missing Piece\" und „Fire and the Flood\" liegen auf weiteren Releases.", done: false, priceUpdated: "2026-07-26", priceUpdated: "2026-07-25" },
     { id: 545, title: "Violent Vira (bestes verfügbares Vinyl)", category: "Entertainment", subcategory: "Musik & Vinyl", priority: "dream", order: 217, price: null, link: "https://www.discogs.com/search/?q=Violent+Vira&format_exact=Vinyl&type=release", linkLabel: "Bei Discogs suchen", note: "Top-Songs u.a. Dead Girl, Sad Sad City. · Sehr nischig; offizielles Vinyl kaum verfügbar — v.a. digital. Auf Amazon gibt es dazu keine Pressung — deshalb führt der Link auf die Vinyl-Suche bei Discogs, dem großen Marktplatz für vergriffene Platten.", done: false, priceUpdated: null },
-    { id: 546, title: "XXXTENTACION — ? (LP)", category: "Entertainment", subcategory: "Musik & Vinyl", priority: "dream", order: 218, price: null, link: "https://www.amazon.de/dp/B07PV9159P", linkLabel: "Kaufen (Vinyl)", note: "Top-Songs: SAD!, Moonlight, changes, Jocelyn Flores. · Enthält SAD!, Moonlight und changes.", done: false, priceUpdated: null },
+    { id: 546, title: "XXXTENTACION —? (LP)", category: "Entertainment", subcategory: "Musik & Vinyl", priority: "dream", order: 218, price: null, link: "https://www.amazon.de/dp/B07PV9159P", linkLabel: "Kaufen (Vinyl)", note: "Top-Songs: SAD!, Moonlight, changes, Jocelyn Flores. · Enthält SAD!, Moonlight und changes.", done: false, priceUpdated: null },
     { id: 547, title: "XXXTENTACION — 17 (LP)", category: "Entertainment", subcategory: "Musik & Vinyl", priority: "dream", order: 219, price: 70, link: "https://www.amazon.de/dp/B07G1SC4PC", linkLabel: "Kaufen (Vinyl)", note: "Ergänzung — enthält „Jocelyn Flores\" und „Revenge\".", done: false, priceUpdated: "2026-07-26", priceUpdated: "2026-07-25" },
     { id: 548, title: "Yeat — 2 Alivë (2LP)", category: "Entertainment", subcategory: "Musik & Vinyl", priority: "dream", order: 220, price: 56.67, link: "https://www.amazon.de/dp/B0B68YWTPM", linkLabel: "Kaufen (Vinyl)", note: "Top-Songs: Money So Big, Gët Busy, Rich Minion, Talk. · Enthält u.a. „Gët Busy\".", done: false, priceUpdated: "2026-07-26", priceUpdated: "2026-07-25" },
     { id: 549, title: "Young the Giant — Young the Giant (LP)", category: "Entertainment", subcategory: "Musik & Vinyl", priority: "dream", order: 221, price: 51.8, link: "https://www.amazon.de/dp/B004DY4Z1Y", linkLabel: "Kaufen (Vinyl)", note: "Top-Songs: Cough Syrup, My Body, Apartment. · Enthält „Cough Syrup\" und „My Body\". „Silvertongue\" liegt auf „Home of the Strange\". Eine offizielle „Reprise\"-Vinyl gibt es nicht.", done: false, priceUpdated: "2026-07-26", priceUpdated: "2026-07-25" },
     { id: 550, title: "ZZ Top — Greatest Hits (2LP, Best-of)", category: "Entertainment", subcategory: "Musik & Vinyl", priority: "dream", order: 222, price: 338.99, link: "https://www.amazon.de/dp/B01GVUOVTI", linkLabel: "Kaufen (Vinyl)", note: "Top-Songs: Sharp Dressed Man, Gimme All Your Lovin', La Grange, Legs, Tush. · Best-of, die alle drei Wunsch-Songs bündelt.", done: false, priceUpdated: "2026-07-26", priceUpdated: "2026-07-25" },
-    { id: 251, title: "Philips PureProtect 3200 (AC3220/10)", category: "Zuhause & Wellness", group: "Luftreiniger", alternative: true, priority: "nice", order: 10, price: 241.76, link: "https://www.home-appliances.philips/de/de/p/AC3220_10", link2: "https://geizhals.de/philips-ac3220-10-pureprotect-3200-series-luftreiniger-a3299490.html", link2Label: "Preisvergleich", note: "Mein Testsieger-Fund. Intelligenter Luftreiniger mit HEPA. Preis grob geschätzt.", done: false, priceUpdated: "2026-07-26" },
+    { id: 251, title: "Philips PureProtect 3200 (AC3220/10)", category: "Zuhause & Wellness", group: "Luftreiniger", alternative: true, priority: "nice", order: 10, price: 241.76, link: "https://www.home-appliances.philips/de/de/p/AC3220_10", link2: "https://geizhals.de/philips-ac3220-10-pureprotect-3200-series-luftreiniger-a3299490.html", link2Label: "Preisvergleich", note: "Mein Testsieger-Fund. Intelligenter Luftreiniger mit HEPA.", done: false, priceUpdated: "2026-07-26" },
     { id: 252, title: "Levoit Core 400S", category: "Zuhause & Wellness", group: "Luftreiniger", alternative: true, priority: "nice", price: 189.99, link: "https://levoit.com/products/core-400s-p-smart-air-purifier?_pos=1&_sid=dcb56a1a3&_ss=r", note: "Beliebte, oft top-bewertete Alternative zum Vergleich — HEPA, smart, leise.", done: false, priceUpdated: "2026-07-26", priceUpdated: null },
     { id: 253, title: "Manta Sleep Mask", category: "Zuhause & Wellness", priority: "nice", order: 40, price: 43, link: "https://mantasleep.de/collections/manta-sleep-masks", note: "100%-Blackout-Schlafmaske mit verstellbaren Augenschalen (kein Druck auf die Augen). US-Produkt ($39), Import nötig.", done: false, priceUpdated: "2026-07-26", priceUpdated: "2026-07-20" },
     { id: 254, title: "Eight Sleep Pod 5 Ultra", category: "Zuhause & Wellness", priority: "dream", order: 50, price: 4000, priceTo: 5500,
@@ -3841,7 +3858,16 @@
 
   function money(n){
     if (n === null || n === undefined || n === "") return "";
-    return Number(n).toLocaleString('de-DE', {minimumFractionDigits:0}) + " €";
+    const v = Math.round(Number(n) * 100) / 100;
+    // Glatte Beträge ohne Nachkommastellen, krumme immer mit genau zwei —
+    // sonst stehen bei Summen Sachen wie "52.573,267 €" da.
+    const stellen = Number.isInteger(v) ? 0 : 2;
+    return v.toLocaleString('de-DE', {minimumFractionDigits: stellen, maximumFractionDigits: stellen}) + " €";
+  }
+
+  // Hat der Eintrag überhaupt einen Preis? (null heißt "noch unbekannt", nicht "kostenlos")
+  function hasPrice(i){
+    return i.price !== null && i.price !== undefined && i.price !== "";
   }
 
   function renderTabs(){
@@ -4102,10 +4128,17 @@
     const uPrio  = u => Math.min(...uItems(u).map(i => PRIO_ORDER[i.priority]));
     const uPrice = u => uItems(u).reduce((s,i) => s + (Number(i.price)||0), 0);
     const uId    = u => Math.min(...uItems(u).map(i => i.id));
+    // Einträge ohne Preis sind nicht "billig", sondern unbekannt — die gehören
+    // beim Preis-Sortieren in beide Richtungen ans Ende, nicht an den Anfang.
+    const uHasPrice = u => uItems(u).some(hasPrice);
     units.sort((a,b) => {
       if (sortMode === 'prio') return (uPrio(a)-uPrio(b)) || (uOrder(a)-uOrder(b)) || (uId(a)-uId(b));
-      if (sortMode === 'asc')  return (uPrice(a)-uPrice(b)) || (uId(a)-uId(b));
-      if (sortMode === 'desc') return (uPrice(b)-uPrice(a)) || (uId(a)-uId(b));
+      if (sortMode === 'asc' || sortMode === 'desc'){
+        const pa = uHasPrice(a), pb = uHasPrice(b);
+        if (pa !== pb) return pa ? -1 : 1;
+        if (!pa) return (uOrder(a)-uOrder(b)) || (uId(a)-uId(b));
+        return (sortMode === 'asc' ? uPrice(a)-uPrice(b) : uPrice(b)-uPrice(a)) || (uId(a)-uId(b));
+      }
       return (uOrder(a)-uOrder(b)) || (uId(a)-uId(b));   // Standard: logische Reihenfolge
     });
 
@@ -4116,7 +4149,10 @@
       const groupItems = u.items.slice().sort((a,b) => (itemOrder(a)-itemOrder(b)) || (a.id-b.id));
       const key = groupKey(groupItems[0]);
       const isOpen = expandedGroups.has(key);
-      const groupSum = groupItems.reduce((s,i) => s + (Number(i.price)||0), 0);
+      // Wenn in der ganzen Gruppe kein einziger Preis steht, ist die Summe nicht 0 € sondern unbekannt
+      const groupSum = groupItems.some(hasPrice)
+        ? money(groupItems.reduce((s,i) => s + (Number(i.price)||0), 0))
+        : '—';
       // Für Alternativen-Gruppen: Preis-Spanne statt Summe (man kauft nur eine Option)
       const altPrices = groupItems.filter(i => i.price !== null && i.price !== undefined && i.price !== '').map(i => Number(i.price));
       const altRange = altPrices.length === 0 ? '—'
@@ -4159,7 +4195,7 @@
               <span class="group-name">${escapeHtml(g)}</span>
               <span class="group-count">${groupItems.length} Teile</span>
             </div>
-            <span style="display:flex;align-items:center;gap:12px;">${gCheck}<span class="group-sum mono">${money(groupSum)}</span></span>
+            <span style="display:flex;align-items:center;gap:12px;">${gCheck}<span class="group-sum mono">${groupSum}</span></span>
           </div>`;
         if (isOpen){
           html += `<div class="group-items">`;
@@ -4403,13 +4439,16 @@
   function countUp(el, to, isMoney){
     if (!el) return;
     const dur = 900, t0 = performance.now();
+    // Während des Zählens auf volle Euro runden (ruhiger), am Ende aber den
+    // exakten Betrag setzen — sonst stand im Ledger eine andere Restsumme als im Hero.
     const fmt = v => isMoney ? money(Math.round(v)) : String(Math.round(v));
+    const fmtEnde = v => isMoney ? money(v) : String(Math.round(v));
     function step(now){
       const p = Math.min(1, (now - t0) / dur);
       const eased = 1 - Math.pow(1 - p, 3);
       el.textContent = fmt(to * eased);
       if (p < 1) requestAnimationFrame(step);
-      else el.textContent = fmt(to);
+      else el.textContent = fmtEnde(to);
     }
     requestAnimationFrame(step);
   }
