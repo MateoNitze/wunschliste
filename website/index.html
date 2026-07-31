@@ -1453,6 +1453,11 @@
       scrollbar-width:none;
       padding-bottom:2px;
       margin-left:-24px; margin-right:-24px; padding-left:24px; padding-right:24px;
+      /* Ausblende-Verlauf am rechten Rand: signalisiert "hier geht's
+         wischend weiter", statt dass ein abgeschnittener Button wie ein
+         Bug aussieht (Feedback: sah wie ungewollter Overflow aus). */
+      -webkit-mask-image:linear-gradient(to right, #000 calc(100% - 28px), transparent 100%);
+      mask-image:linear-gradient(to right, #000 calc(100% - 28px), transparent 100%);
     }
     .filter-bar::-webkit-scrollbar{ display:none; }
     .filter-bar .fchip, .filter-bar .fselect, .filter-bar .fbudget{ flex-shrink:0; }
@@ -1461,16 +1466,20 @@
        landen sie als verwaiste "|" mitten im Nichts (siehe Feedback). */
     .fsep{ display:none; }
 
-    /* Kategorie-Tabs: eine scrollbare Zeile statt zwei umgebrochene. */
+    /* Kategorie-Tabs: eine scrollbare Zeile statt zwei umgebrochene,
+       mit demselben Ausblende-Verlauf als Wisch-Hinweis. */
     .toolbar{
       flex-wrap:nowrap;
       overflow-x:auto;
       -webkit-overflow-scrolling:touch;
       scrollbar-width:none;
       margin-left:-24px; margin-right:-24px; padding-left:24px; padding-right:24px;
+      -webkit-mask-image:linear-gradient(to right, #000 calc(100% - 28px), transparent 100%);
+      mask-image:linear-gradient(to right, #000 calc(100% - 28px), transparent 100%);
     }
     .toolbar::-webkit-scrollbar{ display:none; }
     .tab{ flex-shrink:0; white-space:nowrap; }
+    .filter-bar.scroll-end, .toolbar.scroll-end{ -webkit-mask-image:none; mask-image:none; }
 
     /* Statistik-Panel: das zweispaltige Grid kann auf schmalen Screens
        nicht schrumpfen (Zeilen wie "Nice to have -- 327 offen · 16.053,52 €"
@@ -2966,6 +2975,23 @@ ${sections}
   });
   new MutationObserver(armReveal).observe(document.getElementById('lists'), { childList: true });
   armReveal();
+
+  // Ausblende-Verlauf am rechten Rand der wischbaren Streifen (Filterleiste,
+  // Kategorie-Tabs auf Mobile) verschwinden lassen, sobald man ganz
+  // durchgescrollt hat -- sonst deutet er "hier geht's weiter" an, obwohl
+  // nichts mehr kommt.
+  function initScrollFade(el){
+    if (!el) return;
+    const update = () => {
+      const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 2;
+      el.classList.toggle('scroll-end', atEnd);
+    };
+    el.addEventListener('scroll', update, { passive: true });
+    update();
+    window.addEventListener('resize', update);
+  }
+  initScrollFade(document.querySelector('.filter-bar'));
+  initScrollFade(document.getElementById('tabs'));
 </script>
 
 </body>
