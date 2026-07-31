@@ -49,7 +49,9 @@ lokalen Produktbilder aus `assets/` laden.
 │   ├── references/           # generierte Hero-/Mood-Referenzbilder
 │   └── videos/
 └── website/
-    └── index.html            # die komplette App — eine Datei, kein Backend
+    ├── index.html            # App-Gerüst, Styles, Logik
+    └── data.js               # Produktdaten (items, Bild-Maps) — separat, damit
+                               # Datenänderungen kleine, gezielte Diffs bleiben
 ```
 
 ## Neuen Wunsch eintragen
