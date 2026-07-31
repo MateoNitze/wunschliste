@@ -2006,7 +2006,18 @@
     // Chrome leere Seiten: renderLists() hat den DOM gerade massiv verändert
     // (alle Gruppen aufgeklappt), und ohne einen Frame Wartezeit greift der
     // Druckdialog auf ein Layout zu, das der Browser noch nicht gezeichnet hat.
+    // Wichtig: armReveal() (per MutationObserver an renderLists() gehaengt)
+    // haengt frischen Karten die "reveal"-Klasse erst als Microtask an -- die
+    // muss also VOR dem Entfernen schon gelaufen sein, deshalb passiert das
+    // Entfernen hier drin und nicht direkt nach renderLists().
     requestAnimationFrame(() => requestAnimationFrame(() => {
+      // Scroll-Reveal-Klassen direkt entfernen statt uns auf die CSS-Regel
+      // ".reveal{opacity:1 !important}" im @media print zu verlassen: Karten,
+      // die nie ins Bild gescrollt wurden, tragen sonst dauerhaft opacity:0
+      // (kein Observer hat "in" gesetzt) -- je nach Browser gewinnt die
+      // !important-Regel das nicht zuverlässig, das Ergebnis sind leere
+      // Druckseiten trotz korrekt berechneter Seitenzahl.
+      document.querySelectorAll('.reveal').forEach(el => el.classList.remove('reveal', 'in'));
       window.print();
       expandedGroups = prevExpanded;
       renderLists();
