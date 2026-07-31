@@ -503,6 +503,7 @@
     flex-wrap:wrap;
     margin-bottom:40px;
   }
+  .scroll-hint{ display:none; }
   .tab{
     background:none;
     border:none;
@@ -1481,6 +1482,22 @@
     .tab{ flex-shrink:0; white-space:nowrap; }
     .filter-bar.scroll-end, .toolbar.scroll-end{ -webkit-mask-image:none; mask-image:none; }
 
+    /* Der reine Ausblende-Verlauf war auf dem dunklen Theme kaum zu sehen
+       (verblasst quasi zu "genauso schwarz wie der Hintergrund"). Deshalb
+       zusaetzlich ein deutlich sichtbarer Pfeil-Button, der ueber dem
+       Streifen schwebt und beim Erreichen des Endes verschwindet. */
+    .scrollwrap{ position:relative; }
+    .scroll-hint{
+      position:absolute; top:0; right:-24px; bottom:2px;
+      width:48px;
+      display:flex; align-items:center; justify-content:flex-end;
+      padding-right:24px;
+      font-size:18px; font-weight:700; color:var(--amber);
+      background:linear-gradient(to right, transparent, rgba(12,11,9,0.94) 55%);
+      pointer-events:none;
+    }
+    .scrollwrap.scroll-end .scroll-hint{ display:none; }
+
     /* Statistik-Panel: das zweispaltige Grid kann auf schmalen Screens
        nicht schrumpfen (Zeilen wie "Nice to have -- 327 offen · 16.053,52 €"
        duerfen nicht umbrechen) und wuchs dadurch ueber den Bildschirmrand
@@ -1563,31 +1580,37 @@
     <button class="ctrl-btn dream-toggle magnetic" id="dreamModeBtn" onclick="toggleDreamMode()">◆ Große Träume</button>
   </div>
 
-  <div class="filter-bar sans">
-    <button class="fchip" id="hideDoneBtn" onclick="toggleHideDone()">Erledigte ausblenden</button>
-    <button class="fchip" id="compactBtn" onclick="toggleCompact()">Kompakte Ansicht</button>
-    <span class="fsep"></span>
-    <button class="fchip prio" data-prio="must" onclick="setPrioFilter('must')">Muss bald her</button>
-    <button class="fchip prio" data-prio="nice" onclick="setPrioFilter('nice')">Nice to have</button>
-    <button class="fchip prio" data-prio="dream" onclick="setPrioFilter('dream')">Großer Traum</button>
-    <span class="fsep"></span>
-    <select class="fselect" id="sortSelect" onchange="setSort(this.value)" aria-label="Sortierung">
-      <option value="default">Reihenfolge: Standard</option>
-      <option value="prio">Priorität: Muss zuerst</option>
-      <option value="asc">Preis aufsteigend</option>
-      <option value="desc">Preis absteigend</option>
-    </select>
-    <input class="fbudget" id="budgetInput" type="number" min="0" placeholder="max €" oninput="setBudget(this.value)" aria-label="Budget-Filter in Euro">
-    <span class="fgrow"></span>
-    <button class="fchip ghost" onclick="exportState()">Stand sichern</button>
-    <button class="fchip ghost" onclick="document.getElementById('importFile').click()">Stand laden</button>
-    <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importState(this)">
-    <button class="fchip ghost" onclick="copyList()">Liste kopieren</button>
-    <button class="fchip ghost" onclick="printList()">Drucken</button>
+  <div class="scrollwrap">
+    <div class="filter-bar sans">
+      <button class="fchip" id="hideDoneBtn" onclick="toggleHideDone()">Erledigte ausblenden</button>
+      <button class="fchip" id="compactBtn" onclick="toggleCompact()">Kompakte Ansicht</button>
+      <span class="fsep"></span>
+      <button class="fchip prio" data-prio="must" onclick="setPrioFilter('must')">Muss bald her</button>
+      <button class="fchip prio" data-prio="nice" onclick="setPrioFilter('nice')">Nice to have</button>
+      <button class="fchip prio" data-prio="dream" onclick="setPrioFilter('dream')">Großer Traum</button>
+      <span class="fsep"></span>
+      <select class="fselect" id="sortSelect" onchange="setSort(this.value)" aria-label="Sortierung">
+        <option value="default">Reihenfolge: Standard</option>
+        <option value="prio">Priorität: Muss zuerst</option>
+        <option value="asc">Preis aufsteigend</option>
+        <option value="desc">Preis absteigend</option>
+      </select>
+      <input class="fbudget" id="budgetInput" type="number" min="0" placeholder="max €" oninput="setBudget(this.value)" aria-label="Budget-Filter in Euro">
+      <span class="fgrow"></span>
+      <button class="fchip ghost" onclick="exportState()">Stand sichern</button>
+      <button class="fchip ghost" onclick="document.getElementById('importFile').click()">Stand laden</button>
+      <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importState(this)">
+      <button class="fchip ghost" onclick="copyList()">Liste kopieren</button>
+      <button class="fchip ghost" onclick="printList()">Drucken</button>
+    </div>
+    <span class="scroll-hint" aria-hidden="true">›</span>
   </div>
   <div class="filter-info" id="filterInfo" style="display:none"></div>
 
-  <div class="toolbar" id="tabs"></div>
+  <div class="scrollwrap">
+    <div class="toolbar" id="tabs"></div>
+    <span class="scroll-hint" aria-hidden="true">›</span>
+  </div>
 
 
   <div id="lists"></div>
@@ -2982,9 +3005,11 @@ ${sections}
   // nichts mehr kommt.
   function initScrollFade(el){
     if (!el) return;
+    const wrap = el.closest('.scrollwrap');
     const update = () => {
       const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 2;
       el.classList.toggle('scroll-end', atEnd);
+      if (wrap) wrap.classList.toggle('scroll-end', atEnd);
     };
     el.addEventListener('scroll', update, { passive: true });
     update();
