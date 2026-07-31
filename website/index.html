@@ -2002,9 +2002,15 @@
     const prevExpanded = new Set(expandedGroups);
     items.forEach(i => { if (i.group) expandedGroups.add(groupKey(i)); });
     renderLists();
-    window.print();
-    expandedGroups = prevExpanded;
-    renderLists();
+    // window.print() darf erst nach dem nächsten Repaint kommen, sonst druckt
+    // Chrome leere Seiten: renderLists() hat den DOM gerade massiv verändert
+    // (alle Gruppen aufgeklappt), und ohne einen Frame Wartezeit greift der
+    // Druckdialog auf ein Layout zu, das der Browser noch nicht gezeichnet hat.
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      window.print();
+      expandedGroups = prevExpanded;
+      renderLists();
+    }));
   }
 
   function money(n){
