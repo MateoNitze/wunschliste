@@ -2002,25 +2002,38 @@
     const prevExpanded = new Set(expandedGroups);
     items.forEach(i => { if (i.group) expandedGroups.add(groupKey(i)); });
     renderLists();
-    // window.print() darf erst nach dem nächsten Repaint kommen, sonst druckt
-    // Chrome leere Seiten: renderLists() hat den DOM gerade massiv verändert
-    // (alle Gruppen aufgeklappt), und ohne einen Frame Wartezeit greift der
-    // Druckdialog auf ein Layout zu, das der Browser noch nicht gezeichnet hat.
-    // Wichtig: armReveal() (per MutationObserver an renderLists() gehaengt)
-    // haengt frischen Karten die "reveal"-Klasse erst als Microtask an -- die
-    // muss also VOR dem Entfernen schon gelaufen sein, deshalb passiert das
-    // Entfernen hier drin und nicht direkt nach renderLists().
+    // Der eigentliche Grund fuer leere Druckseiten: .card hat eine
+    // CSS-Transition auf opacity (0.2s ease, siehe .card-Regel weiter oben).
+    // Karten, die nie in den Viewport gescrollt wurden, tragen die
+    // "reveal"-Klasse (opacity:0) dauerhaft. Entfernt man die Klasse, faehrt
+    // die Opacity nicht sofort auf 1, sondern animiert ueber 200ms hoch --
+    // und der Druckdialog nimmt seinen Snapshot mitten in dieser Animation
+    // (gemessen: opacity ~0.07, praktisch unsichtbar). Die CSS-Regel
+    // ".reveal{opacity:1 !important}" im @media print loest das nicht,
+    // weil die Transition trotzdem laeuft.
+    // Fix: Transition per Inline-Style fuer den Druckmoment abschalten,
+    // Opacity + content-visibility (Performance-Lazy-Rendering, betrifft
+    // Karten ausserhalb des bisherigen Viewports genauso) direkt und ohne
+    // Animation erzwingen. armReveal() (per MutationObserver an
+    // renderLists() gehaengt) haengt frischen Karten die "reveal"-Klasse
+    // erst als Microtask an, deshalb zwei Frames warten, bevor wir sie
+    // wieder entfernen.
     requestAnimationFrame(() => requestAnimationFrame(() => {
-      // Scroll-Reveal-Klassen direkt entfernen statt uns auf die CSS-Regel
-      // ".reveal{opacity:1 !important}" im @media print zu verlassen: Karten,
-      // die nie ins Bild gescrollt wurden, tragen sonst dauerhaft opacity:0
-      // (kein Observer hat "in" gesetzt) -- je nach Browser gewinnt die
-      // !important-Regel das nicht zuverlässig, das Ergebnis sind leere
-      // Druckseiten trotz korrekt berechneter Seitenzahl.
-      document.querySelectorAll('.reveal').forEach(el => el.classList.remove('reveal', 'in'));
-      window.print();
-      expandedGroups = prevExpanded;
-      renderLists();
+      const nodes = document.querySelectorAll('#lists .card, #lists .group-header, #lists .dream-project, #lists .category-head');
+      nodes.forEach(el => {
+        el.style.transition = 'none';
+        el.style.contentVisibility = 'visible';
+        el.style.opacity = '1';
+        el.classList.remove('reveal', 'in');
+      });
+      // Noch ein Frame, damit die (transitionslose) Aenderung sicher
+      // gezeichnet ist, bevor der Druckdialog aufgeht.
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        window.print();
+        nodes.forEach(el => { el.style.transition = ''; el.style.contentVisibility = ''; el.style.opacity = ''; });
+        expandedGroups = prevExpanded;
+        renderLists();
+      }));
     }));
   }
 
