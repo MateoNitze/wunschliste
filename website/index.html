@@ -744,7 +744,7 @@
     gap:12px;
     flex-wrap:wrap;
   }
-  .item-title{ font-size:15px; font-weight:500; line-height:1.45; color:var(--text); overflow-wrap:anywhere; }
+  .item-title{ flex:1 1 200px; min-width:0; font-size:15px; font-weight:500; line-height:1.45; color:var(--text); overflow-wrap:anywhere; }
   .series-badge{
     font-family:'JetBrains Mono',Consolas,monospace;
     font-size:9.5px;
@@ -1442,6 +1442,35 @@
     /* Fingerfreundliche Schaltflächen: 31 px sind zum Tippen zu wenig */
     .fchip{ padding:11px 15px; font-size:13px; }
     .fselect, .fbudget{ min-height:42px; }
+
+    /* Statt 5-6 gestapelter Zeilen: Filterleiste als ein horizontal
+       scrollbarer Streifen, damit man auf dem Handy schneller zum
+       eigentlichen Inhalt kommt. */
+    .filter-bar{
+      flex-wrap:nowrap;
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+      padding-bottom:2px;
+      margin-left:-24px; margin-right:-24px; padding-left:24px; padding-right:24px;
+    }
+    .filter-bar::-webkit-scrollbar{ display:none; }
+    .filter-bar .fchip, .filter-bar .fselect, .filter-bar .fbudget{ flex-shrink:0; }
+    .filter-bar .fgrow{ display:none; }
+    /* Trennstriche sind fuers Umbrechen nicht gedacht -- brechen sie um,
+       landen sie als verwaiste "|" mitten im Nichts (siehe Feedback). */
+    .fsep{ display:none; }
+
+    /* Kategorie-Tabs: eine scrollbare Zeile statt zwei umgebrochene. */
+    .toolbar{
+      flex-wrap:nowrap;
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+      margin-left:-24px; margin-right:-24px; padding-left:24px; padding-right:24px;
+    }
+    .toolbar::-webkit-scrollbar{ display:none; }
+    .tab{ flex-shrink:0; white-space:nowrap; }
   }
   @media (prefers-reduced-motion:reduce){
     *, *::before, *::after{ transition:none !important; animation:none !important; }
