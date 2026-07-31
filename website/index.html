@@ -2008,30 +2008,105 @@
   // separates, statisches HTML-Dokument in einem neuen Fenster erzeugen --
   // ganz ohne Animationen, Transitions oder Lazy-Rendering, das jemals
   // ein Zwischenzustand einfrieren koennte.
+  // Ein Eintrag als Druckzeile — optional mit "Zubehör/Optionen"-Kennzeichnung
+  // fuer eingerueckte Gruppenmitglieder.
+  function printRow(i){
+    const priceText = i.price == null ? '' : (i.priceTo ? `${money(i.price)}–${money(i.priceTo)}` : money(i.price));
+    return `<div class="p-row">
+      <span class="p-box"></span>
+      <div class="p-body">
+        <div class="p-title">
+          <span class="p-name">${escapeHtml(i.title)}</span>
+          ${priceText ? `<span class="p-price">${priceText}</span>` : ''}
+        </div>
+        ${i.note ? `<div class="p-note">${escapeHtml(i.note)}</div>` : ''}
+      </div>
+    </div>`;
+  }
+
+  // Gruppen-Kopfzeile (Zubehör-Gruppe, Alternativen oder generische Gruppe) --
+  // darunter folgen die zugehoerigen Eintraege eingerueckt, damit auf dem
+  // Papier genauso wie auf der Website erkennbar ist, dass sie zusammengehören.
+  function printGroupHead(name, meta){
+    return `<div class="p-ghead"><span class="p-gname">${escapeHtml(name)}</span><span class="p-gmeta">${meta}</span></div>`;
+  }
+
+  // subOf-Zubehoer (per Produkt-ID an sein Hauptprodukt gehaengt) eingerueckt
+  // direkt unter dem Hauptprodukt ausgeben.
+  function printItemWithSubs(i, openIds){
+    const subs = items.filter(s => s.subOf === i.id && openIds.has(s.id));
+    let h = printRow(i);
+    if (subs.length){
+      h += `<div class="p-sub">${subs.map(printRow).join('')}</div>`;
+    }
+    return h;
+  }
+
+  // Entspricht renderItemsAndGroups() auf der Website (Einzelprodukte +
+  // Zubehör-/Alternativen-/generische Gruppen als gemeinsame, sortierte
+  // Einheiten), nur ohne Auf-/Zuklappen -- fuers Drucken ist immer alles offen.
+  function printUnitsHtml(list, openIds){
+    list = list.filter(i => !i.subOf);
+    const seenG = {};
+    const units = [];
+    list.forEach(i => {
+      if (i.group){
+        if (!seenG[i.group]){ seenG[i.group] = { group: i.group, items: [] }; units.push(seenG[i.group]); }
+        seenG[i.group].items.push(i);
+      } else {
+        units.push({ item: i });
+      }
+    });
+    const uOrder = u => Math.min(...(u.item ? [u.item] : u.items).map(itemOrder));
+    const uId = u => Math.min(...(u.item ? [u.item] : u.items).map(i => i.id));
+    units.sort((a,b) => (uOrder(a)-uOrder(b)) || (uId(a)-uId(b)));
+
+    return units.map(u => {
+      if (u.item) return printItemWithSubs(u.item, openIds);
+      const groupItems = u.items.slice().sort((a,b) => (itemOrder(a)-itemOrder(b)) || (a.id-b.id));
+      const kind = classifyGroup(groupItems);
+      if (kind.type === 'main-accessory'){
+        return printItemWithSubs(kind.main, openIds) + `<div class="p-sub">${kind.accessories.map(i => printItemWithSubs(i, openIds)).join('')}</div>`;
+      }
+      if (kind.type === 'alternatives'){
+        const altPrices = groupItems.filter(hasPrice).map(i => Number(i.price));
+        const altRange = altPrices.length === 0 ? '—'
+          : (Math.min(...altPrices) === Math.max(...altPrices) ? money(Math.min(...altPrices))
+          : money(Math.min(...altPrices)) + '–' + money(Math.max(...altPrices)));
+        return printGroupHead(u.group, `${groupItems.length} Optionen · ${altRange}`)
+          + `<div class="p-sub">${groupItems.map(i => printItemWithSubs(i, openIds)).join('')}</div>`;
+      }
+      const gSum = groupItems.some(hasPrice) ? money(groupItems.reduce((s,i) => s + (Number(i.price)||0), 0)) : '—';
+      return printGroupHead(u.group, `${groupItems.length} Teile · ${gSum}`)
+        + `<div class="p-sub">${groupItems.map(i => printItemWithSubs(i, openIds)).join('')}</div>`;
+    }).join('');
+  }
+
   function printList(){
     const open = items.filter(i => !purchased.has(i.id));
+    const openIds = new Set(open.map(i => i.id));
     const totalSum = estimateSum(open, false);
     const today = new Date().toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
     const sections = CATEGORIES.map(cat => {
-      const catItems = open.filter(i => i.category === cat).sort((a,b) => itemOrder(a) - itemOrder(b));
+      const catItems = open.filter(i => i.category === cat);
       if (catItems.length === 0) return '';
-      const rows = catItems.map(i => {
-        const priceText = i.price == null ? '' : (i.priceTo ? `${money(i.price)}–${money(i.priceTo)}` : money(i.price));
-        return `<div class="p-row">
-          <span class="p-box"></span>
-          <div class="p-body">
-            <div class="p-title">
-              <span class="p-name">${escapeHtml(i.title)}</span>
-              ${priceText ? `<span class="p-price">${priceText}</span>` : ''}
-            </div>
-            ${i.note ? `<div class="p-note">${escapeHtml(i.note)}</div>` : ''}
-          </div>
-        </div>`;
-      }).join('');
       const sum = estimateSum(catItems, false);
+      // Unterkategorien (z.B. Setup -> Gaming/Arbeitsbereich) genau wie auf
+      // der Website nach ihrem kleinsten Ordnungswert sortiert.
+      const subcats = [...new Set(catItems.map(i => i.subcategory).filter(Boolean))]
+        .sort((a,b) => Math.min(...catItems.filter(i => i.subcategory === a).map(itemOrder))
+                     - Math.min(...catItems.filter(i => i.subcategory === b).map(itemOrder)));
+      const noSub = catItems.filter(i => !i.subcategory);
+      let body = printUnitsHtml(noSub, openIds);
+      subcats.forEach(sub => {
+        const subItems = catItems.filter(i => i.subcategory === sub);
+        const subSum = estimateSum(subItems, false);
+        body += `<h3 class="p-subcat"><span>${escapeHtml(sub)}</span><span class="p-subsum">${money(subSum)}</span></h3>`;
+        body += printUnitsHtml(subItems, openIds);
+      });
       return `<section class="p-cat">
         <h2><span>${escapeHtml(cat)}</span><span class="p-catsum">${money(sum)}</span></h2>
-        ${rows}
+        ${body}
       </section>`;
     }).join('');
 
@@ -2059,10 +2134,24 @@
     break-after:avoid;
   }
   .p-catsum{ font-family:'Courier New',monospace; font-weight:normal; text-transform:none; letter-spacing:0; color:#555; }
+  .p-subcat{
+    font-size:11.5px; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; color:#555;
+    margin:16px 0 4px; padding-bottom:3px; border-bottom:1px dotted #aaa;
+    display:flex; justify-content:space-between; align-items:baseline; break-after:avoid;
+  }
+  .p-subsum{ font-family:'Courier New',monospace; font-weight:normal; letter-spacing:0; text-transform:none; color:#888; }
+  .p-ghead{
+    display:flex; justify-content:space-between; align-items:baseline;
+    font-weight:600; font-size:12px; padding:6px 0 3px; break-after:avoid;
+  }
+  .p-gmeta{ font-family:'Courier New',monospace; font-weight:normal; font-size:10.5px; color:#777; }
+  .p-sub{ margin:0 0 4px 22px; padding-left:12px; border-left:2px solid #ddd; }
   .p-row{
     display:flex; gap:11px; padding:7px 0;
     border-bottom:1px solid #e2e2e2; align-items:flex-start; break-inside:avoid;
   }
+  .p-sub .p-row{ padding:5px 0; }
+  .p-sub .p-name{ font-weight:normal; }
   .p-row:last-child{ border-bottom:none; }
   .p-box{ width:11px; height:11px; margin-top:3px; border:1.4px solid #1a1a1a; border-radius:3px; flex-shrink:0; }
   .p-body{ flex:1; min-width:0; }
