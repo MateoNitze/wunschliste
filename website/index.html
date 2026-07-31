@@ -2001,40 +2001,37 @@
   function printList(){
     const prevExpanded = new Set(expandedGroups);
     items.forEach(i => { if (i.group) expandedGroups.add(groupKey(i)); });
+
+    // Scroll-Reveal (opacity:0 bis zum Einblenden, per "reveal"-Klasse) und
+    // content-visibility:auto (Lazy-Rendering fuer Performance) sind fuer den
+    // Bildschirm gedacht und beim Drucken nur Aerger: Karten, die nie in den
+    // Viewport gescrollt wurden, bleiben unsichtbar bzw. ungelayoutet, und
+    // selbst nachtraeglich per JS erzwungene Korrekturen laufen Gefahr, vom
+    // Druck-Snapshot mitten in einer CSS-Transition oder vor dem naechsten
+    // Compositor-Frame erwischt zu werden (mehrfach beobachtet: opacity blieb
+    // bei ~0,07 statt 1). Deshalb hier der robusteste Weg: eine Style-Regel
+    // MIT !important einfuegen, BEVOR renderLists() die (eingeklappten)
+    // Gruppen aufklappt -- die Karten werden dann von Anfang an sichtbar
+    // erzeugt, statt erst versteckt und danach korrigiert zu werden.
+    const style = document.createElement('style');
+    style.textContent = '#lists .card, #lists .group-header, #lists .dream-project, #lists .category-head { ' +
+      'opacity:1 !important; transform:none !important; filter:none !important; ' +
+      'transition:none !important; animation:none !important; content-visibility:visible !important; }';
+    document.head.appendChild(style);
+
     renderLists();
-    // Der eigentliche Grund fuer leere Druckseiten: .card hat eine
-    // CSS-Transition auf opacity (0.2s ease, siehe .card-Regel weiter oben).
-    // Karten, die nie in den Viewport gescrollt wurden, tragen die
-    // "reveal"-Klasse (opacity:0) dauerhaft. Entfernt man die Klasse, faehrt
-    // die Opacity nicht sofort auf 1, sondern animiert ueber 200ms hoch --
-    // und der Druckdialog nimmt seinen Snapshot mitten in dieser Animation
-    // (gemessen: opacity ~0.07, praktisch unsichtbar). Die CSS-Regel
-    // ".reveal{opacity:1 !important}" im @media print loest das nicht,
-    // weil die Transition trotzdem laeuft.
-    // Fix: Transition per Inline-Style fuer den Druckmoment abschalten,
-    // Opacity + content-visibility (Performance-Lazy-Rendering, betrifft
-    // Karten ausserhalb des bisherigen Viewports genauso) direkt und ohne
-    // Animation erzwingen. armReveal() (per MutationObserver an
-    // renderLists() gehaengt) haengt frischen Karten die "reveal"-Klasse
-    // erst als Microtask an, deshalb zwei Frames warten, bevor wir sie
-    // wieder entfernen.
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      const nodes = document.querySelectorAll('#lists .card, #lists .group-header, #lists .dream-project, #lists .category-head');
-      nodes.forEach(el => {
-        el.style.transition = 'none';
-        el.style.contentVisibility = 'visible';
-        el.style.opacity = '1';
-        el.classList.remove('reveal', 'in');
-      });
-      // Noch ein Frame, damit die (transitionslose) Aenderung sicher
-      // gezeichnet ist, bevor der Druckdialog aufgeht.
-      requestAnimationFrame(() => requestAnimationFrame(() => {
-        window.print();
-        nodes.forEach(el => { el.style.transition = ''; el.style.contentVisibility = ''; el.style.opacity = ''; });
-        expandedGroups = prevExpanded;
-        renderLists();
-      }));
-    }));
+    void document.body.offsetHeight; // erzwungenes Reflow, damit content-visibility sofort greift
+
+    // Grosszuegige, echte Wartezeit statt nur ein bis zwei Animationsframes:
+    // beim manuellen Drucken faellt eine Viertelsekunde nicht auf, gibt dem
+    // Browser aber garantiert genug Zeit, den neuen Zustand zu zeichnen,
+    // bevor der Druckdialog seinen Snapshot nimmt.
+    setTimeout(() => {
+      window.print();
+      style.remove();
+      expandedGroups = prevExpanded;
+      renderLists();
+    }, 250);
   }
 
   function money(n){
