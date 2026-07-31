@@ -1997,41 +1997,68 @@
     ta.remove();
   }
 
-  // --- Druckansicht: alles aufklappen, drucken, Zustand wiederherstellen ---
+  // --- Druckansicht: separates, minimalistisches Dokument ---
+  // Frueher wurde versucht, die Live-Seite fuers Drucken zurechtzubiegen
+  // (Gruppen aufklappen, Scroll-Reveal/"content-visibility:auto" per CSS
+  // oder JS uebersteuern). Das scheiterte wiederholt in echten Browsern
+  // (Brave/Chrome unter Windows): die Druckseiten blieben leer, vermutlich
+  // weil der Druck-Snapshot einen aelteren Compositor/GPU-Layer-Zustand
+  // dieser Karten erwischt, egal wie viel Wartezeit oder wie viele
+  // !important-Overrides man einbaut. Robuster Ansatz: ein komplett
+  // separates, statisches HTML-Dokument in einem neuen Fenster erzeugen --
+  // ganz ohne Animationen, Transitions oder Lazy-Rendering, das jemals
+  // ein Zwischenzustand einfrieren koennte.
   function printList(){
-    const prevExpanded = new Set(expandedGroups);
-    items.forEach(i => { if (i.group) expandedGroups.add(groupKey(i)); });
+    const open = items.filter(i => !purchased.has(i.id));
+    const sections = CATEGORIES.map(cat => {
+      const catItems = open.filter(i => i.category === cat).sort((a,b) => itemOrder(a) - itemOrder(b));
+      if (catItems.length === 0) return '';
+      const rows = catItems.map(i => {
+        const priceText = i.price == null ? '' : (i.priceTo ? `${money(i.price)}–${money(i.priceTo)}` : money(i.price));
+        return `<div class="p-row">
+          <span class="p-box"></span>
+          <div class="p-body">
+            <div class="p-title">${escapeHtml(i.title)}${priceText ? ` <span class="p-price">${priceText}</span>` : ''}</div>
+            ${i.note ? `<div class="p-note">${escapeHtml(i.note)}</div>` : ''}
+          </div>
+        </div>`;
+      }).join('');
+      const sum = estimateSum(catItems, false);
+      return `<div class="p-cat">
+        <h2>${escapeHtml(cat)} <span class="p-catsum">${money(sum)}</span></h2>
+        ${rows}
+      </div>`;
+    }).join('');
 
-    // Scroll-Reveal (opacity:0 bis zum Einblenden, per "reveal"-Klasse) und
-    // content-visibility:auto (Lazy-Rendering fuer Performance) sind fuer den
-    // Bildschirm gedacht und beim Drucken nur Aerger: Karten, die nie in den
-    // Viewport gescrollt wurden, bleiben unsichtbar bzw. ungelayoutet, und
-    // selbst nachtraeglich per JS erzwungene Korrekturen laufen Gefahr, vom
-    // Druck-Snapshot mitten in einer CSS-Transition oder vor dem naechsten
-    // Compositor-Frame erwischt zu werden (mehrfach beobachtet: opacity blieb
-    // bei ~0,07 statt 1). Deshalb hier der robusteste Weg: eine Style-Regel
-    // MIT !important einfuegen, BEVOR renderLists() die (eingeklappten)
-    // Gruppen aufklappt -- die Karten werden dann von Anfang an sichtbar
-    // erzeugt, statt erst versteckt und danach korrigiert zu werden.
-    const style = document.createElement('style');
-    style.textContent = '#lists .card, #lists .group-header, #lists .dream-project, #lists .category-head { ' +
-      'opacity:1 !important; transform:none !important; filter:none !important; ' +
-      'transition:none !important; animation:none !important; content-visibility:visible !important; }';
-    document.head.appendChild(style);
+    const doc = `<!doctype html>
+<html lang="de"><head><meta charset="utf-8">
+<title>Noch zu holen — offene Einträge</title>
+<style>
+  body{ font-family: Georgia, serif; color:#000; background:#fff; font-size:12px; padding:24px; max-width:800px; margin:0 auto; }
+  h1{ font-size:20px; margin:0 0 18px; }
+  h2{ font-size:15px; margin:24px 0 6px; border-bottom:1px solid #000; padding-bottom:4px; display:flex; justify-content:space-between; }
+  .p-catsum{ font-family:monospace; font-weight:normal; }
+  .p-row{ display:flex; gap:10px; padding:6px 0; border-bottom:1px solid #ddd; align-items:flex-start; break-inside:avoid; }
+  .p-box{ width:11px; height:11px; border:1.5px solid #000; border-radius:2px; flex-shrink:0; margin-top:3px; }
+  .p-body{ flex:1; }
+  .p-title{ font-weight:500; }
+  .p-price{ float:right; font-family:monospace; }
+  .p-note{ color:#555; font-size:11px; margin-top:2px; }
+</style>
+</head><body>
+<h1>Noch zu holen — offene Einträge</h1>
+${sections}
+</body></html>`;
 
-    renderLists();
-    void document.body.offsetHeight; // erzwungenes Reflow, damit content-visibility sofort greift
-
-    // Grosszuegige, echte Wartezeit statt nur ein bis zwei Animationsframes:
-    // beim manuellen Drucken faellt eine Viertelsekunde nicht auf, gibt dem
-    // Browser aber garantiert genug Zeit, den neuen Zustand zu zeichnen,
-    // bevor der Druckdialog seinen Snapshot nimmt.
-    setTimeout(() => {
-      window.print();
-      style.remove();
-      expandedGroups = prevExpanded;
-      renderLists();
-    }, 250);
+    const win = window.open('', '_blank');
+    if (!win){ showToast('Pop-up blockiert — bitte Pop-ups für diese Seite erlauben und nochmal versuchen.', null); return; }
+    win.document.open();
+    win.document.write(doc);
+    win.document.close();
+    let printed = false;
+    const doPrint = () => { if (printed) return; printed = true; win.focus(); win.print(); };
+    win.addEventListener('load', doPrint);
+    setTimeout(doPrint, 300); // Sicherheitsnetz, falls "load" schon vor dem Listener gefeuert hat
   }
 
   function money(n){
