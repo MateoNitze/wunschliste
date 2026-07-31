@@ -2010,6 +2010,8 @@
   // ein Zwischenzustand einfrieren koennte.
   function printList(){
     const open = items.filter(i => !purchased.has(i.id));
+    const totalSum = estimateSum(open, false);
+    const today = new Date().toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
     const sections = CATEGORIES.map(cat => {
       const catItems = open.filter(i => i.category === cat).sort((a,b) => itemOrder(a) - itemOrder(b));
       if (catItems.length === 0) return '';
@@ -2018,36 +2020,68 @@
         return `<div class="p-row">
           <span class="p-box"></span>
           <div class="p-body">
-            <div class="p-title">${escapeHtml(i.title)}${priceText ? ` <span class="p-price">${priceText}</span>` : ''}</div>
+            <div class="p-title">
+              <span class="p-name">${escapeHtml(i.title)}</span>
+              ${priceText ? `<span class="p-price">${priceText}</span>` : ''}
+            </div>
             ${i.note ? `<div class="p-note">${escapeHtml(i.note)}</div>` : ''}
           </div>
         </div>`;
       }).join('');
       const sum = estimateSum(catItems, false);
-      return `<div class="p-cat">
-        <h2>${escapeHtml(cat)} <span class="p-catsum">${money(sum)}</span></h2>
+      return `<section class="p-cat">
+        <h2><span>${escapeHtml(cat)}</span><span class="p-catsum">${money(sum)}</span></h2>
         ${rows}
-      </div>`;
+      </section>`;
     }).join('');
 
     const doc = `<!doctype html>
 <html lang="de"><head><meta charset="utf-8">
 <title>Noch zu holen — offene Einträge</title>
 <style>
-  body{ font-family: Georgia, serif; color:#000; background:#fff; font-size:12px; padding:24px; max-width:800px; margin:0 auto; }
-  h1{ font-size:20px; margin:0 0 18px; }
-  h2{ font-size:15px; margin:24px 0 6px; border-bottom:1px solid #000; padding-bottom:4px; display:flex; justify-content:space-between; }
-  .p-catsum{ font-family:monospace; font-weight:normal; }
-  .p-row{ display:flex; gap:10px; padding:6px 0; border-bottom:1px solid #ddd; align-items:flex-start; break-inside:avoid; }
-  .p-box{ width:11px; height:11px; border:1.5px solid #000; border-radius:2px; flex-shrink:0; margin-top:3px; }
-  .p-body{ flex:1; }
-  .p-title{ font-weight:500; }
-  .p-price{ float:right; font-family:monospace; }
-  .p-note{ color:#555; font-size:11px; margin-top:2px; }
+  @page{ margin:16mm 14mm; }
+  *{ box-sizing:border-box; }
+  body{
+    font-family:Georgia,'Times New Roman',serif;
+    color:#1a1a1a; background:#fff;
+    font-size:12px; line-height:1.45;
+    max-width:760px; margin:0 auto; padding:28px 4px;
+  }
+  header.p-head{ margin-bottom:26px; border-bottom:2px solid #b5772a; padding-bottom:14px; }
+  h1{ font-size:23px; font-weight:600; margin:0 0 6px; letter-spacing:0.01em; }
+  .p-meta{ display:flex; justify-content:space-between; align-items:baseline; font-family:'Courier New',monospace; font-size:11px; color:#555; }
+  .p-meta .p-total{ font-size:13px; color:#1a1a1a; font-weight:600; }
+  .p-cat{ break-inside:avoid-page; margin-bottom:6px; }
+  h2{
+    font-size:14.5px; font-weight:600; letter-spacing:0.03em; text-transform:uppercase;
+    margin:22px 0 8px; padding-bottom:5px; border-bottom:1px solid #1a1a1a;
+    display:flex; justify-content:space-between; align-items:baseline;
+    break-after:avoid;
+  }
+  .p-catsum{ font-family:'Courier New',monospace; font-weight:normal; text-transform:none; letter-spacing:0; color:#555; }
+  .p-row{
+    display:flex; gap:11px; padding:7px 0;
+    border-bottom:1px solid #e2e2e2; align-items:flex-start; break-inside:avoid;
+  }
+  .p-row:last-child{ border-bottom:none; }
+  .p-box{ width:11px; height:11px; margin-top:3px; border:1.4px solid #1a1a1a; border-radius:3px; flex-shrink:0; }
+  .p-body{ flex:1; min-width:0; }
+  .p-title{ display:flex; justify-content:space-between; align-items:baseline; gap:14px; }
+  .p-name{ font-weight:600; font-size:12.5px; }
+  .p-price{ font-family:'Courier New',monospace; font-size:11.5px; color:#333; white-space:nowrap; }
+  .p-note{ color:#5a5a5a; font-size:10.5px; margin-top:3px; line-height:1.4; }
+  footer.p-foot{ margin-top:30px; padding-top:10px; border-top:1px solid #ccc; font-size:9.5px; color:#999; text-align:center; }
 </style>
 </head><body>
-<h1>Noch zu holen — offene Einträge</h1>
+<header class="p-head">
+  <h1>Noch zu holen — offene Einträge</h1>
+  <div class="p-meta">
+    <span>Stand: ${today} · ${open.length} offene Einträge</span>
+    <span class="p-total">${money(totalSum)}</span>
+  </div>
+</header>
 ${sections}
+<footer class="p-foot">Noch zu holen — meine Kaufliste</footer>
 </body></html>`;
 
     // Fenstermasse statt "_blank" angeben: dadurch oeffnet der Browser ein
