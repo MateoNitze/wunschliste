@@ -1471,6 +1471,19 @@
     }
     .toolbar::-webkit-scrollbar{ display:none; }
     .tab{ flex-shrink:0; white-space:nowrap; }
+
+    /* Statistik-Panel: das zweispaltige Grid kann auf schmalen Screens
+       nicht schrumpfen (Zeilen wie "Nice to have -- 327 offen · 16.053,52 €"
+       duerfen nicht umbrechen) und wuchs dadurch ueber den Bildschirmrand
+       hinaus -- deshalb war rechts swipen noetig. Einspaltig stapeln. */
+    .stats{ width:calc(100% - 32px); }
+    .stats-body{ grid-template-columns:1fr; gap:20px; padding:16px; }
+    .stat-prio-row{ flex-wrap:wrap; }
+
+    /* Große-Träume-Projektkopf: Titel + Summe brachen aus demselben Grund
+       (kein flex-wrap) rechts über den Rand hinaus. */
+    .dream-project{ padding:18px; }
+    .dream-project-head{ flex-wrap:wrap; }
   }
   @media (prefers-reduced-motion:reduce){
     *, *::before, *::after{ transition:none !important; animation:none !important; }
