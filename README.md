@@ -1,6 +1,6 @@
 # ◆ Noch zu holen
 
-Meine komplette Kaufliste als Website — über 500 Wünsche in acht Kategorien,
+Meine komplette Kaufliste als Website — über 600 Wünsche in acht Kategorien,
 sortiert, priorisiert, abhakbar. Gebaut mit [Claude Code](https://claude.com/claude-code).
 
 ![Screenshot der Website](assets/images/site-preview.png)
@@ -21,7 +21,7 @@ lokalen Produktbilder aus `assets/` laden.
 - **Suche** über Titel, Notizen, Marken und Gruppen (`/` fokussiert die Suche).
 - **Produktbilder** — fast alle Einträge bebildert, fast alle lokal gespeichert
   (`assets/images/products/`); Fallback-Kette lokal → remote → Monogramm.
-- **Geprüfte Preise** — 424 der 576 Einträge gegen die jeweilige Produktseite abgeglichen
+- **Geprüfte Preise** — 424 der 610 Einträge gegen die jeweilige Produktseite abgeglichen
   (Amazon, Herstellershops, Thalia, Geizhals), erkennbar am „Preis geprüft"-Badge.
   Wo kein Preis steht, war auf der Quellseite keiner auslesbar — lieber leer als geraten.
 - **Direkte Kauflinks** — Platten, Filme und Serien verlinken auf die konkrete
@@ -56,16 +56,21 @@ lokalen Produktbilder aus `assets/` laden.
 
 ## Neuen Wunsch eintragen
 
-`website/index.html` im Editor öffnen und nach `NEUEN WUNSCH EINTRAGEN` suchen —
+`website/data.js` im Editor öffnen und nach `NEUEN WUNSCH EINTRAGEN` suchen —
 dort steht eine kommentierte Vorlage zum Kopieren. Kurzfassung: Eintrag mit
 einmaliger `id` ins `items`-Array setzen, optional ein Bild in
-`assets/images/products/` legen und in der `LOCAL_IMAGES`-Map verlinken.
-Speichern, Seite neu laden, fertig.
+`assets/images/products/` legen und in der `LOCAL_IMAGES`-Map (ebenfalls in
+`data.js`) verlinken. Speichern, Seite neu laden, fertig.
+
+Jeder Eintrag braucht `category` (genau eine der acht), `priority`
+(`must`/`nice`/`dream`), `done` und `priceUpdated` — fehlt die `priority`,
+zeigt die Karte „undefined" an und der Eintrag fällt aus der Statistik.
 
 ## Technik
 
-Eine einzige HTML-Datei mit eingebettetem CSS/JS, ohne Framework und ohne Backend.
-Datenquelle ist das `items`-Array in `index.html` — Änderungen an der Liste laufen
-direkt über diese Datei. Design nach `copy/brand-kit.md`: warmes Fast-Schwarz,
+HTML-Gerüst mit eingebettetem CSS/JS, ohne Framework und ohne Backend.
+Datenquelle ist das `items`-Array in `website/data.js`, das per `<script src>`
+vor der Applogik geladen wird — Änderungen an der Liste laufen ausschließlich
+über diese Datei. Design nach `copy/brand-kit.md`: warmes Fast-Schwarz,
 Amber-Akzent, Fraunces / Inter / JetBrains Mono, Filmkorn, Scroll-Reveal —
 alles respektiert `prefers-reduced-motion`.

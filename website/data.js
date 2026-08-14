@@ -1332,7 +1332,7 @@
       done: false, priceUpdated: null },
 
     // ============ Home-Gym ============
-    { id: 608, title: "Zwift (Jahres-Abo)", category: "Software", price: 199.99,
+    { id: 608, title: "Zwift (Jahres-Abo)", category: "Software", priority: "nice", order: 25, price: 199.99,
       link: "https://www.zwift.com/pricing",
       note: "Trainingsplattform fürs Zwift Bike. Jährlich 199,99 € statt 12× 19,99 € monatlich.",
       done: false, priceUpdated: null },

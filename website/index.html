@@ -2445,6 +2445,9 @@ ${sections}
     allExpanded = !allExpanded;
     if (allExpanded){
       items.forEach(i => { if (i.group) expandedGroups.add(groupKey(i)); });
+      // Auch die Zubehör-Aufklapper (subOf) öffnen — sonst bleibt Zubehör, dessen
+      // Hauptartikel in einer Gruppe steckt, trotz "alle aufklappen" verborgen.
+      items.forEach(i => { if (i.subOf != null) expandedGroups.add('sub::' + i.subOf); });
     } else {
       expandedGroups.clear();
     }
