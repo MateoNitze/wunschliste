@@ -2508,7 +2508,12 @@ ${sections}
   // Intro-Texte, die beim Aufklappen bestimmter Gruppen über den Karten erscheinen
   const GROUP_INTROS = {
     "Setup::Gaming::Mikrofon-Arm": "Beide Arme tragen das schwere Shure SM7dB sicher — Geschmackssache. XLR-Kabel und Audio-Interface stecken als Zubehör beim Mikrofon selbst; ein Popfilter liegt dem SM7dB bei, ein Cloudlifter ist unnötig (Vorverstärker eingebaut).",
-    "Körperliches::::Uhr": "Wichtig zu wissen: Das hier sind bewusst nur <b>Beispiele</b>. Es geht mir eigentlich darum, dass ich am liebsten eine schöne Edelstahl-Uhr mit schwarzem, cleanem Zifferblatt hätte — welche genau, ist noch offen. Insgesamt ist das eher ein größerer Traum."
+    "Körperliches::::Uhr": "Wichtig zu wissen: Das hier sind bewusst nur <b>Beispiele</b>. Es geht mir eigentlich darum, dass ich am liebsten eine schöne Edelstahl-Uhr mit schwarzem, cleanem Zifferblatt hätte — welche genau, ist noch offen. Insgesamt ist das eher ein größerer Traum.",
+    "Körperliches::Parfüm::Frühling": "Leichte, frische Düfte für den Übergang — grün, blumig, zitrisch.",
+    "Körperliches::Parfüm::Sommer": "Spritzig und leicht für heiße Tage — Zitrus, aquatisch, dezent.",
+    "Körperliches::Parfüm::Herbst": "Wärmer und würziger — Holz, Gewürze, Leder.",
+    "Körperliches::Parfüm::Winter": "Schwer und süß für die kalte Jahreszeit — Vanille, Amber, Tonka, Oud.",
+    "Körperliches::Parfüm::Ganzjährig": "Allrounder, die zu jeder Jahreszeit funktionieren — weder betont frisch noch betont schwer."
   };
 
   // Rendert eine Karte samt optionalem, aufklappbarem Zubehör (Items mit subOf === i.id)
@@ -2614,7 +2619,7 @@ ${sections}
             <div class="group-header-left">
               <span class="chevron ${isOpen ? 'open':''}">▸</span>
               <span class="group-name">${escapeHtml(g)}</span>
-              <span class="group-count">${groupItems.length} Teile</span>
+              <span class="group-count">${groupItems.length} ${groupNoun(groupItems)}</span>
             </div>
             <span style="display:flex;align-items:center;gap:12px;">${gCheck}<span class="group-sum mono">${groupSum}</span></span>
           </div>`;
@@ -2645,6 +2650,15 @@ ${sections}
 
   function groupKey(item){
     return `${item.category}::${item.subcategory||''}::${item.group||''}`;
+  }
+
+  // "3 Teile" passt für einen PC-Build, aber nicht für die Jahreszeiten-Gruppen
+  // bei den Parfüms — dort ist "3 Düfte" die richtige Bezeichnung.
+  function groupNoun(groupItems){
+    if (groupItems[0] && groupItems[0].subcategory === 'Parfüm'){
+      return groupItems.length === 1 ? 'Duft' : 'Düfte';
+    }
+    return 'Teile';
   }
 
   // Logische Reihenfolge: kleinere Zahl = weiter oben (Fundament zuerst).
