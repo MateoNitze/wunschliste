@@ -1823,7 +1823,9 @@
     }
 
     if (hideDone && nowDone){
-      setTimeout(renderLists, 350);
+      // Die abgehakte Karte verschwindet — als Anker deshalb das oberste
+      // sichtbare Element nehmen, das bleibt, nicht die Karte selbst.
+      setTimeout(() => keepScroll(visibleAnchorSel(id), renderLists), 350);
     }
     if (!opts.silent){
       if (nowDone){
@@ -1927,7 +1929,7 @@
       }
     });
     savePurchased();
-    renderLists();
+    keepScroll('[data-gkey="' + cssEsc(key) + '"]', renderLists);
     renderLedger();
     updateHero();
     updateCategoryProgress(parts[0]);
@@ -2454,7 +2456,7 @@ ${sections}
     document.getElementById('expandAllBtn').textContent = allExpanded ? 'Alle Gruppen zuklappen' : 'Alle Gruppen aufklappen';
     document.getElementById('expandAllBtn').classList.toggle('active', allExpanded);
     document.getElementById('expandAllBtn').setAttribute('aria-pressed', allExpanded);
-    renderLists();
+    keepScroll(visibleAnchorSel(), renderLists);
   }
 
   function renderDreamRoom(){
@@ -2701,26 +2703,98 @@ ${sections}
     return total;
   }
 
-  // Beim Auf-/Zuklappen wird die ganze Liste neu gebaut. Ohne Gegenmaßnahme
-  // schrumpft das Dokument dabei kurz (die lazy-Bilder sind noch nicht geladen),
-  // der Browser kappt die Scroll-Position und man landet ganz oben. Deshalb:
-  // Position der angeklickten Gruppe im Viewport merken und danach wiederherstellen.
-  function groupAnchorTop(key){
-    const el = document.querySelector('[data-gkey="' + (window.CSS && CSS.escape ? CSS.escape(key) : key) + '"]');
-    return el ? el.getBoundingClientRect().top : null;
+  // ---------- Blick-Position über einen Listen-Neuaufbau hinweg halten ----------
+  // Beim Auf-/Zuklappen wird die ganze Liste neu gebaut. Die Karten nutzen
+  // "content-visibility:auto", ihre echten Höhen stehen deshalb erst ein paar
+  // Frames später fest: direkt nach dem Rebuild ist das Dokument kürzer als
+  // gedacht, der Browser kappt die Scroll-Position — und eine einmalige
+  // Korrektur rechnet dann mit einem Layout, das sich noch verschiebt.
+  // Deshalb wird der Anker über mehrere Frames nachjustiert, bis er sitzt.
+  function cssEsc(s){ return (window.CSS && CSS.escape) ? CSS.escape(String(s)) : String(s).replace(/"/g, '\\"'); }
+
+  function anchorSelFor(el){
+    if (!el || !el.getAttribute) return null;
+    const gk = el.getAttribute('data-gkey');
+    if (gk !== null) return '[data-gkey="' + cssEsc(gk) + '"]';
+    const id = el.getAttribute('data-id');
+    if (id !== null) return '.card[data-id="' + cssEsc(id) + '"]';
+    return null;
+  }
+
+  // Oberstes noch sichtbares Element, das den Rebuild überlebt. excludeId lässt
+  // den Eintrag aus, der gerade verschwindet (z.B. abgehakt bei "Erledigte aus").
+  function visibleAnchorSel(excludeId){
+    const els = document.querySelectorAll('.group-header[data-gkey], .card[data-id]');
+    for (let k = 0; k < els.length; k++){
+      const el = els[k];
+      if (excludeId != null && el.getAttribute('data-id') === String(excludeId)) continue;
+      if (el.getBoundingClientRect().bottom > 0) return anchorSelFor(el);
+    }
+    return null;
+  }
+
+  function keepScroll(sel, rerender){
+    const el = sel ? document.querySelector(sel) : null;
+    const top = el ? el.getBoundingClientRect().top : null;
+    rerender();
+    if (top === null) return;
+    // Zweistufig: sofort korrigieren (fängt den Sprung durch den Rebuild ab) und
+    // dann ein paar Frames nachziehen, bis die Platzhalter-Höhen der Karten
+    // sitzen. Sobald der Nutzer selbst scrollt, wird abgebrochen — sonst würde
+    // man ihn mitten in der Bewegung zurückreißen.
+    const correct = () => {
+      const now = document.querySelector(sel);
+      if (!now) return null;
+      const delta = now.getBoundingClientRect().top - top;
+      if (Math.abs(delta) > 1) window.scrollTo({ top: Math.max(0, window.scrollY + delta), behavior: 'auto' });
+      return now;
+    };
+    correct();
+    let stop = false, frames = 0;
+    const onUser = () => { stop = true; };
+    window.addEventListener('wheel', onUser, { passive: true });
+    window.addEventListener('touchstart', onUser, { passive: true });
+    const done = () => {
+      window.removeEventListener('wheel', onUser);
+      window.removeEventListener('touchstart', onUser);
+      // Beim Zuklappen schrumpft das Dokument oft so stark, dass die alte
+      // Position gar nicht mehr existiert (der Browser kappt den Scrollwert).
+      // Dann lässt sich der Blick nicht halten — aber das angeklickte Element
+      // soll wenigstens sichtbar bleiben, damit man die Orientierung behält.
+      // Die Prüfung läuft verzögert, weil das Dokument nach dem Zuklappen noch
+      // weiter schrumpft (Karten außerhalb des Bildes fallen auf Platzhalter).
+      const ensureVisible = () => {
+        if (stop) return;
+        const el2 = document.querySelector(sel);
+        if (!el2) return;
+        const r = el2.getBoundingClientRect();
+        if (r.bottom < 0 || r.top > window.innerHeight) el2.scrollIntoView({ block: 'center', behavior: 'auto' });
+      };
+      ensureVisible();
+      setTimeout(ensureVisible, 250);
+    };
+    // Nachziehen, bis sich zwei Frames hintereinander nichts mehr bewegt
+    // (max. 12 Frames ≈ 200 ms, damit es nie hängen bleibt).
+    let stable = 0;
+    const fix = () => {
+      if (stop) return done();
+      const now = document.querySelector(sel);
+      const before = now ? now.getBoundingClientRect().top : null;
+      correct();
+      const after = now ? now.getBoundingClientRect().top : null;
+      if (before !== null && after !== null && Math.abs(after - top) <= 1) stable++;
+      else stable = 0;
+      if (stable < 2 && ++frames < 12) requestAnimationFrame(fix); else done();
+    };
+    requestAnimationFrame(fix);
   }
 
   function toggleGroup(key){
-    const before = groupAnchorTop(key);
-    if (expandedGroups.has(key)) expandedGroups.delete(key);
-    else expandedGroups.add(key);
-    renderLists();
-    if (before !== null){
-      const after = groupAnchorTop(key);
-      if (after !== null && Math.abs(after - before) > 1){
-        window.scrollTo({ top: window.scrollY + (after - before), behavior: 'auto' });
-      }
-    }
+    keepScroll('[data-gkey="' + cssEsc(key) + '"]', () => {
+      if (expandedGroups.has(key)) expandedGroups.delete(key);
+      else expandedGroups.add(key);
+      renderLists();
+    });
   }
 
   function renderCard(i, accessoryInfo, hidePriority){
